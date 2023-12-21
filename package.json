@@ -1,22 +1,55 @@
 {
-  "name": "trade_portal_sttl",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "next": "14.0.4"
-  },
-  "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18"
-  }
+	"name": "trade_portal_sttl",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"dev:clean": "rm -rf ./.next && next dev",
+		"build": "next build",
+		"export": "next build && node ./scripts/export",
+		"start": "next build && serve out",
+		"test": "jest --passWithNoTests",
+		"lint": "next lint",
+		"pre-commit": "npx lint-staged --no-stash",
+		"pre-push": "npm test",
+		"prepare": "husky install"
+	},
+	"dependencies": {
+		"@azure/msal-browser": "^3.5.0",
+		"@azure/msal-react": "^2.0.7",
+		"@microsoft/applicationinsights-web": "^3.0.5",
+		"@next/bundle-analyzer": "^14.0.4",
+		"date-fns": "^2.30.0",
+		"dotenv": "^16.3.1",
+		"next": "14.0.4",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+		"react-hook-form": "^7.48.2",
+		"trade-portal-components": "^1.4.14",
+		"uuid": "^9.0.1"
+	},
+	"devDependencies": {
+		"@testing-library/cypress": "^10.0.1",
+		"@types/jest": "^29.5.8",
+		"@types/node": "20.9.0",
+		"@types/react": "18.2.37",
+		"@typescript-eslint/eslint-plugin": "^6.11.0",
+		"@typescript-eslint/parser": "^6.11.0",
+		"cypress": "^13.5.1",
+		"cypress-axe": "^1.5.0",
+		"eslint": "^8.53.0",
+		"eslint-config-airbnb": "^19.0.4",
+		"eslint-config-airbnb-typescript": "^17.1.0",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-plugin-import": "^2.29.0",
+		"eslint-plugin-jsx-a11y": "^6.8.0",
+		"eslint-plugin-react": "^7.33.2",
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"husky": "^8.0.3",
+		"jest": "^29.7.0",
+		"lint-staged": "^15.1.0",
+		"prettier": "^3.1.0",
+		"serve": "^14.2.1",
+		"typescript": "^5.2.2"
+	}
 }

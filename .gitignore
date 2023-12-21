@@ -4,21 +4,29 @@
 /node_modules
 /.pnp
 .pnp.js
-.yarn/install-state.gz
 
 # testing
 /coverage
+/cypress/videos
+/cypress/screenshots
+/cypress/fixtures
 
 # next.js
+/.swc
 /.next/
 /out/
-
-# production
 /build
+/dist
+
 
 # misc
+.vscode
 .DS_Store
 *.pem
+*.ignore.*
+.npmrc
+api.http
+.idea
 
 # debug
 npm-debug.log*
@@ -26,6 +34,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
 
 # vercel

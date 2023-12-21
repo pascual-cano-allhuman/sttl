@@ -1,0 +1,14 @@
+{
+	"responseOverrides": {
+		"404": {
+			"rewrite": "/404.html",
+			"statusCode": 404
+		}
+	},
+	"networking": {
+		"allowedIpRanges": ["40.87.134.1/32", "51.104.177.159/32"]
+	},
+	"globalHeaders": {
+		"Cache-Control": "no-store"
+	}
+}

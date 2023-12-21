@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<script>
+			try {
+				for (var i = 0; i < localStorage.length; i++) {
+					var key = localStorage.key(i);
+					if (/fisignup_signin/.test(key)) {
+						localStorage.removeItem(key);
+					}
+				}
+				var cookies = document.cookie.split(";");
+				for (var i = 0; i < cookies.length; i++) {
+					var name_value = cookies[i].split("=");
+					if (/x-ms-cpim/.test(name_value[0])) {
+						document.cookie = name_value[0] + "=; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+					}
+				}
+			} catch (e) {}
+		</script>
+	</head>
+	<body></body>
+</html>
