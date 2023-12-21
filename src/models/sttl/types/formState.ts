@@ -3,7 +3,7 @@ import { PermissionStatus } from "./permissionStatus";
 
 export type FormState = {
 	property_type: PropertyTypeStep[];
-	planning_permission: PlanningPermissionStep[];
+	statutory_obligations: StatutoryObligationsStep[];
 	property_address: PropertyAddressStep[];
 	property_owner_details: PropertyOwnerDetailsStep[];
 };
@@ -69,7 +69,7 @@ export type PropertyOwnerDetailsStep = {
 	};
 };
 
-export type PlanningPermissionStep = {
+export type StatutoryObligationsStep = {
 	permissionStatus: PermissionStatus;
 };
 
