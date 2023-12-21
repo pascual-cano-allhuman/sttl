@@ -1,5 +1,5 @@
 const Home = () => {
-	return <main>STTL App</main>;
+	return null;
 };
 
 export default Home;
