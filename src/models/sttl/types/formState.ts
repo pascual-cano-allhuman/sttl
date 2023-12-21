@@ -46,7 +46,7 @@ export type PropertyAddressStep = {
 		addressLine2?: string;
 		addressLine3?: string;
 		townCity: string;
-		eircode: string;
+		postcode: string;
 		county: string;
 	};
 };
