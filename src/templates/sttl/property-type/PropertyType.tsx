@@ -8,13 +8,14 @@ import { SelectedPropertyFields } from "./SelectedPropertyFields";
 
 type TemplateProps = {
 	onNextBtnClick: (values: any) => void;
+	onPrevBtnClick: () => void;
 	defaultValues: PropertyTypeStep;
 	stepper: { step: number; label: string; totalSteps: number };
 };
 
 export const PropertyType = (props: TemplateProps) => {
 	const [showAlert, setShowAlert] = React.useState(true);
-	const { defaultValues, stepper, onNextBtnClick } = props;
+	const { defaultValues, stepper, onNextBtnClick, onPrevBtnClick } = props;
 	const methods = useForm({ mode: "all", defaultValues });
 	const { getValues, trigger, register, watch } = methods;
 	const category = watch("category");
@@ -29,11 +30,11 @@ export const PropertyType = (props: TemplateProps) => {
 		<FormProvider {...methods}>
 			<FormStepContainer
 				stepper={<Stepper totalSteps={stepper?.totalSteps} currentStep={stepper?.step} label={stepper.label} />}
-				footer={!!category && <FormFooter onNextBtnClick={nextBtnHandler} />}
+				footer={<FormFooter onNextBtnClick={nextBtnHandler} isNextBtnDisabled={!category} onPrevBtnClick={onPrevBtnClick} />}
 				header={<FormHeader title="About the property" subtitle="Select the type of Short Term Tourist Letting property being registered" />}
 			>
 				<Box alignItems="center" columns={[4, 6]}>
-					<CardSelectorGroup>
+					<CardSelectorGroup onChange={() => setShowAlert(true)}>
 						{cards.map(card => (
 							<CardSelector card={card} key={card.id} {...register(`category`)} />
 						))}

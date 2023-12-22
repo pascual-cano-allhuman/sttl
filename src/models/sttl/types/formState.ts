@@ -40,15 +40,17 @@ export const TEXT_TO_UNIT_ROOM_TYPE = Object.entries(UNIT_ROOM_TYPE_AS_TEXT).red
 	return acc;
 }, {});
 
+export type Address = {
+	addressLine1: string;
+	addressLine2?: string;
+	addressLine3?: string;
+	town: string;
+	postcode: string;
+	county: string;
+};
+
 export type PropertyAddressStep = {
-	propertyAddress: {
-		addressLine1: string;
-		addressLine2?: string;
-		addressLine3?: string;
-		townCity: string;
-		postcode: string;
-		county: string;
-	};
+	propertyAddress: Address;
 };
 
 export type PropertyOwnerDetailsStep = {
@@ -59,14 +61,7 @@ export type PropertyOwnerDetailsStep = {
 	businessName: string;
 	telephone: string;
 	isAddressSameAsStlProperty: boolean;
-	ownerAddress?: {
-		addressLine1: string;
-		addressLine2?: string;
-		addressLine3?: string;
-		townCity: string;
-		postcode: string;
-		county: string;
-	};
+	ownerAddress?: Address;
 };
 
 export type StatutoryObligationsStep = {

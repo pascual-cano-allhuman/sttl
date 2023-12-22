@@ -4,7 +4,7 @@ import { Stepper, Box, AddressLookup } from "trade-portal-components";
 import { FormFooter, FormHeader, FormStepContainer } from "templates";
 import { getAutocompleteAddresses, getFormattedAddress } from "lib/autoaddress";
 import { PropertyAddressStep } from "models/sttl";
-import { AddressForm } from "./AddressForm";
+import { AddressForm } from "../shared/AddressForm";
 
 type TemplateProps = {
 	onNextBtnClick: (values: any) => void;
@@ -17,7 +17,7 @@ type TemplateProps = {
 export const PropertyAddress = (props: TemplateProps) => {
 	const [showManualForm, setShowManualForm] = React.useState(false);
 	const addressLookupRef = React.useRef(null);
-	const { onNextBtnClick, onPrevBtnClick, stepper, defaultValues, excludedEircodes = ["D02 CX36"] } = props;
+	const { onNextBtnClick, onPrevBtnClick, stepper, defaultValues, excludedEircodes = [] } = props;
 	const methods = useForm({ mode: "all", defaultValues });
 	const { getValues, trigger, control } = methods;
 	const addressField = useController({

@@ -2,7 +2,7 @@ import { CategoryAsText } from "./categories";
 
 export type PropertyName = string;
 
-export type Address = {
+type PostalAddress = {
 	"@type": "PostalAddress";
 	streetAddress: string;
 	postalCode: string;
@@ -14,14 +14,14 @@ export type Address = {
 export type RoomsOwns = {
 	"@type": PropertyName;
 	additionalType?: PropertyName;
-	address: Address;
+	address: PostalAddress;
 	containsPlace: ContainsPlaceItemForRooms[];
 };
 
 export type EntirePropertyOwns = {
 	"@type": PropertyName;
 	additionalType?: PropertyName;
-	address: Address;
+	address: PostalAddress;
 	numberOfBedrooms: string;
 	amenityFeature: [
 		{
@@ -34,7 +34,7 @@ export type EntirePropertyOwns = {
 
 export type MultipleUnitsOwns = {
 	"@type": "LodgingBusiness";
-	address: Address;
+	address: PostalAddress;
 	containsPlace: ContainsPlaceItemForMultipleUnits[];
 };
 
@@ -84,7 +84,7 @@ export type OfferItem = {
 			name: string;
 			givenName: string;
 			familyName: string;
-			address: Address;
+			address: PostalAddress;
 			email: string;
 			telephone: string;
 			worksFor: {

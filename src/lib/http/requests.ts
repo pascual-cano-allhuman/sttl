@@ -96,7 +96,8 @@ const requestWithRetry = async (url: string, options: any, retryCount = 0, lastS
 				return json;
 			case 400:
 			case 401:
-			case 404: // don't retry, it won't work
+			case 404:
+			case 500: // don't retry, it won't work
 				throw new HttpRequestError({ status, error: json, url, body: options?.body });
 			default: // retry
 				await sleep(delays[retryCount] * 1000);

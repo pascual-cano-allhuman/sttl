@@ -101,4 +101,4 @@ export const StatutoryObligations = (props: TemplateProps) => {
 		</FormStepContainer>
 	);
 };
-export default StatutoryObligationsStep;
+export default StatutoryObligations;

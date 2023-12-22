@@ -16,7 +16,6 @@ export const AddressForm = (props: AddressFormProps) => {
 	const defaultValues = React.useMemo(() => (addressFieldsPrefix ? getValues()?.[addressFieldsPrefix] : getValues()), []);
 	const getFieldName = (fieldName: string) => (addressFieldsPrefix ? `${addressFieldsPrefix}.${fieldName}` : fieldName);
 
-	if (!defaultValues) return null;
 	return (
 		<Box gap="2.4rem">
 			<Input
@@ -74,7 +73,7 @@ export const AddressForm = (props: AddressFormProps) => {
 	);
 };
 
-const validateAddress = (postcode, excludedEircodes) => {
+const validateAddress = (postcode: string, excludedEircodes: string[]) => {
 	if (excludedEircodes?.includes(postcode)) return "You have already added a property with this Eircode";
 	return true;
 };
