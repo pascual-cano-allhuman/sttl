@@ -56,12 +56,12 @@ export const PropertyType = (props: TemplateProps) => {
 
 const infoAlertText = {
 	[Category.room]: `NB: The host resides on the premises during provision of accommodation and it is their primary residence.`,
-	[Category.full_property]: `NB: The host does not reside at the premises (it is a secondary property).`,
+	[Category.fullProperty]: `NB: The host does not reside at the premises (it is a secondary property).`,
 	[Category.units]: `NB: If you have several different types of accommodations at the same address or Eircode you can ‘add another unit type’.`
 };
 
 const cards = [
 	{ id: Category.room, icon: "fi-bed", title: "Bedroom(s) in your home", ariaLabel: "Bedrooms in your home" },
-	{ id: Category.full_property, icon: "fi-bed", title: "Entire property" },
+	{ id: Category.fullProperty, icon: "fi-bed", title: "Entire property" },
 	{ id: Category.units, icon: "fi-camp-spot", title: "Multiple units at a site / Complex" }
 ];

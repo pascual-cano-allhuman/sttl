@@ -69,8 +69,22 @@ const UNITS_OPTIONS = [
 
 export const PROPERTY_OPTIONS = {
 	room: ROOM_OPTIONS,
-	full_property: FULL_PROPERTY_OPTIONS,
+	fullProperty: FULL_PROPERTY_OPTIONS,
 	units: UNITS_OPTIONS
 };
 
 export const PROPERTY_TYPES_NOT_REQUIRING_BEDROOMS = ["Recreational vehicle / Motor home", "Treehouse", "Yurt"];
+
+// TODO
+export const UNIT_ROOM_TYPE_AS_TEXT = {
+	noOfOwnDoorUnits: "Own Door Unit",
+	noOfRooms: "Room",
+	noOfBedrooms: "Bedroom",
+	noOfPitches: "Pitch",
+	number: "Number"
+};
+
+export const TEXT_TO_UNIT_ROOM_TYPE = Object.entries(UNIT_ROOM_TYPE_AS_TEXT).reduce((acc, [key, value]) => {
+	acc[value] = key;
+	return acc;
+}, {});

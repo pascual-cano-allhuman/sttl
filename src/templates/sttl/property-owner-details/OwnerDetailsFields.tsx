@@ -6,11 +6,11 @@ import { countries } from "settings/countries";
 import { UserAccount } from "models/global";
 
 type Props = {
-	accountData: UserAccount;
+	userAccount: UserAccount;
 };
 
 export const OwnerDetailsFields = (props: Props) => {
-	const { accountData } = props;
+	const { userAccount } = props;
 	const { register, formState, watch, setValue } = useFormContext();
 	const { errors } = formState;
 	const userIsOwnerCheck = watch("userIsOwnerCheck");
@@ -48,7 +48,7 @@ export const OwnerDetailsFields = (props: Props) => {
 				{...register(`emailAddress`, {
 					...validateTextInput({ max: 100 }),
 					validate: emailAddress => {
-						if (!hasOwner && emailAddress === accountData.email)
+						if (!hasOwner && emailAddress === userAccount.email)
 							return "The email address should be different from the business owner's email address";
 						return true;
 					},

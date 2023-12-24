@@ -16,7 +16,7 @@ const Page = () => {
 			onPrevBtnClick={() => {}}
 			defaultValues={defaultValues}
 			stepper={stepper}
-			accountData={{} as UserAccount}
+			userAccount={{} as UserAccount}
 			propertyAddress={{} as Address}
 		/>
 	);

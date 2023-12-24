@@ -32,7 +32,7 @@ export const SelectedPropertyFields = () => {
 	}, [category, unregister]);
 
 	if (category === Category.room) return <PrimaryResidenceFields category={category} />;
-	if (category === Category.full_property) return <EntirePropertyFields category={category} />;
+	if (category === Category.fullProperty) return <EntirePropertyFields category={category} />;
 	if (category === Category.units) return <MultipleUnitsFields category={category} />;
 	return null;
 };

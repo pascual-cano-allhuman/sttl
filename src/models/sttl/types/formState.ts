@@ -18,7 +18,7 @@ export type PropertyTypeStep = {
 		numberOfGuestsInSharedRooms?: number;
 		numberOfGuestsInPrivateRooms?: number;
 	};
-	full_property?: {
+	fullProperty?: {
 		propertyType?: string;
 		customPropertyType?: string;
 		numberOfBedrooms?: number;
@@ -26,19 +26,6 @@ export type PropertyTypeStep = {
 	};
 	units?: Record<string, string | number>[];
 };
-
-export const UNIT_ROOM_TYPE_AS_TEXT = {
-	noOfOwnDoorUnits: "Own Door Unit",
-	noOfRooms: "Room",
-	noOfBedrooms: "Bedroom",
-	noOfPitches: "Pitch",
-	number: "Number"
-};
-
-export const TEXT_TO_UNIT_ROOM_TYPE = Object.entries(UNIT_ROOM_TYPE_AS_TEXT).reduce((acc, [key, value]) => {
-	acc[value] = key;
-	return acc;
-}, {});
 
 export type Address = {
 	addressLine1: string;
@@ -68,8 +55,9 @@ export type StatutoryObligationsStep = {
 	permissionStatus: PermissionStatus;
 };
 
-export enum FormAlert {
-	payment_error,
-	property_added,
-	property_updated
-}
+export type PropertyData = {
+	property_type: PropertyTypeStep;
+	statutory_obligations: StatutoryObligationsStep;
+	property_address: PropertyAddressStep[];
+	property_owner_details: PropertyOwnerDetailsStep;
+};

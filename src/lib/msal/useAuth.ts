@@ -38,7 +38,7 @@ export const useAuth = () => {
 					handleAuthenticationError(e, state);
 				});
 		}
-	}, [inProgress, isAuthenticated]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [inProgress, isAuthenticated]);
 
 	// get an authentication response. first try from the redirect response, then from SSO silent request
 	const getAuthenticationResult = async () => {

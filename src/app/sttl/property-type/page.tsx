@@ -9,7 +9,7 @@ const Page = () => {
 	const stepper = { step: 1, label: "Property Type", totalSteps: 3 };
 
 	if (!defaultValues) return null;
-	return <PropertyType onNextBtnClick={() => {}} defaultValues={defaultValues} stepper={stepper} />;
+	return <PropertyType onNextBtnClick={() => {}} defaultValues={defaultValues} stepper={stepper} onPrevBtnClick={() => {}} />;
 };
 
 export default Page;

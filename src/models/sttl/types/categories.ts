@@ -1,18 +1,18 @@
 export enum Category {
 	room = "room",
-	full_property = "full_property",
+	fullProperty = "fullProperty",
 	units = "units"
 }
 
 export enum CategoryAsText {
 	room = "Shared property",
-	full_property = "Entire property",
+	fullProperty = "Entire property",
 	units = "Multiple units"
 }
 
 export const CATEGORY_AS_TEXT = {
 	room: CategoryAsText.room,
-	full_property: CategoryAsText.full_property,
+	fullProperty: CategoryAsText.fullProperty,
 	units: CategoryAsText.units
 };
 

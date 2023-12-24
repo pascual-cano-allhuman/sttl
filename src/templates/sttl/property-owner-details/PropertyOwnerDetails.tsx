@@ -14,18 +14,18 @@ type TemplateProps = {
 	defaultValues: PropertyOwnerDetailsStep & { userIsOwnerCheck?: "Yes" | "No" };
 	stepper: { step: number; label: string; totalSteps: number };
 	propertyAddress: Address;
-	accountData: UserAccount;
+	userAccount: UserAccount;
 };
 
 export const PropertyOwnerDetails = (props: TemplateProps) => {
-	const { onNextBtnClick, onPrevBtnClick, stepper, defaultValues, propertyAddress, accountData } = props;
+	const { onNextBtnClick, onPrevBtnClick, stepper, defaultValues, propertyAddress, userAccount } = props;
 	const methods = useForm({ mode: "all", defaultValues });
 	const { register, watch, trigger, getValues, formState } = methods;
 
+	const userIsOwnerCheck = watch("userIsOwnerCheck");
 	const isAddressSameAsStlProperty = watch(`isAddressSameAsStlProperty`);
 	const countryOfResidence = watch(`countryOfResidence`) || "Ireland";
 	const isIreland = countryOfResidence === "Ireland";
-	const userIsOwnerCheck = watch("userIsOwnerCheck");
 
 	const nextBtnHandler = async () => {
 		const isValid = await trigger(null, { shouldFocus: true });
@@ -64,7 +64,7 @@ export const PropertyOwnerDetails = (props: TemplateProps) => {
 				{userIsOwnerCheck && (
 					<FormProvider {...methods}>
 						<Box columns={4} gap="2.4rem">
-							<OwnerDetailsFields accountData={accountData} />
+							<OwnerDetailsFields userAccount={userAccount} />
 							<Checkbox {...register(`isAddressSameAsStlProperty`)} checked={isAddressSameAsStlProperty} disabled={!isIreland}>
 								Property owner address is the same as the Short Term Tourist Letting property address
 							</Checkbox>

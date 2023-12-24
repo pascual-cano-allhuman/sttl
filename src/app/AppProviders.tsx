@@ -26,7 +26,7 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
 
 export const GlobalLayout = ({ children }: { children: React.ReactNode }) => {
 	const { auth } = useAppContext();
-	const { isLoggedIn, logout } = auth;
+	const { isLoggedIn, logout } = auth || {};
 	return (
 		<Layout links={links} isLoggedIn={isLoggedIn} logout={logout}>
 			{children}

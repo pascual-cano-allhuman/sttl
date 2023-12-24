@@ -33,7 +33,7 @@ export const EntirePropertyFields = ({ category }: FormCategoryProps) => {
 					defaultValue={watch(`${category}.propertyType`)}
 					{...register(`${category}.propertyType`, { required: "You must give type of property" })}
 					error={errors[category]?.[`propertyType`]?.message}
-					options={PROPERTY_OPTIONS.full_property}
+					options={PROPERTY_OPTIONS.fullProperty}
 				/>
 				{showInput && (
 					<Text textStyle="caption">If you have more than one unit at the same site, select option for multiple units above</Text>
