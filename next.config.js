@@ -10,20 +10,15 @@ const nextConfig = {
 	},
 	env: {
 		APP_ENV: process.env.APP_ENV || "",
-		APPINSIGHTS_KEY: process.env.APPINSIGHTS_KEY || "",
-		AUTOADDRESS_KEY: process.env.AUTOADDRESS_KEY || "",
+		GTM_CODE: process.env.GTMCODE || "",
+		TRADE_PORTAL_LEGACY_SITE_URL: process.env.TRADE_PORTAL_LEGACY_SITE_URL || "",
+		TRADE_PORTAL_STTL_APP_URL: process.env.TRADE_PORTAL_STTL_APP_URL || "",
+		FAILTE_IRELAND_SITE_URL: process.env.FAILTE_IRELAND_SITE_URL || "",
+		DISALLOW_ROBOTS: process.env.DISALLOW_ROBOTS || "",
 		B2C_CLIENT_ID: process.env.B2C_CLIENT_ID || "",
 		B2C_DOMAIN: process.env.B2C_DOMAIN || "",
 		B2C_LOGOUT_URI: process.env.B2C_LOGOUT_URI || "",
-		B2C_TENANT: process.env.B2C_TENANT || "",
-		DISALLOW_ROBOTS: process.env.DISALLOW_ROBOTS || "",
-		GLOBAL_PAYMENTS_ENDPOINT: process.env.GLOBAL_PAYMENTS_ENDPOINT || "",
-		GTM_CODE: process.env.GTM_CODE || "",
-		MOCK_MIDDLEWARE: process.env.MOCK_MIDDLEWARE || "",
-		MIDDLEWARE_DE_ENDPOINT: process.env.MIDDLEWARE_DE_ENDPOINT || "",
-		MIDDLEWARE_PORTAL_ENDPOINT: process.env.MIDDLEWARE_PORTAL_ENDPOINT || "",
-		TRADE_PORTAL_LEGACY_SITE_URL: process.env.TRADE_PORTAL_LEGACY_SITE_URL || "",
-		VERBOSITY: process.env.VERBOSITY || ""
+		B2C_TENANT: process.env.B2C_TENANT || ""
 	},
 	output: "export",
 	transpilePackages: ["trade-portal-components"]

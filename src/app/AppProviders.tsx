@@ -8,6 +8,8 @@ import { links } from "settings/layoutLinks";
 import { StyledComponentsRegistry } from "lib/styled-components";
 import { MsalProvider } from "@azure/msal-react";
 import { msalInstance } from "lib/msal";
+import { usePathname } from "next/navigation";
+import { backgroundURL } from "settings/background";
 import { useAppContext, AppContextProvider } from "./AppContext";
 
 export const AppProviders = ({ children }: { children: React.ReactNode }) => {
@@ -28,8 +30,18 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
 export const GlobalLayout = ({ children }: { children: React.ReactNode }) => {
 	const { auth, isLoadingAccount } = useAppContext();
 	const { isLoggedIn, logout } = auth || {};
+	const pathname = usePathname();
+	const backgroundStyle = `#D0E9E9 ${backgroundURL} fixed no-repeat`;
 	return (
-		<Layout links={links} isLoggedIn={isLoggedIn} logout={logout}>
+		<Layout
+			links={links}
+			isLoggedIn={isLoggedIn}
+			logout={logout}
+			hasTransparentHeader
+			backgroundSize="100%"
+			background={backgroundStyle}
+			currentPathname={pathname}
+		>
 			<Suspense>{isLoadingAccount ? <Loading /> : children}</Suspense>
 		</Layout>
 	);

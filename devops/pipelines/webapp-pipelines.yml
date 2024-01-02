@@ -59,19 +59,15 @@ stages:
                       customCommand: "run export -- -o dist/dev"
                   env:
                       APP_ENV: dev
-                      AUTOADDRESS_KEY: "7DB99101-EC13-3A90-434F-2D5117555490"
+                      DISALLOW_ROBOTS: "true"
+                      GTM_CODE: "GTM-WLN96FS"
+                      FAILTE_IRELAND_SITE_URL: "https://www.failteireland.ie"
+                      TRADE_PORTAL_STTL_APP_URL: "https://shorttermtouristlettingdev.failteireland.ie"
+                      TRADE_PORTAL_LEGACY_SITE_URL: "https://tradeportaluat.failteireland.ie"
                       B2C_TENANT: fidigitalenterprisedps
                       B2C_DOMAIN: https://fidigitalenterprisedps.b2clogin.com
                       B2C_CLIENT_ID: bf699dd5-08f0-48c8-8516-185ee40e4633
                       B2C_LOGOUT_URI: "https://tradeportaluat.failteireland.ie"
-                      DISALLOW_ROBOTS: "true"
-                      GTM_CODE: "GTM-WLN96FS"
-                      GLOBAL_PAYMENTS_ENDPOINT: https://pay.sandbox.realexpayments.com/pay
-                      MIDDLEWARE_DE_ENDPOINT: https://failteirelanddev.azure-api.net/de/dev/v1
-                      MIDDLEWARE_PORTAL_ENDPOINT: https://failteirelanddev.azure-api.net/portal/v1
-                      APPINSIGHTS_KEY: "6a255109-e78d-4208-99c0-78292b3f6a07"
-                      TRADE_PORTAL_DE_SITE_URL: https://thankful-bush-03dc0ab03.2.azurestaticapps.net
-                      TRADE_PORTAL_LEGACY_SITE_URL: https://tradeportal.failteireland.ie/
                 - task: Npm@1
                   displayName: "Run build for UAT environment"
                   inputs:
@@ -80,19 +76,15 @@ stages:
                       customCommand: "run export -- -o dist/uat"
                   env:
                       APP_ENV: uat
-                      AUTOADDRESS_KEY: "7DB99101-EC13-3A90-434F-2D5117555490"
-                      B2C_TENANT: fidigitalenterprisedps
-                      B2C_DOMAIN: https://fidigitalenterprisedps.b2clogin.com
-                      B2C_CLIENT_ID: 93110140-27eb-4db0-afea-97bbedc79adf
-                      B2C_LOGOUT_URI: "https://tradeportaluat.failteireland.ie"
                       DISALLOW_ROBOTS: "true"
                       GTM_CODE: "GTM-WLN96FS"
-                      GLOBAL_PAYMENTS_ENDPOINT: https://pay.sandbox.realexpayments.com/pay
-                      MIDDLEWARE_DE_ENDPOINT: https://failteirelanddev.azure-api.net/de/uat/v1
-                      MIDDLEWARE_PORTAL_ENDPOINT: https://failteirelanddev.azure-api.net/portal/uat/v1
-                      APPINSIGHTS_KEY: "b2cb41f4-f305-46a1-9ae8-dd98eb69ad23"
-                      TRADE_PORTAL_DE_SITE_URL: https://thankful-bush-03dc0ab03.2.azurestaticapps.net
-                      TRADE_PORTAL_LEGACY_SITE_URL: https://tradeportal.failteireland.ie/
+                      FAILTE_IRELAND_SITE_URL: "https://www.failteireland.ie"
+                      TRADE_PORTAL_STTL_APP_URL: "https://shorttermtouristlettinguat.failteireland.ie"
+                      TRADE_PORTAL_LEGACY_SITE_URL: "https://tradeportaluat.failteireland.ie"
+                      B2C_TENANT: fidigitalenterprisedps
+                      B2C_DOMAIN: https://fidigitalenterprisedps.b2clogin.com
+                      B2C_CLIENT_ID: bf699dd5-08f0-48c8-8516-185ee40e4633
+                      B2C_LOGOUT_URI: "https://tradeportaluat.failteireland.ie"
                 - task: Npm@1
                   displayName: "Run build for PROD environment"
                   inputs:
@@ -101,19 +93,15 @@ stages:
                       customCommand: "run export -- -o dist/prod"
                   env:
                       APP_ENV: prod
-                      AUTOADDRESS_KEY: "7DB99101-EC13-3A90-434F-2D5117555490"
-                      B2C_TENANT: fidigitalenterpriseprod
-                      B2C_DOMAIN: https://account.failteireland.ie
-                      B2C_CLIENT_ID: cf182af3-03ef-458c-b886-c54304b6821f
-                      B2C_LOGOUT_URI: "https://tradeportal.failteireland.ie"
                       DISALLOW_ROBOTS: "true"
-                      GTM_CODE: "GTM-P3QZ7BQ"
-                      GLOBAL_PAYMENTS_ENDPOINT: https://pay.sandbox.realexpayments.com/pay
-                      MIDDLEWARE_DE_ENDPOINT: https://failteireland.azure-api.net/dent/prod/v1
-                      MIDDLEWARE_PORTAL_ENDPOINT: https://failteireland.azure-api.net/portal/v1
-                      APPINSIGHTS_KEY: "b2cb41f4-f305-46a1-9ae8-dd98eb69ad23"
-                      TRADE_PORTAL_DE_SITE_URL: https://thankful-bush-03dc0ab03.2.azurestaticapps.net
-                      TRADE_PORTAL_LEGACY_SITE_URL: https://tradeportal.failteireland.ie/
+                      GTM_CODE: "GTM-WLN96FS"
+                      FAILTE_IRELAND_SITE_URL: "https://www.failteireland.ie"
+                      TRADE_PORTAL_STTL_APP_URL: "https://shorttermtouristletting.failteireland.ie"
+                      TRADE_PORTAL_LEGACY_SITE_URL: "https://tradeportal.failteireland.ie"
+                      B2C_TENANT: fidigitalenterprisedps
+                      B2C_DOMAIN: https://fidigitalenterprisedps.b2clogin.com
+                      B2C_CLIENT_ID: bf699dd5-08f0-48c8-8516-185ee40e4633
+                      B2C_LOGOUT_URI: "https://tradeportaluat.failteireland.ie"
                 - task: WhiteSource@21
                   inputs:
                       cwd: "$(Build.SourcesDirectory)"

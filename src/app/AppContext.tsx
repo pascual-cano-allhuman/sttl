@@ -4,7 +4,6 @@ import { appInsightsClient } from "lib/logger";
 import { Auth, useAuth } from "lib/msal";
 import { useTagManager } from "lib/tag-manager";
 import { UserAccount, useSessionData, useUserAccount } from "models/global";
-import { FORM_STEPS } from "models/sttl";
 import { AuthRequiredError } from "app/error";
 
 type ContextValue = {
@@ -45,7 +44,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 	// redirects
 	React.useEffect(() => {
 		if (!userId) return;
-		if (["/", "/sttl"].includes(pathname)) router.replace(redirectUrl > "/" ? redirectUrl : "/sttl/terms-and-conditions");
+		if (["/"].includes(pathname)) router.replace(redirectUrl > "/" ? redirectUrl : "/choose");
 	}, [pathname, userId, redirectUrl]);
 
 	// return value
@@ -64,6 +63,11 @@ export const useAppContext = () => React.useContext(AppContext);
 // get the page title
 const getPageTitle = (pathname: string) => {
 	const slug = pathname?.split("/").pop();
-	const step = FORM_STEPS.find(step => step.route === slug)?.label;
-	return step ? `${step} - STTL` : "Short Term Tourist Letting - Fáilte Ireland";
+	const step = PAGES.find(step => step.route === slug)?.label;
+	return step ? `${step} | STTL - Fáilte Ireland Trade Portal` : "STTL - Fáilte Ireland Trade Portal";
 };
+
+const PAGES = [
+	{ label: "Short Term Tourist Letting", route: "choose" },
+	{ label: "Choose the best account for you", route: "sttl-info" }
+];
