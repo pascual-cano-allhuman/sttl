@@ -46,7 +46,7 @@ export const useFormSteps = () => {
 	const { currentStep, nextStep, prevStep, isEditing } = React.useMemo(() => {
 		const isEditing = pathname.includes("/review/");
 		const slug = pathname.split("/").pop();
-		const currentStep = FORM_STEP_BY_ROUTE[slug];
+		const currentStep = steps.find(step => step.route === slug);
 		if (!currentStep) return {};
 		const nextStep = steps[currentStep.stepNumber + 1];
 		const prevStep = steps[currentStep.stepNumber - 1];
