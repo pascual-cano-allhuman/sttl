@@ -1,5 +1,5 @@
 import React from "react";
-import { getUserContext } from "middleware";
+import { getUserContext } from "middleware/requests";
 import { UserAccount, parseUserContext } from "models/global";
 
 type HookProps = {
@@ -19,8 +19,8 @@ export const useUserAccount = (props: HookProps) => {
 		const token = await getToken();
 		const correlation = { correlationId, userId };
 		const data = await getUserContext(token, correlation);
-		const { name = "", email = "", firstName = "", lastName = "" } = parseUserContext(data);
-		return { userId, id: userId, provider, isNewUser, name, email, firstName, lastName } as UserAccount;
+		const { name = "", email = "", firstName = "", lastName = "", contactId = "" } = parseUserContext(data);
+		return { userId, id: userId, provider, isNewUser, name, email, firstName, lastName, contactId } as UserAccount;
 	};
 
 	// get user context into userAccount

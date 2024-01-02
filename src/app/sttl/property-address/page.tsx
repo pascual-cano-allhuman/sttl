@@ -1,15 +1,33 @@
 "use client";
 
 import React from "react";
+import { useSearchParams } from "next/navigation";
 import { PropertyAddress } from "templates";
-import { PropertyAddressStep } from "models/sttl";
+import { useFormContext } from "app/sttl/FormContext";
+import { PropertyAddressStep, PropertyData } from "models/sttl";
 
 const Page = () => {
-	const defaultValues = React.useMemo(() => ({}) as PropertyAddressStep, []);
-	const stepper = { step: 3, label: "Property Address", totalSteps: 3 };
+	const searchParams = useSearchParams();
+	const { sttlForm } = useFormContext();
+	const { formState, stepper, onNextStep, onPrevStep, isEditing, propertiesList } = sttlForm;
+	const entry = searchParams.get("entry") && isEditing ? +searchParams.get("entry") : propertiesList.length;
+	const defaultValues = React.useMemo(() => formState?.property_address?.[entry] || ({} as PropertyAddressStep), [entry, formState]);
+	const excludedEircodes = React.useMemo(() => {
+		return propertiesList
+			.filter((_: any, i: number) => i !== entry)
+			.map((property: PropertyData) => property.property_address.propertyAddress?.postcode);
+	}, [entry, propertiesList]);
 
-	if (!defaultValues) return null;
-	return <PropertyAddress onNextBtnClick={() => {}} onPrevBtnClick={() => {}} defaultValues={defaultValues} stepper={stepper} />;
+	return (
+		<PropertyAddress
+			onNextBtnClick={onNextStep}
+			onPrevBtnClick={onPrevStep}
+			isEditing={isEditing}
+			defaultValues={defaultValues}
+			stepper={stepper}
+			excludedEircodes={excludedEircodes}
+		/>
+	);
 };
 
 export default Page;

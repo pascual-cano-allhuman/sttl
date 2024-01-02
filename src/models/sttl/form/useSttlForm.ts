@@ -1,13 +1,12 @@
 import React from "react";
 import { useSearchParams } from "next/navigation";
-import { transformOrderToFormState, getOrderForCardPayment, getOrderForZeroPayment, transformFormStateToOrder } from "models/sttl/mappings";
-import { FormState, Order } from "models/sttl/types";
+import { getFormFromOrder, getOrderForCardPayment, getOrderForZeroPayment, composeOrder, getFeesFromOrder } from "models/sttl/mappings";
+import { FormState, Order, PropertyData } from "models/sttl/types";
 import { UserAccount } from "models/global";
-import { addStepDataToState, getPropertiesList, deleteEntryFromState, presetCypressData } from "./utils";
+import { addStepDataToState, hasPartialState, getPropertiesList, deleteEntryFromState, presetCypressData } from "./utils";
 import { useFormSteps, FormStep } from "./useFormSteps";
 import { useAlert } from "./useAlert";
 
-const hasPaymentsEnabled = process.env.ENABLE_CARD_PAYMENTS || false;
 type HookProps = {
 	initialState?: FormState;
 	userAccount: UserAccount;
@@ -15,18 +14,18 @@ type HookProps = {
 	appendFeesToOrder: (order: Order, controller?: AbortController) => Promise<Order>;
 	createPaymentRequest: (order: Order) => Promise<Record<string, string>>;
 	sendPaymentResponse: (paymentResponse: Record<string, string>) => Promise<string>;
-	sendOrderToServiceBus: (order: Order) => Promise<void>;
-	retrieveOrderResult: (postCodes: string[]) => Promise<any>;
+	sendZeroPaymentOrder: (order: Order) => Promise<void>;
+	retrieveOrderResult: (propertiesList: PropertyData[]) => Promise<any>;
 	sendQAUpsell: () => Promise<void>;
 	loadSaveAndResumeData: () => Promise<Order>;
 	updateSaveAndResume: (order: Order) => void;
-	deleteSaveAndResumeData: () => Promise<void>;
+	clearSaveAndResumeData: () => Promise<void>;
 };
 
 export const useSttlForm = (props: HookProps) => {
 	// props
-	const { initialState, userAccount, resetCorrelationId, updateSaveAndResume, loadSaveAndResumeData, deleteSaveAndResumeData } = props;
-	const { appendFeesToOrder, createPaymentRequest, sendPaymentResponse, sendOrderToServiceBus, retrieveOrderResult, sendQAUpsell } = props;
+	const { initialState, userAccount, resetCorrelationId, updateSaveAndResume, loadSaveAndResumeData, clearSaveAndResumeData } = props;
+	const { appendFeesToOrder, createPaymentRequest, sendPaymentResponse, sendZeroPaymentOrder, retrieveOrderResult, sendQAUpsell } = props;
 	// states
 	const [formState, setFormState] = React.useState<FormState>(initialState);
 	const [order, setOrder] = React.useState<Order>(null);
@@ -34,30 +33,36 @@ export const useSttlForm = (props: HookProps) => {
 	const [orderResult, setOrderResult] = React.useState(null);
 	const [isSubmittingData, setIsSubmittingData] = React.useState(false);
 	const hasSentQAMembershipUpsell = React.useRef(false);
-	// alerts
-	const { alert, closeAlert, showPaymentRequestError, showPaymentGatewayError } = useAlert();
-
-	// get the current step and the current entry
-	const { formStep, isEditing, stepper, goToNextStep, goToPrevStep, goToStep } = useFormSteps();
+	const { alert, closeAlert, showPaymentRequestError, showPaymentGatewayError, showPropertyAdded, showPropertyChanged } = useAlert();
 	const searchParams = useSearchParams();
-	const propertiesList = React.useMemo(() => getPropertiesList(formState), [formState]);
-	const entry = React.useMemo(() => (isEditing ? +searchParams.get("entry") : propertiesList.length), [searchParams, propertiesList, isEditing]);
 
-	// go to next step in the flow
+	// get the current step and the already completed entries
+	const { formStep, stepper, isEditing, goToNextStep, goToPrevStep, goToStep } = useFormSteps();
+	const propertiesList = React.useMemo(() => getPropertiesList(formState), [formState]);
+	const fees = React.useMemo(() => getFeesFromOrder(order), [order]);
+
+	// save step data on the current entry and go to the next step
 	const onNextStep = (stepData?: Record<string, any>) => {
-		closeAlert();
-		const updatedState = addStepDataToState(formState, formStep, entry, stepData);
-		setFormState(updatedState);
+		const updatedState = updateState(stepData);
 		goToNextStep();
+		if (isEditing) showPropertyChanged();
+		else if (!hasPartialState(updatedState)) showPropertyAdded();
 	};
 
 	// go to the previous step in the flow
-	const onPrevStep = () => {
-		closeAlert();
-		goToPrevStep();
+	const onPrevStep = () => goToPrevStep();
+
+	// update form state with the data from the current step
+	const updateState = (stepData: Record<string, any>) => {
+		const entry = isEditing ? +searchParams.get("entry") : propertiesList.length;
+		const updatedState = addStepDataToState(formState, formStep, entry, stepData);
+		setFormState(updatedState);
+		if (!hasPartialState(updatedState)) updateSaveAndResume(composeOrder(updatedState, userAccount));
+		return updatedState;
 	};
 
-	// go to step 1 to add a new property
+	// go to particular steps
+	const goToReview = () => goToStep(FormStep.review);
 	const registerNewProperty = () => goToStep(FormStep.property_type);
 
 	// delete a property on the review screen
@@ -65,9 +70,9 @@ export const useSttlForm = (props: HookProps) => {
 		closeAlert();
 		const newState = deleteEntryFromState(formState, entryIndex);
 		setFormState(newState);
-		const order = transformFormStateToOrder(newState, userAccount);
+		const order = composeOrder(newState, userAccount);
 		if (order) updateSaveAndResume(order);
-		else deleteSaveAndResumeData();
+		else clearSaveAndResumeData();
 	};
 
 	// create an order with fees
@@ -77,46 +82,45 @@ export const useSttlForm = (props: HookProps) => {
 	};
 
 	// after review create a new order at the BE and setup payment iframe
-	const createPayment = async () => {
-		setIsSubmittingData(true);
+	const createCardPayment = async () => {
+		goToStep(FormStep.card_payment);
 		const order = await getOrderWithFees();
 		const paymentRequest = await createPaymentRequest(order);
 		setPaymentRequest(paymentRequest || null);
 		if (!paymentRequest) {
-			setIsSubmittingData(false);
 			showPaymentRequestError();
-		} else {
-			goToStep(FormStep.payment);
+			goToStep(FormStep.review);
 		}
 	};
 
 	// once the payment is done, post confirmation to BE and wait until the order data is ready
-	const processPayment = async (paymentResponse: Record<string, string>) => {
+	const processCardPayment = async (paymentResponse: Record<string, string>) => {
 		setIsSubmittingData(true);
 		await sendPaymentResponse(paymentResponse);
 		processOrderResult();
 	};
 
 	// Send a zero payment order to the events bus
-	const sendZeroPaymentOrder = async () => {
+	const processZeroPayment = async () => {
 		setIsSubmittingData(true);
 		const order = getOrderForZeroPayment(formState, userAccount);
-		await sendOrderToServiceBus(order);
+		await sendZeroPaymentOrder(order);
 		processOrderResult();
 	};
 
 	// poll the order status, store the result and clean up
 	const processOrderResult = async () => {
-		const postCodes = formState[FormStep.property_address]?.map(property => property.propertyAddress.postcode);
-		// poll the status iteratively until the order is processed (or get a null if we timeout)
-		const orderResult = await retrieveOrderResult(postCodes);
+		const orderResult = await retrieveOrderResult(propertiesList);
 		setOrderResult(orderResult);
 		goToStep(FormStep.confirm);
-		// clean up
-		deleteSaveAndResumeData();
+		clearSaveAndResumeData();
 		setFormState(null);
+		setOrder(null);
 		resetCorrelationId();
 	};
+
+	// remove loading state on the next page
+	React.useEffect(() => setIsSubmittingData(false), [formStep]);
 
 	// send the quality assured consent
 	const applyForQAMembership = async () => {
@@ -133,19 +137,14 @@ export const useSttlForm = (props: HookProps) => {
 	// restore state from a persisted order
 	const restoreSaveAndResume = async () => {
 		const order = await loadSaveAndResumeData();
-		const state = transformOrderToFormState(order);
+		const state = getFormFromOrder(order);
 		if (state) setFormState(state);
 	};
 
 	// async call to discard the remote persisted order
 	const discardSaveAndResume = async () => {
-		await deleteSaveAndResumeData();
+		await clearSaveAndResumeData();
 		setFormState(null);
-	};
-
-	// reset form to start a new registration
-	const resetForm = () => {
-		setFormState(initialState);
 	};
 
 	// set initial state if necessary
@@ -157,7 +156,6 @@ export const useSttlForm = (props: HookProps) => {
 
 	// on the review screen
 	React.useEffect(() => {
-		setIsSubmittingData(false);
 		if (formStep !== FormStep.review) return;
 		const controller = new AbortController();
 		getOrderWithFees(controller).then(orderWithFees => setOrder(orderWithFees));
@@ -165,27 +163,26 @@ export const useSttlForm = (props: HookProps) => {
 	}, [formState, formStep]);
 
 	return {
-		propertiesList,
 		formState,
-		order,
+		propertiesList,
+		fees,
 		stepper,
 		paymentRequest,
 		orderResult,
+		isEditing,
 		isSubmittingData,
-		hasPaymentsEnabled,
 		onPrevStep,
 		onNextStep,
+		goToReview,
 		registerNewProperty,
 		deleteProperty,
-		goToStep,
-		createPayment,
-		processPayment,
-		sendZeroPaymentOrder,
+		createCardPayment,
+		processCardPayment,
+		processZeroPayment,
 		applyForQAMembership,
 		checkSaveAndResume,
 		restoreSaveAndResume,
 		discardSaveAndResume,
-		resetForm,
 		alert,
 		closeAlert,
 		showPaymentGatewayError

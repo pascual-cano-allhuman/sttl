@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { Theme, Layout } from "trade-portal-components";
+import { LoaderWithContent } from "templates/global";
 import { useRouter } from "next/navigation";
 import { links } from "settings/layoutLinks";
 import { StyledComponentsRegistry } from "lib/styled-components";
@@ -25,13 +26,15 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const GlobalLayout = ({ children }: { children: React.ReactNode }) => {
-	const { auth } = useAppContext();
+	const { auth, isLoadingAccount } = useAppContext();
 	const { isLoggedIn, logout } = auth || {};
 	return (
 		<Layout links={links} isLoggedIn={isLoggedIn} logout={logout}>
-			{children}
+			<Suspense>{isLoadingAccount ? <Loading /> : children}</Suspense>
 		</Layout>
 	);
 };
+
+const Loading = () => <LoaderWithContent>Please wait while we are processing your data.</LoaderWithContent>;
 
 export default AppProviders;

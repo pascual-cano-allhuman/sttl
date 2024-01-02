@@ -9,15 +9,20 @@ import { AddressForm } from "../shared/AddressForm";
 type TemplateProps = {
 	onNextBtnClick: (values: any) => void;
 	onPrevBtnClick: () => void;
+	isEditing: boolean;
 	defaultValues: PropertyAddressStep;
-	stepper: { step: number; label: string; totalSteps: number };
+	stepper: { step: number; label: string; total: number };
 	excludedEircodes?: string[];
 };
 
 export const PropertyAddress = (props: TemplateProps) => {
+	const { onNextBtnClick, onPrevBtnClick, stepper, defaultValues, excludedEircodes = [], isEditing } = props;
 	const [showManualForm, setShowManualForm] = React.useState(false);
-	const addressLookupRef = React.useRef(null);
-	const { onNextBtnClick, onPrevBtnClick, stepper, defaultValues, excludedEircodes = [] } = props;
+	const nextLabel = isEditing ? "Save & continue" : "Next";
+	const backLabel = isEditing ? "Cancel" : "Back";
+	const title = "Short Term Tourist Letting property address";
+	const subtitle = "This is the address of the Short Term Tourist Letting property being registered.";
+
 	const methods = useForm({ mode: "all", defaultValues });
 	const { getValues, trigger, control } = methods;
 	const addressField = useController({
@@ -27,28 +32,23 @@ export const PropertyAddress = (props: TemplateProps) => {
 	});
 
 	const nextBtnHandler = async () => {
-		const isValid = trigger();
+		const isValid = await trigger(null, { shouldFocus: true });
 		if (isValid) onNextBtnClick(getValues());
 	};
 
 	return (
 		<FormStepContainer
-			stepper={<Stepper totalSteps={stepper?.totalSteps} currentStep={stepper?.step} label={stepper.label} />}
-			footer={<FormFooter onNextBtnClick={nextBtnHandler} onPrevBtnClick={onPrevBtnClick} />}
-			header={
-				<FormHeader
-					title="Short Term Tourist Letting property address"
-					subtitle="This is the address of the Short Term Tourist Letting property being registered."
-				/>
-			}
+			stepper={<Stepper totalSteps={stepper?.total} currentStep={stepper?.step} label={stepper.label} />}
+			footer={<FormFooter onNextBtnClick={nextBtnHandler} onPrevBtnClick={onPrevBtnClick} nextBtnLabel={nextLabel} backBtnLabel={backLabel} />}
+			header={<FormHeader title={title} subtitle={subtitle} />}
 		>
 			{!showManualForm && (
-				<Box columns={4} minHeight="12rem">
+				<Box columns={4} minHeight="10rem">
 					<AddressLookup
-						ref={addressLookupRef}
-						name="property-address"
+						name="propertyAddress"
 						label="Address search"
-						defaultValue={{}}
+						inputRef={addressField.field.ref}
+						defaultAddress={defaultValues?.propertyAddress}
 						getAutocompleteAddresses={getAutocompleteAddresses}
 						getFormattedAddress={getFormattedAddress}
 						onEditAddress={() => setShowManualForm(true)}

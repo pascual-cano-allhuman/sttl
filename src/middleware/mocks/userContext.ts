@@ -7,7 +7,7 @@ export const userContext = {
 	crm: {
 		contact: {
 			id: "6148a839-05ef-ed11-9135-005056a0ce81",
-			fullName: "John Doe 4"
+			fullName: "John Doe"
 		},
 		accounts: [
 			{

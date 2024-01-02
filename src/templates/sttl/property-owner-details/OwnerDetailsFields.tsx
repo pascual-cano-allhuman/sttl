@@ -12,9 +12,18 @@ type Props = {
 export const OwnerDetailsFields = (props: Props) => {
 	const { userAccount } = props;
 	const { register, formState, watch, setValue } = useFormContext();
-	const { errors } = formState;
+	const { errors, defaultValues } = formState;
 	const userIsOwnerCheck = watch("userIsOwnerCheck");
-	const hasOwner = userIsOwnerCheck === "Yes";
+	const hasOwner = userIsOwnerCheck === "yes";
+
+	React.useEffect(() => {
+		if (hasOwner) {
+			setValue("firstName", userAccount.firstName);
+			setValue("lastName", userAccount.lastName);
+			setValue("emailAddress", userAccount.email);
+		}
+	}, [userIsOwnerCheck]);
+
 	return (
 		<Box columns={4} gap="2.4rem">
 			<Box flexDirection="row" gap="1.6rem">
@@ -30,7 +39,7 @@ export const OwnerDetailsFields = (props: Props) => {
 					id="last-name"
 					label="Last name"
 					{...register(`lastName`, validateTextInput({ min: 2, max: 50 }))}
-					error={errors["lastName"]?.message as string}
+					error={errors["lastName"]?.message}
 					maxLength={60}
 					disabled={hasOwner}
 				/>
@@ -39,7 +48,7 @@ export const OwnerDetailsFields = (props: Props) => {
 				id="business-name"
 				label="Business name (optional)"
 				{...register(`businessName`)}
-				error={errors["businessName"]?.message as string}
+				error={errors["businessName"]?.message}
 				maxLength={200}
 			/>
 			<Input
@@ -58,7 +67,7 @@ export const OwnerDetailsFields = (props: Props) => {
 					}
 				})}
 				disabled={hasOwner}
-				error={errors["emailAddress"]?.message as string}
+				error={errors["emailAddress"]?.message}
 			/>
 			<PhoneNumberInput
 				id="telephone"
@@ -73,13 +82,17 @@ export const OwnerDetailsFields = (props: Props) => {
 				label="Phone number"
 				defaultCountryCode="IE"
 				placeholder="Phone"
-				error={errors["telephone"]?.message as string}
+				error={errors["telephone"]?.message}
+				defaultValue={defaultValues?.telephone}
 			/>
 			<Dropdown
 				label="Country of residence"
 				{...register(`countryOfResidence`, {
 					required: "Required",
-					onChange: () => setValue("isAddressSameAsStlProperty", false)
+					onChange: () => {
+						setValue("isAddressSameAsStlProperty", false);
+						ADDRESS_FIELDS.forEach(field => setValue(`ownerAddress.${field}`, ""));
+					}
 				})}
 				error={errors?.[`countryOfResidence`]?.message}
 				options={COUNTRY_OPTIONS}
@@ -92,3 +105,4 @@ export const OwnerDetailsFields = (props: Props) => {
 const COUNTRY_OPTIONS = countries.map(country => ({ label: country, value: country }));
 const PHONE_PATTERN = /^\+[0-9]{9,15}$/;
 const PHONE_WITH_LEADING_ZERO_PATTERN = /^\+353[0]{1,2}/;
+const ADDRESS_FIELDS = ["addressLine1", "addressLine2", "addressLine3", "town", "postcode", "county"];

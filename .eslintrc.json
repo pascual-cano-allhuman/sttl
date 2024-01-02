@@ -23,7 +23,8 @@
 		"cypress.config.js",
 		"exclude/**/*",
 		"analyze/**/*",
-		"scripts/**/*"
+		"scripts/**/*",
+		"devops/**/*"
 	],
 	"rules": {
 		"@typescript-eslint/no-var-requires": "off",

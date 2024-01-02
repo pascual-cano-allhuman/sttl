@@ -82,7 +82,7 @@ export const formState: FormState = {
 				addressLine3: "",
 				town: "Aut molestiae nihil",
 				postcode: "AAA 0001",
-				county: "Co. Cavan"
+				county: "Cavan"
 			}
 		},
 		{
@@ -92,7 +92,7 @@ export const formState: FormState = {
 				addressLine3: "",
 				town: "Corrupti fugiat ad",
 				postcode: "AAA 0002",
-				county: "Co. Carlow"
+				county: "Carlow"
 			}
 		},
 		{
@@ -102,7 +102,7 @@ export const formState: FormState = {
 				addressLine3: "",
 				town: "Ut consequat Saepe ",
 				postcode: "AAA 0003",
-				county: "Co. Cork"
+				county: "Cork"
 			}
 		},
 		{
@@ -112,7 +112,7 @@ export const formState: FormState = {
 				addressLine3: "",
 				town: "Vitae adipisci non t",
 				postcode: "AAA 0004",
-				county: "Co. Clare"
+				county: "Clare"
 			}
 		},
 		{
@@ -122,7 +122,7 @@ export const formState: FormState = {
 				addressLine3: "",
 				town: "Consequatur Ut dign",
 				postcode: "AAA 0005",
-				county: "Co. Cork"
+				county: "Cork"
 			}
 		},
 		{
@@ -132,7 +132,7 @@ export const formState: FormState = {
 				addressLine3: "",
 				town: "Reiciendis eum moles",
 				postcode: "AAA 0006",
-				county: "Co. Donegal"
+				county: "Donegal"
 			}
 		}
 	],
@@ -151,7 +151,7 @@ export const formState: FormState = {
 				addressLine3: "",
 				town: "Aut molestiae nihil ",
 				postcode: "AAA 0000",
-				county: "Co. Clare"
+				county: "Clare"
 			}
 		},
 		{

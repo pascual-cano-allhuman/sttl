@@ -4,7 +4,7 @@ import { FormStep } from "./useFormSteps";
 // build a properties list from the form state
 export const getPropertiesList = (formState: FormState) => {
 	if (!formState) return [];
-	const total = formState.property_owner_details.length;
+	const total = formState.property_owner_details?.length || 0;
 	const list = [];
 	for (let i = 0; i < total; i++) {
 		const property = {
@@ -18,13 +18,20 @@ export const getPropertiesList = (formState: FormState) => {
 	return list as PropertyData[];
 };
 
+// check if the form state is partial
+export const hasPartialState = (formState: FormState) => {
+	if (!formState) return true;
+	const total = formState.property_owner_details?.length || 0;
+	return formState.property_type?.length > total;
+};
+
 // add step data to the form state on the current entry
 export const addStepDataToState = (formState: FormState, formStep: FormStep, entry: number, stepData: Record<string, any>): FormState => {
 	if (!stepData) return formState;
 	if (formStep === FormStep.review) return { ...formState, ...stepData };
 	const currentFormStepData = formState?.[formStep] || [];
 	const newFormStepData = [...currentFormStepData];
-	newFormStepData[entry] = stepData;
+	newFormStepData[entry || 0] = stepData;
 	const newState = { ...formState, [formStep]: newFormStepData };
 	return newState;
 };

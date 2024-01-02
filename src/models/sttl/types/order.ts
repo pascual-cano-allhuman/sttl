@@ -1,105 +1,10 @@
 import { CategoryAsText } from "./categories";
-
-export type PropertyName = string;
-
-export type PostalAddress = {
-	"@type": "PostalAddress";
-	streetAddress: string;
-	postalCode: string;
-	addressLocality: string;
-	addressRegion: string;
-	addressCountry: string;
-};
-
-export type RoomsOwns = {
-	"@type": PropertyName;
-	additionalType?: PropertyName;
-	address: PostalAddress;
-	containsPlace: ContainsPlaceItemForRooms[];
-};
-
-export type EntirePropertyOwns = {
-	"@type": PropertyName;
-	additionalType?: PropertyName;
-	address: PostalAddress;
-	numberOfBedrooms: string;
-	amenityFeature: [
-		{
-			"@type": "LocationFeatureSpecification";
-			name: "occupancy";
-			value: string;
-		}
-	];
-};
-
-export type MultipleUnitsOwns = {
-	"@type": "LodgingBusiness";
-	address: PostalAddress;
-	containsPlace: ContainsPlaceItemForUnits[];
-};
-
-export type AdditionalProperty = { "@type": string; name: string; value: string }[];
-
-export type OfferOwns = (RoomsOwns | EntirePropertyOwns | MultipleUnitsOwns) & { additionalProperty: AdditionalProperty };
-
-export type ContainsPlaceItemForRooms = {
-	additionalType: "shared" | "private";
-	numberOfRooms: { "@type": "QuantitativeValue"; unitText: string; value: string };
-	amenityFeature: [
-		{
-			"@type": "LocationFeatureSpecification";
-			name: string;
-			value: string;
-		}
-	];
-};
-
-export type ContainsPlaceItemForUnits = {
-	"@type": PropertyName;
-	additionalType: PropertyName;
-	amenityFeature: [
-		{
-			"@type": "LocationFeatureSpecification";
-			name: "occupancy";
-			value: string;
-		}
-	];
-	numberOfRooms?: {
-		"@type": "QuantitativeValue";
-		unitText: string;
-		value: string;
-	};
-};
-
-export type OfferItem = {
-	"@type": "Offer";
-	price?: number;
-	priceCurrency: "EUR";
-	itemOffered: {
-		category: CategoryAsText;
-		"@type": "GovernmentService";
-		name: "STL Registration";
-		isRelatedTo: {
-			"@type": "Person";
-			name: string;
-			givenName: string;
-			familyName: string;
-			address: PostalAddress;
-			email: string;
-			telephone: string;
-			worksFor: {
-				"@type": "Organization";
-				name: string;
-			};
-			owns: OfferOwns;
-		};
-	};
-};
+import { Accommodation } from "./accommodation";
 
 export type Order = {
 	"@context": "https://schema.org" | string;
 	"@type": "Order" | string;
-	acceptedOffer: OfferItem[];
+	acceptedOffer: Offer[];
 	customer: {
 		"@type": "Person";
 		email: string;
@@ -129,4 +34,40 @@ export type Order = {
 	orderNumber?: string;
 	orderDate?: string;
 	orderStatus?: string;
+};
+
+export type Offer = {
+	"@type": "Offer";
+	price?: number;
+	priceCurrency: "EUR";
+	itemOffered: {
+		category: CategoryAsText;
+		"@type": "GovernmentService";
+		name: "STL Registration";
+		isRelatedTo: Person;
+	};
+};
+
+export type Person = {
+	"@type": "Person";
+	name: string;
+	givenName: string;
+	familyName: string;
+	address: PostalAddress;
+	email: string;
+	telephone: string;
+	worksFor: {
+		"@type": "Organization";
+		name: string;
+	};
+	owns: Accommodation;
+};
+
+export type PostalAddress = {
+	"@type": "PostalAddress";
+	streetAddress: string;
+	postalCode: string;
+	addressLocality: string;
+	addressRegion: string;
+	addressCountry: string;
 };

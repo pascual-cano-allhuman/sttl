@@ -4,14 +4,16 @@ import { appInsightsClient } from "lib/logger";
 import { Auth, useAuth } from "lib/msal";
 import { useTagManager } from "lib/tag-manager";
 import { UserAccount, useSessionData, useUserAccount } from "models/global";
+import { FORM_STEPS } from "models/sttl";
 import { AuthRequiredError } from "app/error";
 
 type ContextValue = {
-	isContextLoading?: boolean;
+	isLoadingAccount?: boolean;
 	correlationId?: string;
 	auth?: Auth;
 	dataLayer?: any;
 	userAccount?: UserAccount;
+	isNewUser?: boolean;
 	resetCorrelationId?: () => void;
 };
 
@@ -30,7 +32,8 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 	React.useEffect(() => {
 		document.getElementById("focus-root")?.focus();
 		document.title = getPageTitle(pathname);
-		appInsightsClient?.trackPageView({ uri: pathname, name: document.title, properties: { correlationId, userId } });
+		const correlation = { correlationId, userId, contactId: userAccount?.contactId };
+		appInsightsClient?.trackPageView({ uri: pathname, name: document.title, properties: correlation });
 		dataLayer?.trackPage(pathname, document.title);
 	}, [pathname]);
 
@@ -42,15 +45,15 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 	// redirects
 	React.useEffect(() => {
 		if (!userId) return;
-		if (pathname === "/") router.replace(redirectUrl > "/" ? redirectUrl : "/sttl");
+		if (["/", "/sttl"].includes(pathname)) router.replace(redirectUrl > "/" ? redirectUrl : "/sttl/terms-and-conditions");
 	}, [pathname, userId, redirectUrl]);
 
 	// return value
 	const value = React.useMemo(() => {
 		if (hasAuthError || hasUserAccountError) throw new AuthRequiredError();
-		if (!userAccount) return { isContextLoading: true };
-		return { dataLayer, auth, userAccount, correlationId, resetCorrelationId };
-	}, [dataLayer, auth, userAccount, correlationId, resetCorrelationId]);
+		if (!userAccount) return { auth, isLoadingAccount: true };
+		return { dataLayer, auth, userAccount, correlationId, isNewUser, resetCorrelationId };
+	}, [dataLayer, auth, userAccount, correlationId, isNewUser, resetCorrelationId]);
 
 	return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
@@ -58,18 +61,9 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 // useful way of accessing the context
 export const useAppContext = () => React.useContext(AppContext);
 
-// index steps by route
-const STEPS = [];
-export const FORM_STEP_BY_ROUTE = STEPS.reduce((acc, step) => {
-	acc[step.route] = step;
-	return acc;
-}, {});
-
 // get the page title
 const getPageTitle = (pathname: string) => {
-	const workflow = pathname.split("/").filter(Boolean)[0] || "";
-	const workflowName = workflow.charAt(0).toUpperCase() + workflow.slice(1);
-	const slug = pathname.split("/").filter(Boolean).pop();
-	const step = FORM_STEP_BY_ROUTE[slug]?.label;
-	return step ? `${step} - QA ${workflowName}` : "Short Term Tourist Letting - Fáilte Ireland";
+	const slug = pathname?.split("/").pop();
+	const step = FORM_STEPS.find(step => step.route === slug)?.label;
+	return step ? `${step} - STTL` : "Short Term Tourist Letting - Fáilte Ireland";
 };

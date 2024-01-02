@@ -1,202 +1,155 @@
-const GTM_HEADER_CLASS = "gtm-header";
 const TRADE_PORTAL_LEGACY_SITE_URL = process.env.TRADE_PORTAL_LEGACY_SITE_URL?.replace(/\/$/, "") || "";
 
 export const accountLinks = [
 	{
-		url: `${TRADE_PORTAL_LEGACY_SITE_URL}/profile/`,
-		label: "My profile"
+		url: "/dashboard",
+		label: "My properties"
 	},
 	{
-		url: `${TRADE_PORTAL_LEGACY_SITE_URL}/my-payments/`,
-		label: "My payment history"
-	},
-	{
-		url: `${TRADE_PORTAL_LEGACY_SITE_URL}/communication-preferences/`,
-		label: "Preference centre"
-	},
-	{
-		url: `${TRADE_PORTAL_LEGACY_SITE_URL}/enquiries/`,
-		label: "Enquiries"
+		url: "/dashboard/payment-history",
+		label: "Payment history"
 	}
 ];
 
 export const portalLinks = [
 	{
-		id: "trade_portal_home",
 		label: "Trade Portal Home",
 		url: `${TRADE_PORTAL_LEGACY_SITE_URL}/`,
 		subPages: []
 	},
 	{
-		id: "trade_events",
 		label: "Trade Events",
 		url: "/",
 		subPages: [
 			{
-				id: "overview",
 				label: "Overview",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/trade-events/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/trade-events/`
 			},
 			{
-				id: "trade_events_list",
 				label: "Trade events list",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/upcoming-events/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/upcoming-events/`
 			},
 			{
-				id: "trade_events_calendar",
 				label: "Trade events calendar",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/calendar-view/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/calendar-view/`
 			},
 			{
-				id: "my_trade_events",
 				label: "My trade events",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/my-events/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/my-events/`
 			}
 		]
 	},
 	{
-		id: "enterprise_support",
 		label: "Enterprise Supports",
 		url: "/",
 		subPages: [
 			{
-				id: "overview",
 				label: "Overview",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/enterprise-supports/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/enterprise-supports/`
 			},
 			{
-				id: "live_training_events_list",
 				label: "Live training events list",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/upcoming-business-supports/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/upcoming-business-supports/`
 			},
 			{
-				id: "live_training_events_calendar",
 				label: "Live training events calendar",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/business-supports-calendar-view/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/business-supports-calendar-view/`
 			},
 			{
-				id: "my_live_training_events_events",
 				label: "My live training events",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/my-business-supports/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/my-business-supports/`
 			},
 			{
-				id: "on_demand_business_support",
 				label: "On demand business support",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/on-demand-business-supports/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/on-demand-business-supports/`
 			},
 			{
-				id: "on_demand_eLearning_hub",
 				label: "'On Demand' eLearning Hub",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/on-demand-elearning-hub/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/on-demand-elearning-hub/`
 			}
 		]
 	},
 	{
-		id: "quality_assurance",
 		label: "Quality Assurance",
 		url: "/",
 		subPages: [
 			{
-				id: "overview",
 				label: "Overview",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/registration-grading/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/registration-grading/`
 			},
 			{
-				id: "assessments",
 				label: "Assessments",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/selfassessments/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/selfassessments/`
 			},
 			{
-				id: "renewals",
 				label: "Renewals",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/QARenewal/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/registration-grading/renewal-form/`
 			},
 			{
-				id: "applications",
 				label: "Applications",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/QAApplication/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/registration-grading/applications/`
 			}
 		]
 	},
 	{
-		id: "opportunities",
 		label: "Opportunities",
 		url: "/",
 		subPages: [
 			{
-				id: "overview",
 				label: "Overview",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/opportunities/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/opportunities/`
 			},
 			{
-				id: "new_opportunities",
 				label: "New opportunities",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/new-opportunities/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/new-opportunities/`
 			},
 			{
-				id: "year_opportunities",
 				label: "This year's opportunities",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/this-year-opportunities/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/this-year-opportunities/`
 			},
 			{
-				id: "all_opportunities",
 				label: "All opportunities",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/all-opportunities/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/all-opportunities/`
 			}
 		]
 	},
 	{
-		id: "funding",
 		label: "Funding",
 		url: "/",
 		subPages: [
 			{
-				id: "overview",
 				label: "Overview",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/supports/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/grantapp/`
 			},
 			{
-				id: "create_new_application",
 				label: "Create new application",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/grantapp/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/grantapp/`
 			},
 			{
-				id: "existing_application",
 				label: "My existing applications",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/financial-supports/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/financial-supports/`
 			},
 			{
-				id: "funding_schemes",
 				label: "Funding schemes",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/financial-supports/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/financial-supports/`
 			},
 			{
-				id: "support_requests",
 				label: "Support requests",
-				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/my-support-requests/`,
-				gtmClass: GTM_HEADER_CLASS
+				url: `${TRADE_PORTAL_LEGACY_SITE_URL}/my-support-requests/`
+			}
+		]
+	},
+	{
+		label: "Short Term Tourist Letting Register",
+		url: "/",
+		subPages: [
+			{
+				label: "Overview and FAQ's",
+				url: `https://thankful-bush-03dc0ab03.2.azurestaticapps.net/sttl-info`
+			},
+			{
+				label: "Register now",
+				url: "/sttl"
 			}
 		]
 	}
@@ -204,23 +157,23 @@ export const portalLinks = [
 
 export const footerLinks = [
 	{
-		url: "https://www.failteireland.ie/Footer/Accessibility.aspx",
+		url: `https://www.failteireland.ie/Footer/Accessibility.aspx`,
 		label: "Accessibility"
 	},
 	{
-		url: "https://www.failteireland.ie/Footer/Data-Protection.aspx",
+		url: `https://www.failteireland.ie/Footer/Data-Protection.aspx`,
 		label: "Data Protection"
 	},
 	{
-		url: "https://www.failteireland.ie/Footer/freedom-of-information.aspx ",
+		url: `https://www.failteireland.ie/Footer/freedom-of-information.aspx `,
 		label: "Freedom of Information"
 	},
 	{
-		url: "https://www.failteireland.ie/Footer/Legal-Terms.aspx",
+		url: `https://www.failteireland.ie/Footer/Legal-Terms.aspx`,
 		label: "Legal Terms"
 	},
-	{ url: "https://www.failteireland.ie/privacy.aspx", label: "Privacy Policy" },
-	{ url: "https://www.failteireland.ie/cookies.aspx", label: "Cookie Policy" }
+	{ url: `https://www.failteireland.ie/privacy.aspx`, label: "Privacy Policy" },
+	{ url: `https://www.failteireland.ie/cookies.aspx`, label: "Cookie Policy" }
 ];
 
 export const links = {
@@ -228,5 +181,5 @@ export const links = {
 	accountLinks,
 	portalLinks,
 	homePageUrl: `${process.env.TRADE_PORTAL_LEGACY_SITE_URL || "/"}`,
-	activePortalLink: portalLinks.find(link => link.id === "quality_assurance")
+	activePortalLink: portalLinks[portalLinks.length - 1]
 };

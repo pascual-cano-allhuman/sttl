@@ -5,9 +5,9 @@ import { LoaderWithContent } from "templates";
 import { FormContextProvider, useFormContext } from "./FormContext";
 
 const Loading = ({ children }: { children: React.ReactNode }) => {
-	const { loadingMessage } = useFormContext();
-	if (loadingMessage) return <LoaderWithContent>{loadingMessage}</LoaderWithContent>;
-	return children as React.ReactElement;
+	const { sttlForm } = useFormContext();
+	if (sttlForm.isSubmittingData) return <LoaderWithContent>Please wait while we are processing your data.</LoaderWithContent>;
+	return children;
 };
 
 const ApplicationsLayout = ({ children }: { children: React.ReactNode }) => {

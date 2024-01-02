@@ -9,13 +9,19 @@ import { SelectedPropertyFields } from "./SelectedPropertyFields";
 type TemplateProps = {
 	onNextBtnClick: (values: any) => void;
 	onPrevBtnClick: () => void;
+	isEditing: boolean;
 	defaultValues: PropertyTypeStep;
-	stepper: { step: number; label: string; totalSteps: number };
+	stepper: { step: number; label: string; total: number };
 };
 
 export const PropertyType = (props: TemplateProps) => {
 	const [showAlert, setShowAlert] = React.useState(true);
-	const { defaultValues, stepper, onNextBtnClick, onPrevBtnClick } = props;
+	const { defaultValues, stepper, onNextBtnClick, onPrevBtnClick, isEditing } = props;
+	const nextLabel = isEditing ? "Save & continue" : "Next";
+	const backLabel = isEditing ? "Cancel" : "Back";
+	const title = "About the property";
+	const subtitle = "Select the type of Short Term Tourist Letting property being registered";
+
 	const methods = useForm({ mode: "all", defaultValues });
 	const { getValues, trigger, register, watch } = methods;
 	const category = watch("category");
@@ -27,30 +33,36 @@ export const PropertyType = (props: TemplateProps) => {
 
 	if (!defaultValues) return null;
 	return (
-		<FormProvider {...methods}>
-			<FormStepContainer
-				stepper={<Stepper totalSteps={stepper?.totalSteps} currentStep={stepper?.step} label={stepper.label} />}
-				footer={<FormFooter onNextBtnClick={nextBtnHandler} isNextBtnDisabled={!category} onPrevBtnClick={onPrevBtnClick} />}
-				header={<FormHeader title="About the property" subtitle="Select the type of Short Term Tourist Letting property being registered" />}
-			>
-				<Box alignItems="center" columns={[4, 6]}>
+		<FormStepContainer
+			stepper={<Stepper totalSteps={stepper?.total} currentStep={stepper?.step} label={stepper.label} />}
+			footer={
+				<FormFooter
+					onNextBtnClick={nextBtnHandler}
+					isNextBtnDisabled={!category}
+					onPrevBtnClick={onPrevBtnClick}
+					nextBtnLabel={nextLabel}
+					backBtnLabel={backLabel}
+				/>
+			}
+			header={<FormHeader title={title} subtitle={subtitle} />}
+		>
+			<FormProvider {...methods}>
+				<Box alignItems="center" columns={[4, 6]} gap="3rem">
 					<CardSelectorGroup onChange={() => setShowAlert(true)}>
 						{cards.map(card => (
 							<CardSelector card={card} key={card.id} {...register(`category`)} />
 						))}
 					</CardSelectorGroup>
-				</Box>
-				{category && showAlert && (
-					// TODO remove marginTop
-					<Box columns={6} marginTop="-1rem">
+					{category && showAlert && (
 						<Alert size="sm" status="info" onClose={setShowAlert}>
 							{infoAlertText[category]}
 						</Alert>
-					</Box>
-				)}
+					)}
+				</Box>
+
 				<SelectedPropertyFields />
-			</FormStepContainer>
-		</FormProvider>
+			</FormProvider>
+		</FormStepContainer>
 	);
 };
 

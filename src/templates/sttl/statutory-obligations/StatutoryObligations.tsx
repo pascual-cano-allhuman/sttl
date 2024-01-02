@@ -8,19 +8,20 @@ const errorMessage = `You must select one of the options above in order to compl
 type TemplateProps = {
 	onNextBtnClick: (values: any) => void;
 	onPrevBtnClick: () => void;
+	isEditing: boolean;
 	defaultValues: StatutoryObligationsStep;
-	stepper: { step: number; label: string; totalSteps: number };
+	stepper: { step: number; label: string; total: number };
 	dataLayer: any;
 };
 
 export const StatutoryObligations = (props: TemplateProps) => {
-	const { stepper, onNextBtnClick, onPrevBtnClick, defaultValues, dataLayer } = props;
+	const { stepper, onNextBtnClick, onPrevBtnClick, defaultValues, dataLayer, isEditing } = props;
+	const nextLabel = isEditing ? "Save & continue" : "Next";
+	const backLabel = isEditing ? "Cancel" : "Back";
+	const title = "Statutory Obligations";
+	const subtitle = "Please confirm if the property being registered is compliant with statutory obligations";
 
-	const { watch, trigger, register, formState } = useForm({
-		mode: "onChange",
-		defaultValues
-	});
-
+	const { watch, trigger, register, formState } = useForm({ mode: "onChange", defaultValues });
 	const { permissionStatus } = watch();
 	const error = formState.errors["permissionStatus"]?.message;
 	const havePermission = permissionStatus !== PermissionStatus.do_not_have;
@@ -30,7 +31,7 @@ export const StatutoryObligations = (props: TemplateProps) => {
 		const isValid = await trigger(null, { shouldFocus: true });
 		if (isValid) {
 			const planningPermissionOption = PERMISSION_ANALYTICS_MAP[permissionStatus];
-			dataLayer?.push({ event: "planningPermission", planningPermissionOption });
+			dataLayer?.push?.({ event: "planningPermission", planningPermissionOption });
 			onNextBtnClick({ ...watch() });
 		}
 	};
@@ -38,14 +39,9 @@ export const StatutoryObligations = (props: TemplateProps) => {
 	if (!defaultValues) return null;
 	return (
 		<FormStepContainer
-			stepper={<Stepper totalSteps={stepper?.totalSteps} currentStep={stepper.step} label={stepper.label} />} // TODO: add step to sttlrForm
-			footer={<FormFooter onNextBtnClick={nextBtnHandler} onPrevBtnClick={onPrevBtnClick} />}
-			header={
-				<FormHeader
-					title="Statutory Obligations"
-					subtitle="Please confirm if the property being registered is compliant with statutory obligations"
-				/>
-			}
+			stepper={<Stepper totalSteps={stepper?.total} currentStep={stepper.step} label={stepper.label} />}
+			footer={<FormFooter onNextBtnClick={nextBtnHandler} onPrevBtnClick={onPrevBtnClick} nextBtnLabel={nextLabel} backBtnLabel={backLabel} />}
+			header={<FormHeader title={title} subtitle={subtitle} />}
 		>
 			<Box columns={4} gap="4rem">
 				<Box gap="1.6rem">

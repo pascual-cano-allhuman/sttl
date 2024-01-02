@@ -41,12 +41,12 @@ export type PropertyAddressStep = {
 };
 
 export type PropertyOwnerDetailsStep = {
-	countryOfResidence: string;
 	firstName: string;
 	lastName: string;
 	emailAddress: string;
 	businessName: string;
 	telephone: string;
+	countryOfResidence: string;
 	isAddressSameAsStlProperty: boolean;
 	ownerAddress?: Address;
 };
@@ -58,6 +58,6 @@ export type StatutoryObligationsStep = {
 export type PropertyData = {
 	property_type: PropertyTypeStep;
 	statutory_obligations: StatutoryObligationsStep;
-	property_address: PropertyAddressStep[];
+	property_address: PropertyAddressStep;
 	property_owner_details: PropertyOwnerDetailsStep;
 };

@@ -1,0 +1,549 @@
+# Node.js with React
+# Build a Node.js project that uses React.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+resources:
+    pipelines:
+        - pipeline: "OWASPZapArtifact"
+          project: Infrastructure
+          source: "OWASP Security Report"
+          branch: master
+
+trigger:
+    branches:
+        include:
+            - "develop"
+
+pool:
+    vmImage: "ubuntu-latest"
+
+stages:
+    - stage: Build
+      condition: always()
+      displayName: "Build Web App and Publish Artifacts"
+      jobs:
+          - job: BuildWebApp
+            displayName: "Build WebApp"
+            steps:
+                - task: PowerShell@2
+                  displayName: "Generate NPMRC"
+                  inputs:
+                      workingDir: "$(Build.SourcesDirectory)"
+                      targetType: "inline"
+                      script: |
+                          $code = "
+                                  registry=https://failte.pkgs.visualstudio.com/_packaging/fi-packages/npm/registry/
+                                  always-auth=true
+
+                                  ; begin auth token
+                                  //failte.pkgs.visualstudio.com/_packaging/fi-packages/npm/registry/:username=failte
+                                  //failte.pkgs.visualstudio.com/_packaging/fi-packages/npm/registry/:_password=czdzczNodXRzYnNkZ2VjMnI1ZXFtNmtueHFjeHRzd2kzamhoMjZuZXdmc2NiMnlrb3J3YQ==
+                                  //failte.pkgs.visualstudio.com/_packaging/fi-packages/npm/registry/:email=noemail@failteireland.ie
+                                  //failte.pkgs.visualstudio.com/_packaging/fi-packages/npm/:username=failte
+                                  //failte.pkgs.visualstudio.com/_packaging/fi-packages/npm/:_password=czdzczNodXRzYnNkZ2VjMnI1ZXFtNmtueHFjeHRzd2kzamhoMjZuZXdmc2NiMnlrb3J3YQ==
+                                  //failte.pkgs.visualstudio.com/_packaging/fi-packages/npm/:email=noemail@failteireland.ie
+                                  ; end auth token"
+                                    Set-Content -Value $code  -Path .\.npmrc -Encoding UTF8
+                - task: Npm@1
+                  displayName: "NPM CI"
+                  inputs:
+                      workingDir: "$(Build.SourcesDirectory)"
+                      command: "custom"
+                      customCommand: "ci"
+                - task: Npm@1
+                  displayName: "Run build for DEV environment"
+                  inputs:
+                      workingDir: "$(Build.SourcesDirectory)"
+                      command: "custom"
+                      customCommand: "run export -- -o dist/dev"
+                  env:
+                      APP_ENV: dev
+                      AUTOADDRESS_KEY: "7DB99101-EC13-3A90-434F-2D5117555490"
+                      B2C_TENANT: fidigitalenterprisedps
+                      B2C_DOMAIN: https://fidigitalenterprisedps.b2clogin.com
+                      B2C_CLIENT_ID: bf699dd5-08f0-48c8-8516-185ee40e4633
+                      B2C_LOGOUT_URI: "https://tradeportaluat.failteireland.ie"
+                      DISALLOW_ROBOTS: "true"
+                      GTM_CODE: "GTM-WLN96FS"
+                      GLOBAL_PAYMENTS_ENDPOINT: https://pay.sandbox.realexpayments.com/pay
+                      MIDDLEWARE_DE_ENDPOINT: https://failteirelanddev.azure-api.net/de/dev/v1
+                      MIDDLEWARE_PORTAL_ENDPOINT: https://failteirelanddev.azure-api.net/portal/v1
+                      APPINSIGHTS_KEY: "6a255109-e78d-4208-99c0-78292b3f6a07"
+                      TRADE_PORTAL_DE_SITE_URL: https://thankful-bush-03dc0ab03.2.azurestaticapps.net
+                      TRADE_PORTAL_LEGACY_SITE_URL: https://tradeportal.failteireland.ie/
+                - task: Npm@1
+                  displayName: "Run build for UAT environment"
+                  inputs:
+                      workingDir: "$(Build.SourcesDirectory)"
+                      command: "custom"
+                      customCommand: "run export -- -o dist/uat"
+                  env:
+                      APP_ENV: uat
+                      AUTOADDRESS_KEY: "7DB99101-EC13-3A90-434F-2D5117555490"
+                      B2C_TENANT: fidigitalenterprisedps
+                      B2C_DOMAIN: https://fidigitalenterprisedps.b2clogin.com
+                      B2C_CLIENT_ID: 93110140-27eb-4db0-afea-97bbedc79adf
+                      B2C_LOGOUT_URI: "https://tradeportaluat.failteireland.ie"
+                      DISALLOW_ROBOTS: "true"
+                      GTM_CODE: "GTM-WLN96FS"
+                      GLOBAL_PAYMENTS_ENDPOINT: https://pay.sandbox.realexpayments.com/pay
+                      MIDDLEWARE_DE_ENDPOINT: https://failteirelanddev.azure-api.net/de/uat/v1
+                      MIDDLEWARE_PORTAL_ENDPOINT: https://failteirelanddev.azure-api.net/portal/uat/v1
+                      APPINSIGHTS_KEY: "b2cb41f4-f305-46a1-9ae8-dd98eb69ad23"
+                      TRADE_PORTAL_DE_SITE_URL: https://thankful-bush-03dc0ab03.2.azurestaticapps.net
+                      TRADE_PORTAL_LEGACY_SITE_URL: https://tradeportal.failteireland.ie/
+                - task: Npm@1
+                  displayName: "Run build for PROD environment"
+                  inputs:
+                      workingDir: "$(Build.SourcesDirectory)"
+                      command: "custom"
+                      customCommand: "run export -- -o dist/prod"
+                  env:
+                      APP_ENV: prod
+                      AUTOADDRESS_KEY: "7DB99101-EC13-3A90-434F-2D5117555490"
+                      B2C_TENANT: fidigitalenterpriseprod
+                      B2C_DOMAIN: https://account.failteireland.ie
+                      B2C_CLIENT_ID: cf182af3-03ef-458c-b886-c54304b6821f
+                      B2C_LOGOUT_URI: "https://tradeportal.failteireland.ie"
+                      DISALLOW_ROBOTS: "true"
+                      GTM_CODE: "GTM-P3QZ7BQ"
+                      GLOBAL_PAYMENTS_ENDPOINT: https://pay.sandbox.realexpayments.com/pay
+                      MIDDLEWARE_DE_ENDPOINT: https://failteireland.azure-api.net/dent/prod/v1
+                      MIDDLEWARE_PORTAL_ENDPOINT: https://failteireland.azure-api.net/portal/v1
+                      APPINSIGHTS_KEY: "b2cb41f4-f305-46a1-9ae8-dd98eb69ad23"
+                      TRADE_PORTAL_DE_SITE_URL: https://thankful-bush-03dc0ab03.2.azurestaticapps.net
+                      TRADE_PORTAL_LEGACY_SITE_URL: https://tradeportal.failteireland.ie/
+                - task: WhiteSource@21
+                  inputs:
+                      cwd: "$(Build.SourcesDirectory)"
+                      projectName: "Short Term Lets - Web"
+                - task: DeleteFiles@1
+                  displayName: "Delete App modules"
+                  inputs:
+                      SourceFolder: "$(Build.SourcesDirectory)"
+                      Contents: "node_modules"
+                - task: DeleteFiles@1
+                  displayName: "Delete Storybook modules"
+                  inputs:
+                      SourceFolder: "$(Build.SourcesDirectory)/storybook"
+                      Contents: "node_modules"
+                - task: ArchiveFiles@2
+                  displayName: "Create App Artifact - DEV"
+                  inputs:
+                      rootFolderOrFile: "$(Build.SourcesDirectory)/dist/dev"
+                      includeRootFolder: false
+                      archiveType: "zip"
+                      archiveFile: "$(Build.ArtifactStagingDirectory)/webapp-dev-$(Build.BuildId).zip"
+                      replaceExistingArchive: true
+                - task: ArchiveFiles@2
+                  displayName: "Create App Artifact - UAT"
+                  inputs:
+                      rootFolderOrFile: "$(Build.SourcesDirectory)/dist/uat"
+                      includeRootFolder: false
+                      archiveType: "zip"
+                      archiveFile: "$(Build.ArtifactStagingDirectory)/webapp-uat-$(Build.BuildId).zip"
+                      replaceExistingArchive: true
+                - task: ArchiveFiles@2
+                  displayName: "Create App Artifact - PROD"
+                  inputs:
+                      rootFolderOrFile: "$(Build.SourcesDirectory)/dist/prod"
+                      includeRootFolder: false
+                      archiveType: "zip"
+                      archiveFile: "$(Build.ArtifactStagingDirectory)/webapp-prod-$(Build.BuildId).zip"
+                      replaceExistingArchive: true
+                - task: PublishBuildArtifacts@1
+                  displayName: "Publish App Artifact - DEV"
+                  inputs:
+                      PathtoPublish: "$(Build.ArtifactStagingDirectory)/webapp-dev-$(Build.BuildId).zip"
+                      ArtifactName: "webapp-dev"
+                      publishLocation: "Container"
+                - task: PublishBuildArtifacts@1
+                  displayName: "Publish App Artifact - UAT"
+                  inputs:
+                      PathtoPublish: "$(Build.ArtifactStagingDirectory)/webapp-uat-$(Build.BuildId).zip"
+                      ArtifactName: "webapp-uat"
+                      publishLocation: "Container"
+                - task: PublishBuildArtifacts@1
+                  displayName: "Publish App Artifact - PROD"
+                  inputs:
+                      PathtoPublish: "$(Build.ArtifactStagingDirectory)/webapp-prod-$(Build.BuildId).zip"
+                      ArtifactName: "webapp-prod"
+                      publishLocation: "Container"
+                - task: ArchiveFiles@2
+                  displayName: "Create Bicep Templates Artifact"
+                  inputs:
+                      rootFolderOrFile: "$(Build.SourcesDirectory)/devops/bicep/webapp"
+                      includeRootFolder: false
+                      archiveType: "zip"
+                      archiveFile: "$(Build.ArtifactStagingDirectory)/devops-$(Build.BuildId).zip"
+                      replaceExistingArchive: true
+                - task: PublishBuildArtifacts@1
+                  displayName: "Publish Bicep Templates Artifact"
+                  inputs:
+                      PathtoPublish: "$(Build.ArtifactStagingDirectory)/devops-$(Build.BuildId).zip"
+                      ArtifactName: "devops"
+                      publishLocation: "Container"
+    - stage: DeployDEV
+      displayName: "Deploy to DEV"
+      jobs:
+          - deployment: DeployDEV
+            displayName: "Deploy WebApp to DEV"
+            environment: "DEV"
+            variables:
+                - group: DEV
+            strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            - task: ExtractFiles@1
+                              inputs:
+                                  archiveFilePatterns: "$(System.DefaultWorkingDirectory)/../**/devops/*.zip"
+                                  destinationFolder: "$(System.DefaultWorkingDirectory)/devops"
+                                  cleanDestinationFolder: true
+                                  overwriteExistingFiles: false
+                            - task: ExtractFiles@1
+                              inputs:
+                                  archiveFilePatterns: "$(System.DefaultWorkingDirectory)/../**/webapp-dev/*.zip"
+                                  destinationFolder: "$(System.DefaultWorkingDirectory)/webapp"
+                                  cleanDestinationFolder: true
+                                  overwriteExistingFiles: false
+                            - task: AzureCLI@2
+                              displayName: "Create Azure Resources"
+                              inputs:
+                                  azureSubscription: "sc-dig-ent-dps"
+                                  scriptType: bash
+                                  scriptLocation: inlineScript
+                                  inlineScript: |
+                                      az --version
+                                      az group create --name $(resourceGroupSTL) --location $(location)
+                                      az deployment group create --resource-group $(resourceGroupSTL) --template-file '$(System.DefaultWorkingDirectory)/devops/template.bicep' --parameters '$(System.DefaultWorkingDirectory)/devops/parameters.dev.json'
+                            - task: AzureCLI@2
+                              displayName: "Get SWA Deployment Token"
+                              inputs:
+                                  azureSubscription: "sc-dig-ent-dps"
+                                  scriptType: bash
+                                  scriptLocation: inlineScript
+                                  inlineScript: |
+                                      APIKEY=$(az staticwebapp secrets list --name swa-slt-app-dev | jq -r '.properties.apiKey')
+                                      echo "##vso[task.setvariable variable=apiKey;issecret=true]$APIKEY"
+                            - task: AzureStaticWebApp@0
+                              inputs:
+                                  app_location: "/webapp"
+                                  workingDirectory: "$(System.DefaultWorkingDirectory)"
+                                  skip_app_build: true
+                              env:
+                                  azure_static_web_apps_api_token: $(apiKey)
+    - stage: QADev
+      displayName: "Quality Assurance DEV"
+      jobs:
+          - job: OwaspZapPassiveScan
+            displayName: "OWASP Zap Passive Scan"
+            steps:
+                - download: OWASPZapArtifact
+                  artifact: "OWASP Security Report Schema"
+
+                - task: DockerInstaller@0
+                  inputs:
+                      dockerVersion: "17.09.0-ce"
+                - task: Bash@3
+                  displayName: "Copy Security Report Artifact"
+                  inputs:
+                      targetType: "inline"
+                      script: |
+                          if [ ! -d '$(System.DefaultWorkingDirectory)/report' ]
+                          then
+                            echo 'Creating folder $(System.DefaultWorkingDirectory)/report'
+                            mkdir -p '$(System.DefaultWorkingDirectory)/report'
+                          else
+                          echo 'Did not create folder'
+                          fi
+
+                          echo 'Path $(System.DefaultWorkingDirectory)/../OWASPZapArtifact/OWASP Security Report Schema'
+
+                          cp '$(System.DefaultWorkingDirectory)/../OWASPZapArtifact/OWASP Security Report Schema/OWASPToNUnit3.xslt' '$(System.DefaultWorkingDirectory)/'
+
+                          cp '$(System.DefaultWorkingDirectory)/../OWASPZapArtifact/OWASP Security Report Schema/af-config.yml' '$(System.DefaultWorkingDirectory)/'
+                - task: Bash@3
+                  displayName: "Run Owasp Zap Scan"
+                  inputs:
+                      targetType: "inline"
+                      script: |
+                          chmod -R 777  ./
+
+                          timestamp() {
+                            date +"%Y%m%d" # current time
+                          }
+
+                          docker run --env siteUrl=https://victorious-water-02b650403.1.azurestaticapps.net -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap.sh -cmd -autorun /zap/wrk/af-config.yml
+
+                          true
+                      workingDirectory: "$(System.DefaultWorkingDirectory)"
+                - task: PowerShell@2
+                  displayName: "Convert ZAP Report to Nunit Report Format"
+                  inputs:
+                      targetType: "inline"
+                      script: |
+                          $XslPath = "./OWASPToNUnit3.xslt"
+                          $XmlInputPath = ""
+
+                          get-childitem "./report" -recurse | where {$_.extension -eq ".xml"} | % {
+                            $XmlInputPath = $_.FullName
+                            Write-Host "XML File Location: $XmlInputPath"
+                          }
+
+                          $XmlOutputPath = "./report/Converted-OWASP-ZAP-NUnitReport.xml"
+
+                          $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform
+                          $XslTransform.Load($XslPath)
+
+                          $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
+                      workingDirectory: "$(System.DefaultWorkingDirectory)"
+                - task: PublishTestResults@2
+                  displayName: "Publish Test Results Converted-OWASP-ZAP-NUnitReport.xml"
+                  inputs:
+                      testResultsFormat: "NUnit"
+                      testResultsFiles: "Converted-OWASP-ZAP-NUnitReport.xml"
+                      searchFolder: "$(System.DefaultWorkingDirectory)/report"
+    - stage: DeployUAT
+      displayName: "Deploy to UAT"
+      jobs:
+          - deployment: DeployUAT
+            displayName: "Deploy WebApp to UAT"
+            environment: "UAT"
+            variables:
+                - group: UAT
+            strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            - task: ExtractFiles@1
+                              inputs:
+                                  archiveFilePatterns: "$(System.DefaultWorkingDirectory)/../**/devops/*.zip"
+                                  destinationFolder: "$(System.DefaultWorkingDirectory)/devops"
+                                  cleanDestinationFolder: true
+                                  overwriteExistingFiles: false
+                            - task: ExtractFiles@1
+                              inputs:
+                                  archiveFilePatterns: "$(System.DefaultWorkingDirectory)/../**/webapp-uat/*.zip"
+                                  destinationFolder: "$(System.DefaultWorkingDirectory)/webapp"
+                                  cleanDestinationFolder: true
+                                  overwriteExistingFiles: false
+                            - task: AzureCLI@2
+                              displayName: "Create Azure Resources"
+                              inputs:
+                                  azureSubscription: "sc-dig-ent-dps"
+                                  scriptType: bash
+                                  scriptLocation: inlineScript
+                                  inlineScript: |
+                                      az --version
+                                      az group create --name $(resourceGroupSTL) --location $(location)
+                                      az deployment group create --resource-group $(resourceGroupSTL) --template-file '$(System.DefaultWorkingDirectory)/devops/template.bicep' --parameters '$(System.DefaultWorkingDirectory)/devops/parameters.uat.json'
+                            - task: AzureCLI@2
+                              displayName: "Get SWA Deployment Token"
+                              inputs:
+                                  azureSubscription: "sc-dig-ent-dps"
+                                  scriptType: bash
+                                  scriptLocation: inlineScript
+                                  inlineScript: |
+                                      APIKEY=$(az staticwebapp secrets list --name swa-slt-app-uat | jq -r '.properties.apiKey')
+                                      echo "##vso[task.setvariable variable=apiKey;issecret=true]$APIKEY"
+                            - task: AzureStaticWebApp@0
+                              inputs:
+                                  app_location: "/webapp"
+                                  workingDirectory: "$(System.DefaultWorkingDirectory)"
+                                  skip_app_build: true
+                              env:
+                                  azure_static_web_apps_api_token: $(apiKey)
+    - stage: QAUAT
+      displayName: "Quality Assurance UAT"
+      jobs:
+          - job: OwaspZapPassiveScan
+            displayName: "OWASP Zap Passive Scan"
+            steps:
+                - download: OWASPZapArtifact
+                  artifact: "OWASP Security Report Schema"
+
+                - task: DockerInstaller@0
+                  inputs:
+                      dockerVersion: "17.09.0-ce"
+                - task: Bash@3
+                  displayName: "Copy Security Report Artifact"
+                  inputs:
+                      targetType: "inline"
+                      script: |
+                          if [ ! -d '$(System.DefaultWorkingDirectory)/report' ]
+                          then
+                            echo 'Creating folder $(System.DefaultWorkingDirectory)/report'
+                            mkdir -p '$(System.DefaultWorkingDirectory)/report'
+                          else
+                          echo 'Did not create folder'
+                          fi
+
+                          echo 'Path $(System.DefaultWorkingDirectory)/../OWASPZapArtifact/OWASP Security Report Schema'
+
+                          cp '$(System.DefaultWorkingDirectory)/../OWASPZapArtifact/OWASP Security Report Schema/OWASPToNUnit3.xslt' '$(System.DefaultWorkingDirectory)/'
+
+                          cp '$(System.DefaultWorkingDirectory)/../OWASPZapArtifact/OWASP Security Report Schema/af-config.yml' '$(System.DefaultWorkingDirectory)/'
+                - task: Bash@3
+                  displayName: "Run Owasp Zap Scan"
+                  inputs:
+                      targetType: "inline"
+                      script: |
+                          chmod -R 777  ./
+
+                          timestamp() {
+                            date +"%Y%m%d" # current time
+                          }
+
+                          docker run --env siteUrl=https://victorious-water-02b650403.1.azurestaticapps.net -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap.sh -cmd -autorun /zap/wrk/af-config.yml
+
+                          true
+                      workingDirectory: "$(System.DefaultWorkingDirectory)"
+                - task: PowerShell@2
+                  displayName: "Convert ZAP Report to Nunit Report Format"
+                  inputs:
+                      targetType: "inline"
+                      script: |
+                          $XslPath = "./OWASPToNUnit3.xslt"
+                          $XmlInputPath = ""
+
+                          get-childitem "./report" -recurse | where {$_.extension -eq ".xml"} | % {
+                            $XmlInputPath = $_.FullName
+                            Write-Host "XML File Location: $XmlInputPath"
+                          }
+
+                          $XmlOutputPath = "./report/Converted-OWASP-ZAP-NUnitReport.xml"
+
+                          $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform
+                          $XslTransform.Load($XslPath)
+
+                          $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
+                      workingDirectory: "$(System.DefaultWorkingDirectory)"
+                - task: PublishTestResults@2
+                  displayName: "Publish Test Results Converted-OWASP-ZAP-NUnitReport.xml"
+                  inputs:
+                      testResultsFormat: "NUnit"
+                      testResultsFiles: "Converted-OWASP-ZAP-NUnitReport.xml"
+                      searchFolder: "$(System.DefaultWorkingDirectory)/report"
+    - stage: DeployPROD
+      displayName: "Deploy to PROD"
+      jobs:
+          - deployment: DeployProd
+            displayName: "Deploy WebApp to PROD"
+            environment: "PROD"
+            variables:
+                - group: PROD
+            strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            - task: ExtractFiles@1
+                              inputs:
+                                  archiveFilePatterns: "$(System.DefaultWorkingDirectory)/../**/devops/*.zip"
+                                  destinationFolder: "$(System.DefaultWorkingDirectory)/devops"
+                                  cleanDestinationFolder: true
+                                  overwriteExistingFiles: false
+                            - task: ExtractFiles@1
+                              inputs:
+                                  archiveFilePatterns: "$(System.DefaultWorkingDirectory)/../**/webapp-prod/*.zip"
+                                  destinationFolder: "$(System.DefaultWorkingDirectory)/webapp"
+                                  cleanDestinationFolder: true
+                                  overwriteExistingFiles: false
+                            - task: AzureCLI@2
+                              displayName: "Create Azure Resources"
+                              inputs:
+                                  azureSubscription: "sc-dig-ent-prod"
+                                  scriptType: bash
+                                  scriptLocation: inlineScript
+                                  inlineScript: |
+                                      az --version
+                                      az group create --name $(resourceGroupSTL) --location $(location)
+                                      az deployment group create --resource-group $(resourceGroupSTL) --template-file '$(System.DefaultWorkingDirectory)/devops/template.bicep' --parameters '$(System.DefaultWorkingDirectory)/devops/parameters.prod.json'
+                            - task: AzureCLI@2
+                              displayName: "Get SWA Deployment Token"
+                              inputs:
+                                  azureSubscription: "sc-dig-ent-prod"
+                                  scriptType: bash
+                                  scriptLocation: inlineScript
+                                  inlineScript: |
+                                      APIKEY=$(az staticwebapp secrets list --name swa-slt-app-prod | jq -r '.properties.apiKey')
+                                      echo "##vso[task.setvariable variable=apiKey;issecret=true]$APIKEY"
+                            - task: AzureStaticWebApp@0
+                              inputs:
+                                  app_location: "/webapp"
+                                  workingDirectory: "$(System.DefaultWorkingDirectory)"
+                                  skip_app_build: true
+                              env:
+                                  azure_static_web_apps_api_token: $(apiKey)
+    - stage: QAPROD
+      displayName: "Quality Assurance PROD"
+      jobs:
+          - job: OwaspZapPassiveScan
+            displayName: "OWASP Zap Passive Scan"
+            steps:
+                - download: OWASPZapArtifact
+                  artifact: "OWASP Security Report Schema"
+
+                - task: DockerInstaller@0
+                  inputs:
+                      dockerVersion: "17.09.0-ce"
+                - task: Bash@3
+                  displayName: "Copy Security Report Artifact"
+                  inputs:
+                      targetType: "inline"
+                      script: |
+                          if [ ! -d '$(System.DefaultWorkingDirectory)/report' ]
+                          then
+                            echo 'Creating folder $(System.DefaultWorkingDirectory)/report'
+                            mkdir -p '$(System.DefaultWorkingDirectory)/report'
+                          else
+                          echo 'Did not create folder'
+                          fi
+
+                          echo 'Path $(System.DefaultWorkingDirectory)/../OWASPZapArtifact/OWASP Security Report Schema'
+
+                          cp '$(System.DefaultWorkingDirectory)/../OWASPZapArtifact/OWASP Security Report Schema/OWASPToNUnit3.xslt' '$(System.DefaultWorkingDirectory)/'
+
+                          cp '$(System.DefaultWorkingDirectory)/../OWASPZapArtifact/OWASP Security Report Schema/af-config.yml' '$(System.DefaultWorkingDirectory)/'
+                - task: Bash@3
+                  displayName: "Run Owasp Zap Scan"
+                  inputs:
+                      targetType: "inline"
+                      script: |
+                          chmod -R 777  ./
+
+                          timestamp() {
+                            date +"%Y%m%d" # current time
+                          }
+
+                          docker run --env siteUrl=https://victorious-water-02b650403.1.azurestaticapps.net -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap.sh -cmd -autorun /zap/wrk/af-config.yml
+
+                          true
+                      workingDirectory: "$(System.DefaultWorkingDirectory)"
+                - task: PowerShell@2
+                  displayName: "Convert ZAP Report to Nunit Report Format"
+                  inputs:
+                      targetType: "inline"
+                      script: |
+                          $XslPath = "./OWASPToNUnit3.xslt"
+                          $XmlInputPath = ""
+
+                          get-childitem "./report" -recurse | where {$_.extension -eq ".xml"} | % {
+                            $XmlInputPath = $_.FullName
+                            Write-Host "XML File Location: $XmlInputPath"
+                          }
+
+                          $XmlOutputPath = "./report/Converted-OWASP-ZAP-NUnitReport.xml"
+
+                          $XslTransform = New-Object System.Xml.Xsl.XslCompiledTransform
+                          $XslTransform.Load($XslPath)
+
+                          $XslTransform.Transform($XmlInputPath, $XmlOutputPath)
+                      workingDirectory: "$(System.DefaultWorkingDirectory)"
+                - task: PublishTestResults@2
+                  displayName: "Publish Test Results Converted-OWASP-ZAP-NUnitReport.xml"
+                  inputs:
+                      testResultsFormat: "NUnit"
+                      testResultsFiles: "Converted-OWASP-ZAP-NUnitReport.xml"
+                      searchFolder: "$(System.DefaultWorkingDirectory)/report"

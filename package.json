@@ -1,17 +1,15 @@
 {
 	"name": "trade_portal_sttl",
-	"version": "0.0.0",
+	"version": "1.2.0",
 	"private": true,
 	"scripts": {
 		"dev": "next dev",
 		"dev:clean": "rm -rf ./.next && next dev",
 		"build": "next build",
-		"export": "next build && node ./scripts/export",
+		"export": "next build && node ./devops/scripts/export",
 		"start": "next build && serve out",
 		"test": "jest --passWithNoTests",
 		"lint": "eslint .",
-		"pre-commit": "npx lint-staged --no-stash",
-		"pre-push": "npm test",
 		"prepare": "husky install"
 	},
 	"dependencies": {
@@ -25,7 +23,7 @@
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"react-hook-form": "^7.48.2",
-		"trade-portal-components": "^1.4.15",
+		"trade-portal-components": "^1.4.17",
 		"uuid": "^9.0.1"
 	},
 	"devDependencies": {

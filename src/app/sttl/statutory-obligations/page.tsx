@@ -1,16 +1,29 @@
 "use client";
 
 import React from "react";
+import { useSearchParams } from "next/navigation";
 import { StatutoryObligations } from "templates";
+import { useAppContext } from "app/AppContext";
+import { useFormContext } from "app/sttl/FormContext";
 import { StatutoryObligationsStep } from "models/sttl";
 
 const Page = () => {
-	const defaultValues = React.useMemo(() => ({}) as StatutoryObligationsStep, []);
-	const stepper = { step: 2, label: "Statutory Obligations", totalSteps: 3 };
+	const searchParams = useSearchParams();
+	const { sttlForm } = useFormContext();
+	const { dataLayer } = useAppContext();
+	const { formState, stepper, onNextStep, onPrevStep, isEditing, propertiesList } = sttlForm;
+	const entry = searchParams.get("entry") && isEditing ? +searchParams.get("entry") : propertiesList.length;
+	const defaultValues = React.useMemo(() => formState?.statutory_obligations?.[entry] || ({} as StatutoryObligationsStep), [entry, formState]);
 
-	if (!defaultValues) return null;
 	return (
-		<StatutoryObligations onNextBtnClick={() => {}} onPrevBtnClick={() => {}} dataLayer={{}} defaultValues={defaultValues} stepper={stepper} />
+		<StatutoryObligations
+			onNextBtnClick={onNextStep}
+			onPrevBtnClick={onPrevStep}
+			isEditing={isEditing}
+			dataLayer={dataLayer}
+			defaultValues={defaultValues}
+			stepper={stepper}
+		/>
 	);
 };
 

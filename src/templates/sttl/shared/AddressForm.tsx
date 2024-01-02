@@ -11,9 +11,9 @@ type AddressFormProps = {
 };
 export const AddressForm = (props: AddressFormProps) => {
 	const { addressFieldsPrefix, isIrishAddress = false, excludedEircodes } = props;
-	const { register, formState, getValues } = useFormContext();
+	const { register, formState } = useFormContext();
 	const errors = addressFieldsPrefix ? formState?.errors?.[addressFieldsPrefix] : formState?.errors;
-	const defaultValues = React.useMemo(() => (addressFieldsPrefix ? getValues()?.[addressFieldsPrefix] : getValues()), []);
+	const defaultValues = React.useMemo(() => (addressFieldsPrefix ? formState?.defaultValues?.[addressFieldsPrefix] : formState?.defaultValues), []);
 	const getFieldName = (fieldName: string) => (addressFieldsPrefix ? `${addressFieldsPrefix}.${fieldName}` : fieldName);
 
 	return (

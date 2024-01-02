@@ -75,7 +75,6 @@ export const PROPERTY_OPTIONS = {
 
 export const PROPERTY_TYPES_NOT_REQUIRING_BEDROOMS = ["Recreational vehicle / Motor home", "Treehouse", "Yurt"];
 
-// TODO
 export const UNIT_ROOM_TYPE_AS_TEXT = {
 	noOfOwnDoorUnits: "Own Door Unit",
 	noOfRooms: "Room",

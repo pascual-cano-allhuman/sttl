@@ -1,0 +1,36 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"environment": {
+			"value": "prod"
+		},
+		"location": {
+			"value": "northeurope"
+		},
+		"principalId": {
+			"value": "mi-dent-logic-prod"
+		},
+		"rgDentName": {
+			"value": "rg-digitalenterprise-prod"
+		},
+		"enterpriseGradeCdnStatus": {
+			"value": "Disabled"
+		},
+		"backendName": {
+			"value": "failteireland"
+		},
+		"backendResourceGroup": {
+			"value": "rg-api-prod"
+		},
+		"backendSubscriptionId": {
+			"value": "afbc4dac-3914-4a24-8b38-f5d432599dc7"
+		},
+		"tags": {
+			"value": { "Workload name": "Short-term Lets" }
+		},
+		"logWorkspaceId": {
+			"value": "/subscriptions/afbc4dac-3914-4a24-8b38-f5d432599dc7/resourceGroups/rg-logs-prod/providers/Microsoft.OperationalInsights/workspaces/law-dent-prod"
+		}
+	}
+}

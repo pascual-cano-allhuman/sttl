@@ -21,7 +21,7 @@ export const FormFooter = (props: FormFooterProps) => {
 					</Button>
 				)}
 			</Box>
-			<Box width={["100%", nextBtnLabel ? "auto" : "9.5rem"]}>
+			<Box minWidth={["100%", "9.5rem"]} width="auto">
 				{onNextBtnClick && (
 					<Button
 						size={["medium", "large"]}

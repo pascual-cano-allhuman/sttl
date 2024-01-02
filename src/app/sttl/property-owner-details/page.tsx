@@ -1,23 +1,30 @@
 "use client";
 
 import React from "react";
+import { useSearchParams } from "next/navigation";
+import { useAppContext } from "app/AppContext";
+import { useFormContext } from "app/sttl/FormContext";
 import { PropertyOwnerDetails } from "templates";
-import { Address, PropertyOwnerDetailsStep } from "models/sttl";
-import { UserAccount } from "models/global";
+import { PropertyOwnerDetailsStep } from "models/sttl";
 
 const Page = () => {
-	const defaultValues = React.useMemo(() => ({}) as PropertyOwnerDetailsStep, []);
-	const stepper = { step: 4, label: "Property Address", totalSteps: 4 };
+	const searchParams = useSearchParams();
+	const { userAccount } = useAppContext();
+	const { sttlForm } = useFormContext();
+	const { formState, stepper, onNextStep, onPrevStep, isEditing, propertiesList } = sttlForm;
+	const entry = searchParams.get("entry") && isEditing ? +searchParams.get("entry") : propertiesList.length;
+	const defaultValues = React.useMemo(() => formState?.property_owner_details?.[entry] || ({} as PropertyOwnerDetailsStep), [entry, formState]);
+	const propertyAddress = React.useMemo(() => formState?.property_address?.[entry]?.propertyAddress, []);
 
-	if (!defaultValues) return null;
 	return (
 		<PropertyOwnerDetails
-			onNextBtnClick={() => {}}
-			onPrevBtnClick={() => {}}
+			onNextBtnClick={onNextStep}
+			onPrevBtnClick={onPrevStep}
+			isEditing={isEditing}
 			defaultValues={defaultValues}
 			stepper={stepper}
-			userAccount={{} as UserAccount}
-			propertyAddress={{} as Address}
+			userAccount={userAccount}
+			propertyAddress={propertyAddress}
 		/>
 	);
 };
