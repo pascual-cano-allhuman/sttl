@@ -27,15 +27,15 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 	const { correlationId, resetCorrelationId } = useSessionData();
 	const { dataLayer } = useTagManager(process.env.GTM_CODE);
 	const { userAccount, hasUserAccountError } = useUserAccount({ getToken, userId, correlationId, provider, isNewUser });
+	const correlation = React.useMemo(() => ({ correlationId, userId, contactId: userAccount?.contactId }), [correlationId, userId, userAccount]);
 
 	// on page change focus on root element, track the page
 	React.useEffect(() => {
 		document.getElementById("focus-root")?.focus();
 		document.title = getPageTitle(pathname);
-		const correlation = { correlationId, userId, contactId: userAccount?.contactId };
 		appInsightsClient?.trackPageView({ uri: pathname, name: document.title, properties: correlation });
 		dataLayer?.trackPage(pathname, document.title);
-	}, [pathname]);
+	}, [pathname, dataLayer, appInsightsClient, correlation]);
 
 	// is logged in event
 	React.useEffect(() => {

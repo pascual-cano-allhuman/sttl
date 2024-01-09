@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 
 declare global {
 	interface Window {
@@ -13,6 +11,7 @@ declare global {
 export const useTagManager = (gtmCode: string) => {
 	// Holds a reference to the dataLayer object. Before GTM loads it just enqueues any event pushed
 	const dataLayerRef = useRef(null);
+	const [isSetup, setIsSetup] = useState(false);
 
 	// Load the GTM library
 	const loadScript = (window: any, document: any, gtmCode: string) =>
@@ -37,12 +36,13 @@ export const useTagManager = (gtmCode: string) => {
 		if (!gtmCode || window["Cypress"]) return;
 		loadScript(window, document, gtmCode).then(dataLayer => {
 			dataLayerRef.current = dataLayer;
+			setIsSetup(true);
 		});
 	}, [gtmCode]);
 
 	// expose dataLayer object
 	const dataLayer = useMemo(() => {
-		if (!dataLayerRef.current) return;
+		if (!isSetup || !dataLayerRef.current) return;
 		return {
 			...dataLayerRef.current,
 			trackPage: (pathname: string, title: string) => {
@@ -51,7 +51,7 @@ export const useTagManager = (gtmCode: string) => {
 				dataLayerRef.current.push(event);
 			}
 		};
-	}, [dataLayerRef]);
+	}, [dataLayerRef, isSetup]);
 
 	return {
 		dataLayer
