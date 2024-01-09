@@ -70,7 +70,7 @@ export const httpDelete = async (url: string, token?: string, controller?: any):
 // exponential backoff strategy
 const requestWithRetry = async (url: string, options: any, retryCount = 0, lastStatus = null, lastError = null): Promise<any> => {
 	const delays = [1, 3, 7];
-	if (retryCount >= delays.length) {
+	if (retryCount > delays.length) {
 		// retries exhausted for connection errors
 		throw new HttpRequestError({ status: lastStatus, error: lastError, url, body: options?.body });
 	} else {

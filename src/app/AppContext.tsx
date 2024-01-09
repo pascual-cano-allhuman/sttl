@@ -53,7 +53,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 		if (hasAuthError || hasUserAccountError) throw new AuthRequiredError();
 		if (!userAccount) return { auth, isLoadingAccount: true };
 		return { dataLayer, auth, userAccount, correlationId, isNewUser, resetCorrelationId };
-	}, [dataLayer, auth, userAccount, correlationId, isNewUser, resetCorrelationId]);
+	}, [dataLayer, auth, userAccount, correlationId, isNewUser, hasAuthError, hasUserAccountError, resetCorrelationId]);
 
 	return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
