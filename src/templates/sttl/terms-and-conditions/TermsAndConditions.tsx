@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Box, Text, Divider, TextLink, Button, Checkbox, Alert, TickList, TableRows } from "trade-portal-components";
@@ -7,12 +9,12 @@ import { feesInfo } from "settings/feesInfo";
 type Props = {
 	onNextBtnClick: () => void;
 	resumeRegistration?: () => void;
-	hasPendingRegistration?: boolean;
+	hasPendingApplication?: boolean;
 	isNewUser?: boolean;
 };
 
 export const TermsAndConditions = (props: Props) => {
-	const { onNextBtnClick, resumeRegistration, isNewUser, hasPendingRegistration } = props;
+	const { onNextBtnClick, resumeRegistration, isNewUser, hasPendingApplication } = props;
 
 	const { register, trigger, formState } = useForm({ mode: "onChange" });
 	const { errors } = formState;
@@ -31,7 +33,7 @@ export const TermsAndConditions = (props: Props) => {
 	return (
 		<Box as="section" gap={["2.4rem", "3.2rem"]} padding="0 1.6rem" columns={8} margin="0 auto">
 			{isNewUser && <Alert title="Account created successfully">Your Fáilte Ireland account has been created</Alert>}
-			{!isNewUser && hasPendingRegistration && (
+			{!isNewUser && hasPendingApplication && (
 				<Alert title="Application in progress" status="error">
 					You currently have a Short Term Tourist Letting Application in progress. You can&nbsp;
 					<a href="/sttl/review" onClick={onResumeRegistration}>

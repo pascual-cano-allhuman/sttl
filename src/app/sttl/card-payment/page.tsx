@@ -5,8 +5,8 @@ import { CardPayment } from "templates";
 import { useFormContext } from "app/sttl/FormContext";
 
 const Page = () => {
-	const { sttlForm, correlation } = useFormContext();
-	const { paymentRequest, processCardPayment, alert, showPaymentGatewayError, closeAlert, createCardPayment } = sttlForm;
+	const { sttlOrder, correlation } = useFormContext();
+	const { paymentRequest, processCardPayment, alert, showPaymentGatewayError, closeAlert, createCardPayment } = sttlOrder;
 
 	const onSuccess = async paymentResponse => {
 		await processCardPayment(paymentResponse);

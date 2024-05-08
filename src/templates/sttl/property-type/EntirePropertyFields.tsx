@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useFormContext, useFormState } from "react-hook-form";
 import { Box, Text, NumberInput, Dropdown, Input } from "trade-portal-components";

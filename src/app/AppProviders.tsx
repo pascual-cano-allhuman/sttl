@@ -26,11 +26,11 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const GlobalLayout = ({ children }: { children: React.ReactNode }) => {
-	const { auth, isLoadingAccount } = useAppContext();
-	const { isLoggedIn, logout } = auth || {};
+	const { auth, isLoadingData } = useAppContext();
+	const { isLoggedIn, logout, login } = auth || {};
 	return (
-		<Layout links={links} isLoggedIn={isLoggedIn} logout={logout}>
-			<Suspense>{isLoadingAccount ? <Loading /> : children}</Suspense>
+		<Layout links={links} isLoggedIn={isLoggedIn} logout={logout} login={login}>
+			<Suspense>{isLoadingData ? <Loading /> : children}</Suspense>
 		</Layout>
 	);
 };

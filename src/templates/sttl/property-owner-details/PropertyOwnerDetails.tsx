@@ -1,3 +1,5 @@
+"use client";
+
 import { useForm, FormProvider } from "react-hook-form";
 import { Box, Checkbox, Stepper, Switch, ToggleButton } from "trade-portal-components";
 import { FormFooter, FormHeader, FormStepContainer } from "templates";

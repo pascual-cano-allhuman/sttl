@@ -16,9 +16,9 @@ export const getOrderForZeroPayment = (formState: FormState, userAccount: UserAc
 	return { ...order, orderNumber, orderDate, orderStatus, acceptedOffer, partOfInvoice } as Order;
 };
 
-export const composeOrder = (formState: FormState, userAccount: UserAccount): Order => {
+export const composeOrder = (formState: FormState, userAccount?: UserAccount): Order => {
 	const propertiesList = getPropertiesList(formState);
-	if (propertiesList.length === 0 || !userAccount) return null;
+	if (propertiesList.length === 0) return null;
 
 	const acceptedOffer = propertiesList.map(property => {
 		const { category } = property.property_type;
@@ -46,15 +46,15 @@ export const composeOrder = (formState: FormState, userAccount: UserAccount): Or
 		acceptedOffer,
 		customer: {
 			"@type": "Person",
-			email: userAccount["email"] || emailFromFirstProperty || "",
-			name: userAccount["name"]?.replace("@", "") || nameFromFirstProperty || "",
+			email: userAccount?.email || emailFromFirstProperty || "",
+			name: userAccount?.name?.replace("@", "") || nameFromFirstProperty || "",
 			telephone: "",
 			identifier: [
 				{
 					"@type": "PropertyValue",
 					propertyID: "B2C",
-					valueReference: userAccount["provider"] || "",
-					value: userAccount["id"] || ""
+					valueReference: userAccount?.provider || "",
+					value: userAccount?.id || ""
 				}
 			],
 			worksFor: {

@@ -1,7 +1,8 @@
-import { AuthenticationResult, InteractionRequiredAuthError, InteractionStatus } from "@azure/msal-browser";
-import { useIsAuthenticated, useMsal } from "@azure/msal-react";
-import { usePathname } from "next/navigation";
 import React from "react";
+import { AuthenticationResult, InteractionRequiredAuthError, InteractionStatus } from "@azure/msal-browser";
+import { useMsal } from "@azure/msal-react";
+import { usePathname, useRouter } from "next/navigation";
+import { b2cPolicies } from "settings/authConfig";
 import { logger } from "../logger";
 
 // REFERENCES:
@@ -11,50 +12,64 @@ import { logger } from "../logger";
 const scopes = [process.env.B2C_CLIENT_ID];
 // use client_id as scope https://github.com/AzureAD/microsoft-authentication-library-for-js/issues/1506
 
-export const useAuth = () => {
+type Claims = { userId: string; provider?: string; email?: string; isNewUser?: boolean };
+type Params = { mustLogInPaths?: RegExp };
+
+export const useAuth = (params?: Params) => {
+	const { mustLogInPaths } = params || {};
 	const { instance, accounts, inProgress } = useMsal();
-	const [claimsData, setClaimsData] = React.useState({ userId: "", provider: "", email: "", isNewUser: false });
-	const [redirectUrl, setRedirectUrl] = React.useState<string>("");
-	const [hasAuthError, setHasAuthError] = React.useState(false);
-	const isAuthenticated = useIsAuthenticated();
-	const isLoggedIn = React.useMemo(() => isAuthenticated && !!claimsData?.userId, [isAuthenticated, claimsData]);
+	const [claimsData, setClaimsData] = React.useState<Claims>();
+	const [hasError, setHasAuthError] = React.useState(false);
+	const isLoggedIn = React.useMemo(() => (claimsData ? !!claimsData?.userId : undefined), [claimsData]);
 	const isSetup = React.useRef(false);
 	const pathname = usePathname();
+	const router = useRouter();
 
 	// On first load, get token claims from B2C.
 	React.useEffect(() => {
 		if (window["Cypress"]) return;
+		if (process.env.SHOULD_MOCK_MIDDLEWARE) return setClaimsData({ userId: "00000000-0000-0000-0000-000000000000" });
 		if (inProgress === InteractionStatus.None && !isSetup.current) {
 			isSetup.current = true;
 			getAuthenticationResult()
+				// successful authentication, setup the claims
 				.then(response => {
+					const account = accounts.find(acc => acc.localAccountId === response.account.localAccountId) || accounts[0];
+					if (account) instance?.setActiveAccount(account);
+					const state = parseState(response.state);
+					if (state.redirectUrl && state.redirectUrl !== pathname) router.replace(state.redirectUrl);
 					const claims = getClaimsData(response);
 					setClaimsData(claims);
-					const state = parseState(response.state);
-					if (state.redirectUrl) setRedirectUrl(state.redirectUrl);
 				})
+				// handle authentication errors
 				.catch(e => {
 					const state = stringifyState({ redirectUrl: pathname });
 					handleAuthenticationError(e, state);
+					setClaimsData({ userId: null, provider: null, email: null, isNewUser: null });
 				});
 		}
-	}, [inProgress, isAuthenticated]);
+	}, [inProgress]);
 
-	// get an authentication response. first try from the redirect response, then from SSO silent request
+	// get an authentication response. first try from the redirect response, then from silent requests
 	const getAuthenticationResult = async () => {
-		if (!accounts[0]) throw new InteractionRequiredAuthError("No account present");
+		// check first if we had a response attached to a redirect
 		const response = await instance.handleRedirectPromise();
 		if (response) return response;
-		const request = { scopes, account: accounts[0] };
+		// if not try to authenticate through a silent request
+		const request = { scopes };
 		return instance.ssoSilent(request);
 	};
 
-	// if token experied redirect user to B2C
+	// check why the authentication failed and redirect the user to B2C if needed
 	const handleAuthenticationError = (e: Error, state?: string) => {
 		if (e instanceof InteractionRequiredAuthError) {
-			window.onbeforeunload = null;
-			instance.acquireTokenRedirect({ scopes, state: state || "" });
+			// the user needs to sign in, exclude some pages though
+			if (!mustLogInPaths || mustLogInPaths?.test(pathname)) {
+				window.onbeforeunload = null;
+				instance.acquireTokenRedirect({ scopes, state: state || "" });
+			}
 		} else {
+			// unexpected error, log it and set the error state
 			setHasAuthError(true);
 			logger.error(e);
 			console.log(e); // eslint-disable-line no-console
@@ -76,9 +91,10 @@ export const useAuth = () => {
 	return React.useMemo(() => {
 		// expose a function to request a token
 		const getToken = async () => {
-			if (window["Cypress"] && ["local", "dev"].includes(process.env.APP_ENV)) return "00000000-0000-0000-0000-000000000000";
-			if (!claimsData.userId) return null;
-			const request = { scopes, account: accounts[0] };
+			if (process.env.SHOULD_MOCK_MIDDLEWARE) return "00000000-0000-0000-0000-000000000000";
+			if (!claimsData?.userId) return null;
+			const account = instance.getActiveAccount() || accounts[0];
+			const request = { scopes, account };
 			try {
 				const response = await instance.acquireTokenSilent(request);
 				return response.idToken;
@@ -92,24 +108,40 @@ export const useAuth = () => {
 			window.onbeforeunload = null;
 			const loginRequest = { scopes };
 			instance?.loginRedirect(loginRequest).catch(e => {
-				logger.log(e);
+				setHasAuthError(true);
+				logger.error(e);
+				console.log(e); // eslint-disable-line no-console
+			});
+		};
+
+		// redirect the user to B2C for signing up
+		const signUp = () => {
+			const { authority } = b2cPolicies.authorities?.signUp || {};
+			const loginRequest = { scopes, authority };
+			instance?.loginRedirect(loginRequest).catch(e => {
+				logger.error(e);
+				console.log(e); // eslint-disable-line no-console
 			});
 		};
 
 		// redirect the user to B2C for sign out
 		const logout = async () => {
-			const tokenRequest = { scopes, account: accounts[0] };
+			router.push("/");
+			const account = instance.getActiveAccount() || accounts[0];
+			const tokenRequest = { scopes, account };
 			window.onbeforeunload = null;
 			try {
 				const { idToken } = await instance.acquireTokenSilent(tokenRequest);
-				instance?.logoutRedirect({ idTokenHint: idToken });
+				await instance?.logoutRedirect({ idTokenHint: idToken });
 			} catch (e) {
-				instance?.logoutRedirect();
+				await instance?.logoutRedirect();
 			}
 		};
 
-		return { isLoggedIn, redirectUrl, hasAuthError, login, logout, getToken, ...claimsData };
-	}, [isLoggedIn, redirectUrl, claimsData, hasAuthError]);
+		// has the initial setup been done
+		if (isLoggedIn === undefined) return;
+		return { isLoggedIn, hasError, login, logout, signUp, getToken, ...claimsData };
+	}, [isLoggedIn, claimsData, hasError, claimsData]);
 };
 
 // utils

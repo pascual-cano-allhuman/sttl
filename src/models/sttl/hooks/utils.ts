@@ -1,5 +1,5 @@
 import { FormState, PropertyData } from "../types";
-import { FormStep } from "./useFormSteps";
+import { FormStep } from "./formSteps";
 
 // build a properties list from the form state
 export const getPropertiesList = (formState: FormState) => {
@@ -47,9 +47,21 @@ export const deleteEntryFromState = (formState: FormState, entryIndex: number) =
 	return newState;
 };
 
-// preset cypress data into the form
-export const presetCypressData = (cy: any, setFormState: (state: any) => void, setOrderResult: (result: any) => void) => {
-	if (!cy) return;
-	setFormState(cy.env("FORM_STATE"));
-	setOrderResult(cy.env("ORDER_RESULT"));
+// retry mechanism for fetching order status
+export const retry = async (callback: () => Promise<any>) => {
+	for (let i = 0; i < 15; i++) {
+		try {
+			const result = await callback(); // eslint-disable-line no-await-in-loop
+			if (result) return result;
+		} finally {
+			await sleep(2000); // eslint-disable-line no-await-in-loop
+		}
+	}
+};
+
+// delay for retry
+const sleep = (ms: number): Promise<void> => {
+	return new Promise(resolve => {
+		setTimeout(resolve, ms);
+	});
 };

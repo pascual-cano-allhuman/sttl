@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useForm, useController, FormProvider } from "react-hook-form";
 import { Stepper, Box, AddressLookup } from "trade-portal-components";

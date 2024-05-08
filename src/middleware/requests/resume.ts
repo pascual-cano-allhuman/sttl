@@ -4,11 +4,11 @@ import { logger } from "lib/logger";
 import { order } from "../mocks/order";
 
 const MIDDLEWARE_PORTAL_ENDPOINT = process.env.MIDDLEWARE_PORTAL_ENDPOINT?.length > 0 ? process.env.MIDDLEWARE_PORTAL_ENDPOINT : null;
-const MOCK_MIDDLEWARE = process.env.MOCK_MIDDLEWARE || false;
+const SHOULD_MOCK_MIDDLEWARE = process.env.SHOULD_MOCK_MIDDLEWARE || false;
 
 export const postSaveAndResumeData = async (userId: string, order: Order, token: string, correlation: Record<string, string>) => {
 	if (!MIDDLEWARE_PORTAL_ENDPOINT || !token || !order || !userId) return;
-	if (MOCK_MIDDLEWARE) return;
+	if (SHOULD_MOCK_MIDDLEWARE) return;
 	try {
 		await httpPost(`${MIDDLEWARE_PORTAL_ENDPOINT}/cache/sttl/${userId}`, order, token);
 	} catch (e) {
@@ -18,7 +18,7 @@ export const postSaveAndResumeData = async (userId: string, order: Order, token:
 
 export const getSaveAndResumeData = async (userId: string, token: string, correlation: Record<string, string>): Promise<Order> => {
 	if (!MIDDLEWARE_PORTAL_ENDPOINT || !token || !userId) return;
-	if (MOCK_MIDDLEWARE) return order;
+	if (SHOULD_MOCK_MIDDLEWARE) return order;
 	try {
 		const data = await httpGet(`${MIDDLEWARE_PORTAL_ENDPOINT}/cache/sttl/${userId}`, token);
 
@@ -36,7 +36,7 @@ export const getSaveAndResumeData = async (userId: string, token: string, correl
 
 export const deleteSaveAndResumeData = async (userId: string, token: string, correlation: Record<string, string>) => {
 	if (!MIDDLEWARE_PORTAL_ENDPOINT || !token || !userId) return;
-	if (MOCK_MIDDLEWARE) return;
+	if (SHOULD_MOCK_MIDDLEWARE) return;
 	try {
 		await httpDelete(`${MIDDLEWARE_PORTAL_ENDPOINT}/cache/sttl/${userId}`, token);
 	} catch (e) {

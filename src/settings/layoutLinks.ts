@@ -179,7 +179,6 @@ export const footerLinks = [
 export const links = {
 	footerLinks,
 	accountLinks,
-	portalLinks,
 	homePageUrl: `${process.env.TRADE_PORTAL_LEGACY_SITE_URL || "/"}`,
 	activePortalLink: portalLinks[portalLinks.length - 1]
 };

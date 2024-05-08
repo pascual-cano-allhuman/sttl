@@ -8,27 +8,21 @@ import { useAppContext } from "app/AppContext";
 
 const Page = () => {
 	const { isNewUser } = useAppContext();
-	const { sttlForm } = useFormContext();
-	const { onNextStep, checkSaveAndResume, restoreSaveAndResume, goToReview } = sttlForm;
-	const [hasPendingRegistration, setHasPendingRegistration] = React.useState<boolean>(false);
+	const { sttlForm, saveAndResume } = useFormContext();
+	const { onNextStep, goToReview, updateFormState } = sttlForm;
+	const { pendingApplication } = saveAndResume;
 
 	const resumeRegistration = () => {
-		restoreSaveAndResume?.();
+		if (!pendingApplication) return;
+		updateFormState(pendingApplication);
 		goToReview();
 	};
-
-	React.useEffect(() => {
-		(async () => {
-			const check = await checkSaveAndResume?.();
-			setHasPendingRegistration(check);
-		})();
-	}, []);
 
 	return (
 		<TermsAndConditions
 			onNextBtnClick={onNextStep}
 			resumeRegistration={resumeRegistration}
-			hasPendingRegistration={hasPendingRegistration}
+			hasPendingApplication={!!pendingApplication}
 			isNewUser={isNewUser}
 		/>
 	);

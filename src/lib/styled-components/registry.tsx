@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable import/no-extraneous-dependencies, react/jsx-no-useless-fragment */
 import React, { useState } from "react";
 import { useServerInsertedHTML } from "next/navigation";

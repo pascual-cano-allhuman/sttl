@@ -1,20 +1,15 @@
 "use client";
 
 import React from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { FORM_STEP_BY_ID } from "models/sttl";
 import { Review } from "templates";
 import { useFormContext } from "app/sttl/FormContext";
 import { useAppContext } from "app/AppContext";
 
 const Page = () => {
-	const pathname = usePathname();
-	const router = useRouter();
-	const { sttlForm } = useFormContext();
+	const { sttlForm, sttlOrder } = useFormContext();
 	const { dataLayer } = useAppContext();
-	const { propertiesList, stepper, alert, fees } = sttlForm;
-	const { createCardPayment, processZeroPayment, registerNewProperty, applyForQAMembership, deleteProperty } = sttlForm;
-	const goToEditStep = (formStep: string, entry: number) => router.push(`${pathname}/${FORM_STEP_BY_ID[formStep].route}?entry=${entry}`);
+	const { propertiesList, stepper, alert, registerNewProperty, applyForQAMembership, deleteProperty, goToEditStep } = sttlForm;
+	const { fees, createCardPayment, processZeroPayment } = sttlOrder;
 
 	return (
 		<Review

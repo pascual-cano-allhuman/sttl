@@ -4,11 +4,11 @@ import { appInsightsClient } from "lib/logger";
 import { Auth, useAuth } from "lib/msal";
 import { useTagManager } from "lib/tag-manager";
 import { UserAccount, useSessionData, useUserAccount } from "models/global";
-import { FORM_STEPS } from "models/sttl";
+import { formSteps } from "models/sttl";
 import { AuthRequiredError } from "app/error";
 
 type ContextValue = {
-	isLoadingAccount?: boolean;
+	isLoadingData?: boolean;
 	correlationId?: string;
 	auth?: Auth;
 	dataLayer?: any;
@@ -22,12 +22,14 @@ const AppContext = React.createContext({} as ContextValue);
 export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 	const pathname = usePathname();
 	const router = useRouter();
-	const auth = useAuth();
-	const { userId, redirectUrl, getToken, provider, isNewUser, hasAuthError } = auth;
+	const auth = useAuth({ mustLogInPaths: /^\/sttl\/?.*$/ });
 	const { correlationId, resetCorrelationId } = useSessionData();
 	const { dataLayer } = useTagManager(process.env.GTM_CODE);
-	const { userAccount, hasUserAccountError } = useUserAccount({ getToken, userId, correlationId, provider, isNewUser });
-	const correlation = React.useMemo(() => ({ correlationId, userId, contactId: userAccount?.contactId }), [correlationId, userId, userAccount]);
+	const userAccount = useUserAccount({ auth, correlationId });
+	const correlation = React.useMemo(
+		() => ({ correlationId, userId: auth?.userId, contactId: userAccount?.contactId }),
+		[correlationId, auth, userAccount]
+	);
 
 	// on page change focus on root element, track the page
 	React.useEffect(() => {
@@ -35,25 +37,26 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 		document.title = getPageTitle(pathname);
 		appInsightsClient?.trackPageView({ uri: pathname, name: document.title, properties: correlation });
 		dataLayer?.trackPage(pathname, document.title);
-	}, [pathname, dataLayer, appInsightsClient, correlation]);
+	}, [pathname, dataLayer, appInsightsClient]);
 
 	// is logged in event
 	React.useEffect(() => {
-		if (userId) dataLayer?.push({ event: "userLoggedIn" });
-	}, [userId, dataLayer]);
+		if (auth?.userId) dataLayer?.push({ event: "userLoggedIn" });
+	}, [auth?.userId, dataLayer]);
 
 	// redirects
 	React.useEffect(() => {
-		if (!userId) return;
-		if (["/", "/sttl"].includes(pathname)) router.replace(redirectUrl > "/" ? redirectUrl : "/sttl/terms-and-conditions");
-	}, [pathname, userId, redirectUrl]);
+		if (!auth?.userId) return;
+		if (["/"].includes(pathname)) router.replace("/dashboard");
+		if (["/sttl"].includes(pathname)) router.replace("/sttl/terms-and-conditions");
+	}, [pathname, auth?.userId]);
 
 	// return value
 	const value = React.useMemo(() => {
-		if (hasAuthError || hasUserAccountError) throw new AuthRequiredError();
-		if (!userAccount) return { auth, isLoadingAccount: true };
-		return { dataLayer, auth, userAccount, correlationId, isNewUser, resetCorrelationId };
-	}, [dataLayer, auth, userAccount, correlationId, isNewUser, hasAuthError, hasUserAccountError, resetCorrelationId]);
+		if (auth?.hasError || userAccount?.hasError) throw new AuthRequiredError();
+		if (!userAccount) return { isLoadingData: true };
+		return { dataLayer, auth, userAccount, correlationId, resetCorrelationId };
+	}, [dataLayer, auth, userAccount, correlationId, resetCorrelationId]);
 
 	return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
@@ -64,6 +67,6 @@ export const useAppContext = () => React.useContext(AppContext);
 // get the page title
 const getPageTitle = (pathname: string) => {
 	const slug = pathname?.split("/").pop();
-	const step = FORM_STEPS.find(step => step.route === slug)?.label;
+	const step = formSteps.find(step => step.route === slug)?.label;
 	return step ? `${step} - STTL` : "Short Term Tourist Letting - Fáilte Ireland";
 };

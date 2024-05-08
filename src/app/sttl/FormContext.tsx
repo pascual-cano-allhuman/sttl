@@ -1,49 +1,56 @@
 import React from "react";
 import { useAppContext } from "app/AppContext";
-import { useSttlForm } from "models/sttl";
+import { useSttlFormState, useSttlOrder, useSaveAndResume } from "models/sttl";
 import { logger } from "lib/logger";
-import { useFormRequests } from "models/sttl";
+import { useMiddleware } from "middleware/useMiddleware";
 
 type ContextProps = { children: React.ReactNode };
 type ContextValue = {
-	sttlForm: ReturnType<typeof useSttlForm>;
+	sttlForm: ReturnType<typeof useSttlFormState>;
+	sttlOrder: ReturnType<typeof useSttlOrder>;
+	saveAndResume: ReturnType<typeof useSaveAndResume>;
 	correlation: { userId?: string; correlationId?: string; contactId?: string };
 };
 const Context = React.createContext({} as ContextValue);
 
 export const FormContextProvider = ({ children }: ContextProps) => {
 	const { auth, correlationId, userAccount, resetCorrelationId } = useAppContext();
-	const { userId, hasAuthError, getToken } = auth || {}; // getToken
+	const { userId, getToken } = auth || {};
 	const correlation = { userId, correlationId, contactId: userAccount?.contactId };
 
 	// check we have all the data we need
 	React.useEffect(() => {
 		if (!userAccount?.contactId) return;
 		logger.event("STTL Application Start", correlation);
-	}, [hasAuthError, userAccount]);
+	}, [userAccount]);
 
 	// attach token to requests
-	const formRequests = useFormRequests({ getToken, correlation });
-	const { appendFeesToOrder, createPaymentRequest, sendPaymentResponse, sendZeroPaymentOrder, retrieveOrderResult } = formRequests;
-	const { loadSaveAndResumeData, updateSaveAndResume, clearSaveAndResumeData, sendQAUpsell } = formRequests;
+	const middleware = useMiddleware({ getToken, correlation });
+	const { appendFeesToOrder, createPaymentRequest, sendPaymentResponse, sendZeroPaymentOrder, fetchOrderStatus } = middleware;
+	const { loadSaveAndResumeData, updateSaveAndResume, clearSaveAndResumeData, sendQAUpsell } = middleware;
 
 	// manage the new applications form
-	const sttlForm = useSttlForm({
+	const sttlForm = useSttlFormState({ sendQAUpsell, resetCorrelationId });
+	const { formState, goToStep } = sttlForm;
+
+	// manage the order and payment flow
+	const sttlOrder = useSttlOrder({
+		formState,
 		userAccount,
-		resetCorrelationId,
+		goToStep,
 		appendFeesToOrder,
 		createPaymentRequest,
 		sendPaymentResponse,
 		sendZeroPaymentOrder,
-		retrieveOrderResult,
-		sendQAUpsell,
-		loadSaveAndResumeData,
-		updateSaveAndResume,
-		clearSaveAndResumeData
+		fetchOrderStatus
 	});
+	const { order } = sttlOrder;
+
+	// save and resume functionality
+	const saveAndResume = useSaveAndResume({ order, loadSaveAndResumeData, updateSaveAndResume, clearSaveAndResumeData });
 
 	// return value
-	const value = React.useMemo(() => ({ sttlForm, correlation }), [sttlForm, correlation]);
+	const value = React.useMemo(() => ({ sttlForm, sttlOrder, saveAndResume, correlation }), [sttlForm, saveAndResume, correlation]);
 	return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 

@@ -16,6 +16,9 @@ export const b2cPolicies = B2C_TENANT
 				signUpSignIn: {
 					authority: `${B2C_DOMAIN}/${B2C_TENANT}.onmicrosoft.com/B2C_1A_FISIGNUP_SIGNIN`
 				},
+				signUp: {
+					authority: `${B2C_DOMAIN}/${B2C_TENANT}.onmicrosoft.com/B2C_1A_FISIGNUPONLY`
+				},
 				forgotPassword: {
 					authority: `${B2C_DOMAIN}/${B2C_TENANT}.onmicrosoft.com/v2.0/B2C_1A_FIPROFILEPASSWORDRESET`
 				},
@@ -24,7 +27,7 @@ export const b2cPolicies = B2C_TENANT
 				}
 			},
 			authorityDomain: `${B2C_DOMAIN}`
-	  }
+		}
 	: { authorities: { signUpSignIn: {} } };
 
 /**

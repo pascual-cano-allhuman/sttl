@@ -7,3 +7,6 @@ export * from "./sttl/property-owner-details/PropertyOwnerDetails";
 export * from "./sttl/review/Review";
 export * from "./sttl/card-payment/CardPayment";
 export * from "./sttl/confirm/Confirm";
+export * from "./dashboard/Dashboard";
+export * from "./dashboard/my-properties/MyProperties";
+export * from "./dashboard/payment-history/PaymentHistory";

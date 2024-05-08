@@ -4,11 +4,11 @@ import { logger } from "lib/logger";
 
 const MIDDLEWARE_DE_ENDPOINT = process.env.MIDDLEWARE_DE_ENDPOINT?.length > 0 ? process.env.MIDDLEWARE_DE_ENDPOINT : null;
 const MIDDLEWARE_PORTAL_ENDPOINT = process.env.MIDDLEWARE_PORTAL_ENDPOINT?.length > 0 ? process.env.MIDDLEWARE_PORTAL_ENDPOINT : null;
-const MOCK_MIDDLEWARE = process.env.MOCK_MIDDLEWARE || false;
+const SHOULD_MOCK_MIDDLEWARE = process.env.SHOULD_MOCK_MIDDLEWARE || false;
 
 export const postCardPaymentRequest = async (order: any, token: string, correlation: Record<string, string>) => {
 	if (!MIDDLEWARE_DE_ENDPOINT || !token) return;
-	if (MOCK_MIDDLEWARE) return getFakePaymentRequest(); // dummy data
+	if (SHOULD_MOCK_MIDDLEWARE) return getFakePaymentRequest(); // dummy data
 	if (order?.acceptedOffer?.[0]?.itemOffered?.isRelatedTo?.owns?.address?.postalCode === "D00 0001") return null; // simulate error
 	if (order["@type"] !== "Order") return;
 	try {
@@ -26,7 +26,7 @@ export const postCardPaymentRequest = async (order: any, token: string, correlat
 
 export const postCardPaymentResponse = async (data: object, token: string, correlation: Record<string, string>): Promise<any> => {
 	if (!MIDDLEWARE_DE_ENDPOINT || !token) return;
-	if (MOCK_MIDDLEWARE) return { orderId: "00000000-0000-0000-0000-000000000000", status: "OrderDelivered" }; // dummy response
+	if (SHOULD_MOCK_MIDDLEWARE) return { orderId: "00000000-0000-0000-0000-000000000000", status: "OrderDelivered" }; // dummy response
 	try {
 		const { orderId, status } = await httpPostFormData(`${MIDDLEWARE_DE_ENDPOINT}/pay/response`, { hppResponse: JSON.stringify(data) }, token);
 		logger.event(`Card payment confirmation for STTL: ${orderId}. status ${status}.`, correlation);
@@ -52,7 +52,7 @@ export const postOrderToEventsBus = async (order: any, token: string, correlatio
 
 export const getOrderStatusFromEventBus = async (token: string, correlation: Record<string, string>, propertiesList?: any[]) => {
 	if (!MIDDLEWARE_DE_ENDPOINT || !token) return;
-	if (MOCK_MIDDLEWARE) return getFakeOrderStatus(propertiesList);
+	if (SHOULD_MOCK_MIDDLEWARE) return getFakeOrderStatus(propertiesList);
 	try {
 		return await httpGet(`${MIDDLEWARE_DE_ENDPOINT}/b2c/event/${correlation.correlationId}/status?mode=full`, token);
 	} catch (e) {

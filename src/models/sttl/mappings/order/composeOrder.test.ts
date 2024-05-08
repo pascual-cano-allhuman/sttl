@@ -11,11 +11,6 @@ describe("composeOrder", () => {
 		expect(result).toBeNull();
 	});
 
-	it("should return null if userAccount is missing", () => {
-		const result = composeOrder(formState, null);
-		expect(result).toBeNull();
-	});
-
 	it("should return a valid Order object when both formState and userAccount are provided", () => {
 		const result = composeOrder(formState, userAccount);
 		expect(result).toBeDefined();

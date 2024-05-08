@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useFormContext, useController } from "react-hook-form";
 import { AddressLookup } from "trade-portal-components";

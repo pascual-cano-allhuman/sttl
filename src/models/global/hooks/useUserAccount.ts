@@ -1,22 +1,22 @@
 import React from "react";
 import { getUserContext } from "middleware/requests";
 import { UserAccount, parseUserContext } from "models/global";
+import { Auth } from "lib/msal";
 
 type HookProps = {
-	getToken: () => Promise<string>;
-	userId: string;
+	auth: Auth;
 	correlationId: string;
-	provider: string;
-	isNewUser: boolean;
 };
 
 export const useUserAccount = (props: HookProps) => {
-	const { getToken, userId, correlationId, provider, isNewUser } = props;
+	const { auth, correlationId } = props;
+	const { getToken, userId, provider, isNewUser } = auth || {};
 	const [userAccount, setUserAccount] = React.useState<UserAccount>();
-	const [hasUserAccountError, setHasUserAccountError] = React.useState(false);
+	const [hasError, setHasError] = React.useState(false);
 
 	const getUserAccount = async () => {
-		const token = await getToken();
+		if (!userId) return null;
+		const token = await getToken?.();
 		const correlation = { correlationId, userId };
 		const data = await getUserContext(token, correlation);
 		const { name = "", email = "", firstName = "", lastName = "", contactId = "" } = parseUserContext(data);
@@ -25,13 +25,16 @@ export const useUserAccount = (props: HookProps) => {
 
 	// get user context into userAccount
 	React.useEffect(() => {
-		if (!userId) return;
+		if (!auth) return;
 		getUserAccount()
 			.then(userAccount => setUserAccount(userAccount))
-			.catch(() => setHasUserAccountError(true));
-	}, [userId]);
+			.catch(() => setHasError(true));
+	}, [auth]);
 
-	return { userAccount, hasUserAccountError };
+	return React.useMemo(() => {
+		if (userAccount === undefined && !hasError) return;
+		return { hasError, ...userAccount };
+	}, [hasError, userAccount]);
 };
 
 export default useUserAccount;

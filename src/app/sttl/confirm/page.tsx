@@ -5,9 +5,8 @@ import { Confirm } from "templates";
 import { useFormContext } from "app/sttl/FormContext";
 
 const Page = () => {
-	const { sttlForm } = useFormContext();
-	const { orderResult } = sttlForm;
-
+	const { sttlOrder } = useFormContext();
+	const { orderResult } = sttlOrder;
 	return <Confirm orderResult={orderResult} />;
 };
 

@@ -1,4 +1,4 @@
-export const dashboardSample = {
+export const properties = {
 	value: [
 		{
 			address: { postalCode: "D00 001", streetAddress: "10 Westland Square, Pearse Street, Dublin 2" },

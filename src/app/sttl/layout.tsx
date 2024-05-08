@@ -5,8 +5,8 @@ import { LoaderWithContent } from "templates";
 import { FormContextProvider, useFormContext } from "./FormContext";
 
 const Loading = ({ children }: { children: React.ReactNode }) => {
-	const { sttlForm } = useFormContext();
-	if (sttlForm.isSubmittingData) return <LoaderWithContent>Please wait while we are processing your data.</LoaderWithContent>;
+	const { sttlOrder } = useFormContext();
+	if (sttlOrder.isSubmittingData) return <LoaderWithContent>Please wait while we are processing your data.</LoaderWithContent>;
 	return children;
 };
 
