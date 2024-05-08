@@ -11,25 +11,20 @@ describe("getPaymentFromSchema", () => {
 				confirmationNumber: "CONF-456"
 			}
 		};
-		const token = "TOKEN123";
-
-		const actual = getPaymentFromSchema(orderSchema, token);
-
+		const actual = getPaymentFromSchema(orderSchema);
 		const expected = {
 			invoiceNumber: "INV-123",
 			invoiceDate: "1/1/2024",
-			invoiceUrl: "/document/sttlreceipt/INV-123.pdf?authorization=TOKEN123",
+			invoiceUrl: "/document/sttlreceipt/INV-123.pdf",
 			confirmationNumber: "CONF-456",
 			orderStatus: "Pending",
 			id: "123456"
 		};
-
 		expect(actual).toEqual(expected);
 	});
 
 	it("returns undefined if orderSchema is not provided", () => {
-		const token = "TOKEN123";
-		const actual = getPaymentFromSchema(undefined, token);
+		const actual = getPaymentFromSchema(undefined);
 		expect(actual).toBeUndefined();
 	});
 });

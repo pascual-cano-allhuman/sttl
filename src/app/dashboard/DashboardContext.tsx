@@ -7,6 +7,7 @@ type ContextProps = { children: React.ReactNode };
 type ContextValue = {
 	dashboard?: DashboardHook;
 	isLoadingData?: boolean;
+	openInvoice: (invoiceUrl: string) => void;
 };
 const Context = React.createContext({} as ContextValue);
 
@@ -16,6 +17,7 @@ export const DashboardContext = ({ children }: ContextProps) => {
 	const { userId, isLoggedIn, getToken } = auth || {};
 	const correlation = { userId, correlationId, contactId: userAccount?.contactId };
 	const { loadSaveAndResumeData, clearSaveAndResumeData, loadDashboardPayments } = useMiddleware({ getToken, correlation });
+
 	// hook
 	const dashboard = useDashboard({
 		isLoggedIn,
@@ -26,8 +28,12 @@ export const DashboardContext = ({ children }: ContextProps) => {
 
 	// return value
 	const value = React.useMemo(() => {
-		return { dashboard };
-	}, [dashboard]);
+		const openInvoice = async (invoiceUrl: string) => {
+			const token = await auth?.getToken?.();
+			window.open(`${invoiceUrl}?authorization=${token || ""}`);
+		};
+		return { dashboard, openInvoice };
+	}, [dashboard, auth]);
 	return <Context.Provider value={value}>{children}</Context.Provider>;
 };
 

@@ -1,1 +1,1 @@
-export * from "./payments/getPaymentFromSchema";
+export * from "./getPaymentFromSchema";

@@ -28,7 +28,7 @@ export const useAuth = (params?: Params) => {
 	// On first load, get token claims from B2C.
 	React.useEffect(() => {
 		if (window["Cypress"]) return;
-		if (process.env.SHOULD_MOCK_MIDDLEWARE) return setClaimsData({ userId: "00000000-0000-0000-0000-000000000000" });
+		// if (process.env.SHOULD_MOCK_MIDDLEWARE) return setClaimsData({ userId: "00000000-0000-0000-0000-000000000000" });
 		if (inProgress === InteractionStatus.None && !isSetup.current) {
 			isSetup.current = true;
 			getAuthenticationResult()
@@ -91,7 +91,7 @@ export const useAuth = (params?: Params) => {
 	return React.useMemo(() => {
 		// expose a function to request a token
 		const getToken = async () => {
-			if (process.env.SHOULD_MOCK_MIDDLEWARE) return "00000000-0000-0000-0000-000000000000";
+			// if (process.env.SHOULD_MOCK_MIDDLEWARE) return "00000000-0000-0000-0000-000000000000";
 			if (!claimsData?.userId) return null;
 			const account = instance.getActiveAccount() || accounts[0];
 			const request = { scopes, account };

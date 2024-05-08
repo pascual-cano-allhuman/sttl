@@ -22,7 +22,7 @@ const AppContext = React.createContext({} as ContextValue);
 export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
 	const pathname = usePathname();
 	const router = useRouter();
-	const auth = useAuth({ mustLogInPaths: /^\/sttl\/?.*$/ });
+	const auth = useAuth({ mustLogInPaths: /^\/(sttl|dashboard)\/?.*$/ });
 	const { correlationId, resetCorrelationId } = useSessionData();
 	const { dataLayer } = useTagManager(process.env.GTM_CODE);
 	const userAccount = useUserAccount({ auth, correlationId });
