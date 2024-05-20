@@ -13,8 +13,8 @@ const Page = () => {
 	const { sttlForm } = useFormContext();
 	const { formState, stepper, onNextStep, onPrevStep, isEditing, propertiesList } = sttlForm;
 	const entry = searchParams.get("entry") && isEditing ? +searchParams.get("entry") : propertiesList.length;
-	const defaultValues = React.useMemo(() => formState?.property_owner_details?.[entry] || ({} as PropertyOwnerDetailsStep), [entry, formState]);
-	const propertyAddress = React.useMemo(() => formState?.property_address?.[entry]?.propertyAddress, []);
+	const defaultValues = React.useMemo(() => formState?.propertyOwner?.[entry] || ({} as PropertyOwnerDetailsStep), [entry, formState]);
+	const propertyAddress = React.useMemo(() => formState?.propertyAddress?.[entry]?.propertyAddress, []);
 
 	return (
 		<PropertyOwnerDetails

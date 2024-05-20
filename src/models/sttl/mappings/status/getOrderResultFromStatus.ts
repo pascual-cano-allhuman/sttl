@@ -3,7 +3,7 @@ import { PropertyData } from "models/sttl/types";
 export const getOrderResultFromStatus = (status: any, propertiesList: PropertyData[]) => {
 	const registrations = [];
 	propertiesList.forEach(property => {
-		const address = property?.property_address?.propertyAddress;
+		const address = property?.propertyAddress?.propertyAddress;
 		const sttlNumber = getSTTLNumberForPostalCode(address?.postcode, status);
 		if (sttlNumber) registrations.push({ address: address.addressLine1, sttlNumber, postcode: address.postcode });
 	});

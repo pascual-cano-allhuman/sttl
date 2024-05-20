@@ -68,7 +68,7 @@ const getFakePaymentRequest = async () => {
 
 const getFakeOrderStatus = async (propertiesList: any[]) => {
 	const subOperations = propertiesList.map((property, index) => {
-		const postalCode = property?.property_address?.propertyAddress?.postcode;
+		const postalCode = property?.propertyAddress?.propertyAddress?.postcode;
 		const sttlNumber = `STL-00000${index}`;
 		const signals = [
 			{ name: "STL Code Generation", data: { number: sttlNumber } },

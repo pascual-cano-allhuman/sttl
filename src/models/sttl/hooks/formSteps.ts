@@ -1,9 +1,9 @@
 export enum FormStep {
 	terms_and_conditions = "terms_and_conditions",
-	property_type = "property_type",
-	statutory_obligations = "statutory_obligations",
-	property_address = "property_address",
-	property_owner_details = "property_owner_details",
+	propertyType = "propertyType",
+	statutoryObligations = "statutoryObligations",
+	propertyAddress = "propertyAddress",
+	propertyOwner = "propertyOwner",
 	review = "review",
 	card_payment = "card_payment",
 	confirm = "confirm"
@@ -11,10 +11,10 @@ export enum FormStep {
 
 export const FORM_STEPS_DATA = [
 	{ id: FormStep.terms_and_conditions, label: "Terms and conditions", route: "terms-and-conditions" },
-	{ id: FormStep.property_type, label: "STTL property type", route: "property-type" },
-	{ id: FormStep.statutory_obligations, label: "Statutory obligations", route: "statutory-obligations" },
-	{ id: FormStep.property_address, label: "STTL property address", route: "property-address" },
-	{ id: FormStep.property_owner_details, label: "Property owner details", route: "property-owner-details" },
+	{ id: FormStep.propertyType, label: "STTL property type", route: "property-type" },
+	{ id: FormStep.statutoryObligations, label: "Statutory obligations", route: "statutory-obligations" },
+	{ id: FormStep.propertyAddress, label: "STTL property address", route: "property-address" },
+	{ id: FormStep.propertyOwner, label: "Property owner details", route: "property-owner-details" },
 	{ id: FormStep.review, label: "Review details", route: "review" },
 	{ id: FormStep.card_payment, label: "Payment details", route: "card-payment" },
 	{ id: FormStep.confirm, label: "Confirm", route: "confirm" }

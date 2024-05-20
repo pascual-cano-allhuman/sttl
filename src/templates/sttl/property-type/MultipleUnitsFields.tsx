@@ -2,18 +2,15 @@ import React from "react";
 import { useFormContext, useFormState } from "react-hook-form";
 import { Box, Text, NumberInput, Dropdown, Input, Divider, TextLink } from "trade-portal-components";
 import { PROPERTY_OPTIONS } from "settings/propertyTypeOptions";
-import { Category } from "models";
 
-const optionsMap = PROPERTY_OPTIONS.units.reduce((acc, { label, inputName, inputLabel }) => {
+const optionsMap = PROPERTY_OPTIONS.multipleUnits.reduce((acc, { label, inputName, inputLabel }) => {
 	acc[label] = { inputName, inputLabel };
 	return acc;
 }, {});
 
 type Entry = [number, Record<string, string | number>];
 
-export type FormCategoryProps = { category: Category };
-
-export const MultipleUnitsFields = ({ category }: FormCategoryProps) => {
+export const MultipleUnitsFields = () => {
 	const { register, watch, getValues, trigger, unregister } = useFormContext();
 	const { errors } = useFormState();
 
@@ -37,7 +34,7 @@ export const MultipleUnitsFields = ({ category }: FormCategoryProps) => {
 
 	const onRemoveUnit = key => {
 		setUnitEntries(prev => prev.filter(([_key]) => +_key !== +key));
-		unregister(`${category}.${key}`); // remove fields from react-hook-form internal state
+		unregister(`${`multipleUnits`}.${key}`); // remove fields from react-hook-form internal state
 	};
 
 	const categoryEntriesLength = unitEntries.length;
@@ -46,31 +43,34 @@ export const MultipleUnitsFields = ({ category }: FormCategoryProps) => {
 		<Box columns={4} gap="2.4rem">
 			{unitEntries.map(([id, values]) => {
 				const { propertyType, customPropertyType, noOfGuests, ...rest } = values;
-				const selectedPropertyType = watch(`${category}.${id}.propertyType`);
+				const selectedPropertyType = watch(`${`multipleUnits`}.${id}.propertyType`);
 				const showCustomPropertyTypeInput = selectedPropertyType === `Other - specify`;
 				const { inputName, inputLabel } = optionsMap[selectedPropertyType] || {};
-				const dynamicInputName = inputName && `${category}.${id}.${inputName}`;
+				const dynamicInputName = inputName && `${`multipleUnits`}.${id}.${inputName}`;
 				return (
 					<Box key={id} gap="2.4rem">
-						<Box gap="0.8rem" id={`${category}.propertyType`}>
+						<Box gap="0.8rem" id={`${`multipleUnits`}.propertyType`}>
 							<Dropdown
 								label="Type of unit"
 								placeholder="Please Select"
 								defaultValue={propertyType}
-								{...register(`${category}.${id}.propertyType`, { required: "You must select type of unit" })}
-								error={errors[category]?.[`${id}`]?.propertyType?.message}
-								options={PROPERTY_OPTIONS.units}
+								{...register(`${`multipleUnits`}.${id}.propertyType`, { required: "You must select type of unit" })}
+								error={errors[`multipleUnits`]?.[`${id}`]?.propertyType?.message}
+								options={PROPERTY_OPTIONS.multipleUnits}
 								hint="Please complete information for each unit type"
 							/>
 						</Box>
 						<Box gap="2.4rem" display={selectedPropertyType ? "flex" : "none"}>
 							{showCustomPropertyTypeInput && (
 								<Input
-									id={`${category}.${id}.customPropertyType`}
+									id={`${`multipleUnits`}.${id}.customPropertyType`}
 									label="Please specify type of unit"
 									defaultValue={customPropertyType}
-									{...register(`${category}.${id}.customPropertyType`, { required: "You must enter type of unit", maxLength: 100 })}
-									error={errors[category]?.[`${id}`]?.customPropertyType?.message}
+									{...register(`${`multipleUnits`}.${id}.customPropertyType`, {
+										required: "You must enter type of unit",
+										maxLength: 100
+									})}
+									error={errors[`multipleUnits`]?.[`${id}`]?.customPropertyType?.message}
 								/>
 							)}
 							{/* this input depends on what was selected as propertyType in a dropdown */}
@@ -80,15 +80,15 @@ export const MultipleUnitsFields = ({ category }: FormCategoryProps) => {
 									label={inputLabel}
 									defaultValue={rest[inputName]}
 									{...register(dynamicInputName, { required: true, min: 1, max: 9999, valueAsNumber: true })}
-									error={errors[category]?.[`${id}`]?.[`${inputName}`] && "You must give number"}
+									error={errors[`multipleUnits`]?.[`${id}`]?.[`${inputName}`] && "You must give number"}
 								/>
 							)}
 							<NumberInput
-								id={`${category}.${id}.noOfGuests`}
+								id={`${`multipleUnits`}.${id}.noOfGuests`}
 								label="Number of guests that can be accommodated"
 								defaultValue={noOfGuests}
-								{...register(`${category}.${id}.noOfGuests`, { required: true, min: 1, max: 9999, valueAsNumber: true })}
-								error={errors[category]?.[`${id}`]?.noOfGuests && "You must give number"}
+								{...register(`${`multipleUnits`}.${id}.noOfGuests`, { required: true, min: 1, max: 9999, valueAsNumber: true })}
+								error={errors[`multipleUnits`]?.[`${id}`]?.noOfGuests && "You must give number"}
 							/>
 						</Box>
 						{showRemoveUnitButton && (

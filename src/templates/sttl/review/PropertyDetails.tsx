@@ -1,5 +1,4 @@
 import React from "react";
-import { Category } from "models/global";
 import { PropertyTypeStep } from "models";
 import { Box, Text, TickList } from "trade-portal-components";
 
@@ -39,12 +38,12 @@ const ListOfUnits = ({ units }: ListItemProps) => {
 
 export const getPropertyDetails = (data: PropertyTypeStep) => {
 	const { category } = data;
-	if (category === Category.room) return getListItemsForRoom(data.room);
-	if (category === Category.fullProperty) return getListItemsForFullProperty(data.fullProperty);
-	if (category === Category.units) return getListItemsForUnits(data.units);
+	if (category === "sharedProperty") return getListItemsForRoom(data.sharedProperty);
+	if (category === "fullProperty") return getListItemsForFullProperty(data.fullProperty);
+	if (category === "multipleUnits") return getListItemsForUnits(data.multipleUnits);
 };
 
-export const getListItemsForRoom = (data: PropertyTypeStep["room"]) => {
+export const getListItemsForRoom = (data: PropertyTypeStep["sharedProperty"]) => {
 	const propertyType = data.customPropertyType || data.propertyType;
 	const { numberOfSharedRooms, numberOfPrivateRooms, numberOfGuestsInSharedRooms, numberOfGuestsInPrivateRooms } = data;
 	const items = [];
@@ -66,7 +65,7 @@ export const getListItemsForFullProperty = (data: PropertyTypeStep["fullProperty
 	return items;
 };
 
-export const getListItemsForUnits = (units: PropertyTypeStep["units"]) => {
+export const getListItemsForUnits = (units: PropertyTypeStep["multipleUnits"]) => {
 	return units.map(unit => {
 		const propertyType = unit.customPropertyType || unit.propertyType;
 		const numberOfGuests = unit.noOfGuests;

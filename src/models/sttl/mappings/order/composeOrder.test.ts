@@ -6,7 +6,7 @@ import { FormState } from "../../types";
 jest.mock("uuid");
 describe("composeOrder", () => {
 	it("should return null if no offers in formState", () => {
-		const emptyFormState = { property_type: {} } as FormState;
+		const emptyFormState = { propertyType: {} } as FormState;
 		const result = composeOrder(emptyFormState, userAccount);
 		expect(result).toBeNull();
 	});

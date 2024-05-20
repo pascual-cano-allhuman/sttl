@@ -1,15 +1,15 @@
 import { Category, PermissionStatus } from "models/global";
 
 export type FormState = {
-	property_type: PropertyTypeStep[];
-	statutory_obligations: StatutoryObligationsStep[];
-	property_address: PropertyAddressStep[];
-	property_owner_details: PropertyOwnerDetailsStep[];
+	propertyType: PropertyTypeStep[];
+	statutoryObligations: StatutoryObligationsStep[];
+	propertyAddress: PropertyAddressStep[];
+	propertyOwner: PropertyOwnerDetailsStep[];
 };
 
 export type PropertyTypeStep = {
 	category: Category;
-	room?: {
+	sharedProperty?: {
 		propertyType?: string;
 		customPropertyType?: string;
 		numberOfSharedRooms?: number;
@@ -23,7 +23,7 @@ export type PropertyTypeStep = {
 		numberOfBedrooms?: number;
 		numberOfGuests?: number;
 	};
-	units?: Record<string, string | number>[];
+	multipleUnits?: Record<string, string | number>[];
 };
 
 type Address = {
@@ -55,8 +55,8 @@ export type StatutoryObligationsStep = {
 };
 
 export type PropertyData = {
-	property_type: PropertyTypeStep;
-	statutory_obligations: StatutoryObligationsStep;
-	property_address: PropertyAddressStep;
-	property_owner_details: PropertyOwnerDetailsStep;
+	propertyType: PropertyTypeStep;
+	statutoryObligations: StatutoryObligationsStep;
+	propertyAddress: PropertyAddressStep;
+	propertyOwner: PropertyOwnerDetailsStep;
 };

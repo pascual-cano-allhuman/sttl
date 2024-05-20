@@ -11,11 +11,11 @@ const Page = () => {
 	const { sttlForm } = useFormContext();
 	const { formState, stepper, onNextStep, onPrevStep, isEditing, propertiesList } = sttlForm;
 	const entry = searchParams.get("entry") && isEditing ? +searchParams.get("entry") : propertiesList.length;
-	const defaultValues = React.useMemo(() => formState?.property_address?.[entry] || ({} as PropertyAddressStep), [entry, formState]);
+	const defaultValues = React.useMemo(() => formState?.propertyAddress?.[entry] || ({} as PropertyAddressStep), [entry, formState]);
 	const excludedEircodes = React.useMemo(() => {
 		return propertiesList
 			.filter((_: any, i: number) => i !== entry)
-			.map((property: PropertyData) => property.property_address.propertyAddress?.postcode);
+			.map((property: PropertyData) => property.propertyAddress.propertyAddress?.postcode);
 	}, [entry, propertiesList]);
 
 	return (

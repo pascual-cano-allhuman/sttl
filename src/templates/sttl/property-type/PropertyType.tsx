@@ -5,7 +5,7 @@ import { FormProvider } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { Stepper, Alert, Box, CardSelector, CardSelectorGroup } from "trade-portal-components";
 import { FormFooter, FormHeader, FormStepContainer } from "templates";
-import { PropertyTypeStep, Category } from "models";
+import { PropertyTypeStep } from "models";
 import { SelectedPropertyFields } from "./SelectedPropertyFields";
 
 type TemplateProps = {
@@ -69,13 +69,13 @@ export const PropertyType = (props: TemplateProps) => {
 };
 
 const infoAlertText = {
-	[Category.room]: `NB: The host resides on the premises during provision of accommodation and it is their primary residence.`,
-	[Category.fullProperty]: `NB: The host does not reside at the premises (it is a secondary property).`,
-	[Category.units]: `NB: If you have several different types of accommodations at the same address or Eircode you can ‘add another unit type’.`
+	sharedProperty: `NB: The host resides on the premises during provision of accommodation and it is their primary residence.`,
+	fullProperty: `NB: The host does not reside at the premises (it is a secondary property).`,
+	multipleUnits: `NB: If you have several different types of accommodations at the same address or Eircode you can ‘add another unit type’.`
 };
 
 const cards = [
-	{ id: Category.room, icon: "fi-bed", title: "Bedroom(s) in your home", ariaLabel: "Bedrooms in your home" },
-	{ id: Category.fullProperty, icon: "fi-bed", title: "Entire property" },
-	{ id: Category.units, icon: "fi-camp-spot", title: "Multiple units at a site / Complex" }
+	{ id: "sharedProperty", icon: "fi-bed", title: "Bedroom(s) in your home", ariaLabel: "Bedrooms in your home" },
+	{ id: "fullProperty", icon: "fi-bed", title: "Entire property" },
+	{ id: "multipleUnits", icon: "fi-camp-spot", title: "Multiple units at a site / Complex" }
 ];

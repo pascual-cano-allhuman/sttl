@@ -3,7 +3,7 @@ import { Property, SharedPropertyDetails, FullPropertyDetails, MultipleUnitsDeta
 export const usePropertyDetails = ({ property }: { property: Property }) => {
 	const propertyType = property.customPropertyType || property.propertyType;
 	switch (property.category) {
-		case "room": {
+		case "sharedProperty": {
 			const items = getItemsForSharedProperty(propertyType, property.details as SharedPropertyDetails);
 			return { items };
 		}
@@ -11,7 +11,7 @@ export const usePropertyDetails = ({ property }: { property: Property }) => {
 			const items = getItemsForFullProperty(propertyType, property.details as FullPropertyDetails);
 			return { items };
 		}
-		case "units": {
+		case "multipleUnits": {
 			const units = getListItemsForUnits(property.details as MultipleUnitsDetails);
 			return { units };
 		}

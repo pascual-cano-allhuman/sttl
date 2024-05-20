@@ -5,17 +5,17 @@ import { getOwnerDetails, getPlanningPermissionFromOfferItem, getPropertyAddress
 export const getFormFromOrder = (order: OrderSchema): FormState => {
 	return order?.acceptedOffer?.reduce(
 		(acc, item: Offer) => {
-			acc["property_type"].push(getPropertyType(item));
-			acc["statutory_obligations"].push(getPlanningPermissionFromOfferItem(item));
-			acc["property_address"].push(getPropertyAddress(item));
-			acc["property_owner_details"].push(getOwnerDetails(item));
+			acc["propertyType"].push(getPropertyType(item));
+			acc["statutoryObligations"].push(getPlanningPermissionFromOfferItem(item));
+			acc["propertyAddress"].push(getPropertyAddress(item));
+			acc["propertyOwner"].push(getOwnerDetails(item));
 			return acc;
 		},
 		{
-			property_type: [],
-			statutory_obligations: [],
-			property_address: [],
-			property_owner_details: []
+			propertyType: [],
+			statutoryObligations: [],
+			propertyAddress: [],
+			propertyOwner: []
 		}
 	);
 };

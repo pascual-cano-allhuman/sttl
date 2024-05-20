@@ -1,5 +1,5 @@
 import { PROPERTY_OPTIONS, TEXT_TO_UNIT_ROOM_TYPE } from "settings/propertyTypeOptions";
-import { AccommodationSchema, TEXT_TO_CATEGORY, Category, TEXT_TO_PLANNING_PERMISSION, CategoryAsText, PersonSchema } from "models/global";
+import { AccommodationSchema, TEXT_TO_CATEGORY, TEXT_TO_PLANNING_PERMISSION, CategoryAsText, PersonSchema } from "models/global";
 
 export const getPlanningPermissionFromOfferItem = (item: Offer) => {
 	const permission = item.itemOffered.isRelatedTo.owns.additionalProperty?.find(ap => ap.name === "Planning Permission");
@@ -18,10 +18,10 @@ export const getPropertyType = (item: Offer) => {
 	const category = TEXT_TO_CATEGORY[categoryAsText];
 	const stepOneArrayItem = { category };
 
-	if (category === Category.room) {
+	if (category === "sharedProperty") {
 		const owns = item.itemOffered.isRelatedTo.owns as AccommodationSchema;
 		const { containsPlace } = owns;
-		const hasRoomProperty = PROPERTY_OPTIONS.room.some(({ value }) => value === owns.additionalType);
+		const hasRoomProperty = PROPERTY_OPTIONS.sharedProperty.some(({ value }) => value === owns.additionalType);
 		const propertyType = hasRoomProperty ? owns.additionalType : "Other - specify";
 		const customPropertyType = hasRoomProperty ? undefined : owns.additionalType;
 
@@ -50,7 +50,7 @@ export const getPropertyType = (item: Offer) => {
 		return stepOneArrayItem;
 	}
 
-	if (category === Category.fullProperty) {
+	if (category === "fullProperty") {
 		const owns = item.itemOffered.isRelatedTo.owns as AccommodationSchema;
 		const hasFullProperty = PROPERTY_OPTIONS.fullProperty.some(({ value }) => value === owns.additionalType);
 		const propertyType = hasFullProperty ? owns.additionalType : "Other - specify";
@@ -67,14 +67,14 @@ export const getPropertyType = (item: Offer) => {
 		return stepOneArrayItem;
 	}
 
-	if (category === Category.units) {
+	if (category === "multipleUnits") {
 		const owns = item.itemOffered.isRelatedTo.owns as AccommodationSchema;
 
 		const propertyDetails = owns.containsPlace.reduce((acc, next) => {
 			const unitText = next.numberOfRooms?.unitText;
 			const numberOfRooms = next.numberOfRooms?.value ? +next.numberOfRooms.value : 0;
 			const numberOfGuests = next.amenityFeature[0]?.value ? +next.amenityFeature[0].value : 0;
-			const hasUnitsProperty = PROPERTY_OPTIONS.units.some(({ value }) => value === next.additionalType);
+			const hasUnitsProperty = PROPERTY_OPTIONS.multipleUnits.some(({ value }) => value === next.additionalType);
 			const propertyType = hasUnitsProperty ? next.additionalType : "Other - specify";
 			const customPropertyType = hasUnitsProperty ? undefined : next.additionalType;
 

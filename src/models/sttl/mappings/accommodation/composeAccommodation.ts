@@ -1,12 +1,12 @@
 import { PropertyData } from "models/sttl";
-import { AccommodationSchema, Category, PLANNING_PERMISSION_AS_TEXT, AddressSchema } from "models/global";
+import { AccommodationSchema, PLANNING_PERMISSION_AS_TEXT, AddressSchema } from "models/global";
 // TODO: move PLANNING_PERMISSION_AS_TEXT to settings
 import { UNIT_ROOM_TYPE_AS_TEXT } from "settings/propertyTypeOptions";
 
 export const composeAccommodation = (property: PropertyData) => {
 	const accommodation = getAccommodationByType(property);
-	const { propertyAddress } = property.property_address;
-	const { permissionStatus } = property.statutory_obligations;
+	const { propertyAddress } = property.propertyAddress;
+	const { permissionStatus } = property.statutoryObligations;
 	const address = getPostalAddress(propertyAddress, "Ireland");
 	const planningPermission = {
 		"@type": "PropertyValue",
@@ -17,10 +17,10 @@ export const composeAccommodation = (property: PropertyData) => {
 };
 
 export const getAccommodationByType = (property: PropertyData) => {
-	const { category, room, fullProperty, units } = property.property_type;
-	if (category === Category.room) return getSharedRooms(room);
-	if (category === Category.fullProperty) return getEntireProperty(fullProperty);
-	if (category === Category.units) return getMultipleUnitsProperty(units);
+	const { category, sharedProperty, fullProperty, multipleUnits } = property.propertyType;
+	if (category === "sharedProperty") return getSharedRooms(sharedProperty);
+	if (category === "fullProperty") return getEntireProperty(fullProperty);
+	if (category === "multipleUnits") return getMultipleUnitsProperty(multipleUnits);
 };
 
 const getPostalAddress = (addressInput: any, countryOfResidence: string): AddressSchema => {
@@ -34,9 +34,9 @@ const getPostalAddress = (addressInput: any, countryOfResidence: string): Addres
 	return address;
 };
 
-const getSharedRooms = (room: any) => {
-	const { propertyType, customPropertyType } = room;
-	const { numberOfSharedRooms, numberOfPrivateRooms, numberOfGuestsInSharedRooms, numberOfGuestsInPrivateRooms } = room;
+const getSharedRooms = (data: any) => {
+	const { propertyType, customPropertyType } = data;
+	const { numberOfSharedRooms, numberOfPrivateRooms, numberOfGuestsInSharedRooms, numberOfGuestsInPrivateRooms } = data;
 	const isShared = numberOfSharedRooms;
 	const isPrivate = numberOfPrivateRooms;
 	const hasSharedOrPrivateRooms = !!isShared || !!isPrivate;
@@ -63,8 +63,8 @@ const getSharedRooms = (room: any) => {
 	};
 };
 
-const getEntireProperty = (fullProperty: any) => {
-	const { propertyType, numberOfGuests, numberOfBedrooms, customPropertyType } = fullProperty;
+const getEntireProperty = (data: any) => {
+	const { propertyType, numberOfGuests, numberOfBedrooms, customPropertyType } = data;
 	return {
 		"@type": "Accommodation",
 		additionalType: !customPropertyType ? propertyType : customPropertyType,
@@ -79,10 +79,10 @@ const getEntireProperty = (fullProperty: any) => {
 	};
 };
 
-const getMultipleUnitsProperty = (units: any) => {
+const getMultipleUnitsProperty = (data: any) => {
 	return {
 		"@type": "LodgingBusiness",
-		containsPlace: units.reduce((acc, next) => {
+		containsPlace: data.reduce((acc, next) => {
 			const { propertyType, customPropertyType, noOfGuests, ...rest } = next;
 			const propName = Object.keys(rest).find(key => !!UNIT_ROOM_TYPE_AS_TEXT[key]); // should always find one only
 			const unitText = UNIT_ROOM_TYPE_AS_TEXT[propName];

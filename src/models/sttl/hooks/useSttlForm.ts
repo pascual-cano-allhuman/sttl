@@ -66,7 +66,7 @@ export const useSttlForm = (params: Parameters) => {
 	// go to particular steps
 	const goToStep = (step: FormStep) => router.push(formStepById[step].url);
 	const goToEditStep = (step: FormStep, entry: number) => router.push(getEditStepUrl(step, entry));
-	const registerNewProperty = () => goToStep(FormStep.property_type);
+	const registerNewProperty = () => goToStep(FormStep.propertyType);
 	const goToReview = () => goToStep(FormStep.review);
 
 	// delete a property on the review screen

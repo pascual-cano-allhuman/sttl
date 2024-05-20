@@ -1,11 +1,11 @@
-import { Category, PermissionStatus } from "models/global";
+import { PermissionStatus } from "models/global";
 import { FormState } from "../../types";
 
 export const formState: FormState = {
-	property_type: [
+	propertyType: [
 		{
-			category: "room" as Category,
-			room: {
+			category: "sharedProperty",
+			sharedProperty: {
 				propertyType: "House",
 				numberOfSharedRooms: 1,
 				numberOfGuestsInSharedRooms: 1,
@@ -14,7 +14,7 @@ export const formState: FormState = {
 			}
 		},
 		{
-			category: "fullProperty" as Category,
+			category: "fullProperty",
 			fullProperty: {
 				propertyType: "Apartment / Flat",
 				numberOfBedrooms: 1,
@@ -22,12 +22,12 @@ export const formState: FormState = {
 			}
 		},
 		{
-			category: "units" as Category,
-			units: [{ propertyType: "Hostel", noOfGuests: 1 }]
+			category: "multipleUnits",
+			multipleUnits: [{ propertyType: "Hostel", noOfGuests: 1 }]
 		},
 		{
-			category: "room" as Category,
-			room: {
+			category: "sharedProperty",
+			sharedProperty: {
 				propertyType: "Other - specify",
 				customPropertyType: "Room Special",
 				numberOfSharedRooms: 1,
@@ -37,7 +37,7 @@ export const formState: FormState = {
 			}
 		},
 		{
-			category: "fullProperty" as Category,
+			category: "fullProperty",
 			fullProperty: {
 				propertyType: "Other - specify",
 				customPropertyType: "Entire prop Special",
@@ -46,8 +46,8 @@ export const formState: FormState = {
 			}
 		},
 		{
-			category: "units" as Category,
-			units: [
+			category: "multipleUnits",
+			multipleUnits: [
 				{ propertyType: "Activity or adventure centre", noOfGuests: 2, noOfRooms: 1 },
 				{ propertyType: "Hostel", noOfGuests: 2 },
 				{ propertyType: "Apartments - student accommodation", noOfGuests: 2, noOfOwnDoorUnits: 1 },
@@ -55,7 +55,7 @@ export const formState: FormState = {
 			]
 		}
 	],
-	statutory_obligations: [
+	statutoryObligations: [
 		{
 			permissionStatus: PermissionStatus.have
 		},
@@ -75,7 +75,7 @@ export const formState: FormState = {
 			permissionStatus: PermissionStatus.will_have
 		}
 	],
-	property_address: [
+	propertyAddress: [
 		{
 			propertyAddress: {
 				addressLine1: "532 West Rocky Milton Freeway",
@@ -137,7 +137,7 @@ export const formState: FormState = {
 			}
 		}
 	],
-	property_owner_details: [
+	propertyOwner: [
 		{
 			countryOfResidence: "Ireland",
 			firstName: "Cruz",

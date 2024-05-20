@@ -13,7 +13,7 @@ const Page = () => {
 	const { dataLayer } = useAppContext();
 	const { formState, stepper, onNextStep, onPrevStep, isEditing, propertiesList } = sttlForm;
 	const entry = searchParams.get("entry") && isEditing ? +searchParams.get("entry") : propertiesList.length;
-	const defaultValues = React.useMemo(() => formState?.statutory_obligations?.[entry] || ({} as StatutoryObligationsStep), [entry, formState]);
+	const defaultValues = React.useMemo(() => formState?.statutoryObligations?.[entry] || ({} as StatutoryObligationsStep), [entry, formState]);
 
 	return (
 		<StatutoryObligations

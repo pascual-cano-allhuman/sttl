@@ -62,7 +62,7 @@ export const Review = (props: TemplateProps) => {
 				<ScrollableContainer maxHeight={hasMoreThan10 ? "calc(10*56.5px)" : "unset"}>
 					<Box gap={hasMoreThan10 ? "0" : "1.6rem"} as="ul">
 						{propertiesList?.map((property, index) => {
-							const { propertyAddress } = property.property_address;
+							const { propertyAddress } = property.propertyAddress;
 							const onEditClick = (step: string) => goToEditStep(step, index);
 							return (
 								<CollapsePanel
@@ -123,7 +123,7 @@ export const Review = (props: TemplateProps) => {
 				onClose={() => setModalPropertyIndex(null)}
 			>
 				<Box marginTop="1rem">
-					<AddressDisplay address={propertiesList[modalPropertyIndex]?.property_address.propertyAddress} hasBackground />
+					<AddressDisplay address={propertiesList[modalPropertyIndex]?.propertyAddress.propertyAddress} hasBackground />
 				</Box>
 			</Modal>
 		</FormStepContainer>

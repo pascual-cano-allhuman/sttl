@@ -1,4 +1,4 @@
-const ROOM_OPTIONS = [
+const SHARED_PROPERTY_OPTIONS = [
 	{ label: "Apartment / Flat", value: "Apartment / Flat" },
 	{ label: "B&B", value: "B&B" },
 	{ label: "House", value: "House" },
@@ -31,7 +31,7 @@ const OPTIONAL_INPUTS = {
 	number: "number"
 };
 
-const UNITS_OPTIONS = [
+const MULTIPLE_UNITS_OPTIONS = [
 	{
 		label: "Activity or adventure centre",
 		value: "Activity or adventure centre",
@@ -68,9 +68,9 @@ const UNITS_OPTIONS = [
 ];
 
 export const PROPERTY_OPTIONS = {
-	room: ROOM_OPTIONS,
+	sharedProperty: SHARED_PROPERTY_OPTIONS,
 	fullProperty: FULL_PROPERTY_OPTIONS,
-	units: UNITS_OPTIONS
+	multipleUnits: MULTIPLE_UNITS_OPTIONS
 };
 
 export const PROPERTY_TYPES_NOT_REQUIRING_BEDROOMS = ["Recreational vehicle / Motor home", "Treehouse", "Yurt"];

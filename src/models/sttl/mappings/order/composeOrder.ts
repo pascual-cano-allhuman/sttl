@@ -21,7 +21,7 @@ export const composeOrder = (formState: FormState, userAccount?: UserAccount): O
 	if (propertiesList.length === 0) return null;
 
 	const acceptedOffer = propertiesList.map(property => {
-		const { category } = property.property_type;
+		const { category } = property.propertyType;
 		const categoryAsText = CATEGORY_AS_TEXT[category] as CategoryAsText;
 		const accommodation = composeAccommodation(property);
 		const owner = getOwner(property);
@@ -36,7 +36,7 @@ export const composeOrder = (formState: FormState, userAccount?: UserAccount): O
 			}
 		};
 	});
-	const firstPropertyOwner = formState?.["property_owner_details"]?.[0];
+	const firstPropertyOwner = formState?.["propertyOwner"]?.[0];
 	const nameFromFirstProperty = firstPropertyOwner ? `${firstPropertyOwner.firstName} ${firstPropertyOwner.lastName}` : "";
 	const emailFromFirstProperty = firstPropertyOwner ? firstPropertyOwner.emailAddress : "";
 
@@ -74,14 +74,14 @@ export const composeOrder = (formState: FormState, userAccount?: UserAccount): O
 
 export const getPropertiesList = (formState: FormState) => {
 	if (!formState) return [];
-	const total = formState.property_owner_details?.length || 0;
+	const total = formState.propertyOwner?.length || 0;
 	const list = [];
 	for (let i = 0; i < total; i++) {
 		const property = {
-			property_type: formState.property_type[i],
-			statutory_obligations: formState.statutory_obligations[i],
-			property_address: formState.property_address[i],
-			property_owner_details: formState.property_owner_details[i]
+			propertyType: formState.propertyType[i],
+			statutoryObligations: formState.statutoryObligations[i],
+			propertyAddress: formState.propertyAddress[i],
+			propertyOwner: formState.propertyOwner[i]
 		};
 		list.push(property);
 	}
@@ -89,9 +89,9 @@ export const getPropertiesList = (formState: FormState) => {
 };
 
 export const getOwner = (property: PropertyData) => {
-	const { firstName, lastName, emailAddress, telephone, businessName } = property.property_owner_details;
-	const ownerAddress = property.property_owner_details.ownerAddress || property.property_address.propertyAddress;
-	const ownerCountry = property.property_owner_details.countryOfResidence;
+	const { firstName, lastName, emailAddress, telephone, businessName } = property.propertyOwner;
+	const ownerAddress = property.propertyOwner.ownerAddress || property.propertyAddress.propertyAddress;
+	const ownerCountry = property.propertyOwner.countryOfResidence;
 	return {
 		"@type": "Person",
 		name: `${firstName} ${lastName}`,

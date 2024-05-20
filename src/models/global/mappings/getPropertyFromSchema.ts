@@ -21,9 +21,9 @@ export const getPropertyFromSchema = (accommodationSchema: AccommodationSchema, 
 };
 
 export const getPropertyCategory = (accommodationSchema: AccommodationSchema) => {
-	if (accommodationSchema["@type"] === "Accommodation" && accommodationSchema.containsPlace) return Category.room;
-	if (accommodationSchema["@type"] === "Accommodation" && !accommodationSchema.containsPlace) return Category.fullProperty;
-	if (accommodationSchema["@type"] === "LodgingBusiness" && accommodationSchema.containsPlace) return Category.units;
+	if (accommodationSchema["@type"] === "Accommodation" && accommodationSchema.containsPlace) return "sharedProperty";
+	if (accommodationSchema["@type"] === "Accommodation" && !accommodationSchema.containsPlace) return "fullProperty";
+	if (accommodationSchema["@type"] === "LodgingBusiness" && accommodationSchema.containsPlace) return "multipleUnits";
 	return null;
 };
 
@@ -38,9 +38,9 @@ const getPropertyType = (accommodationSchema: AccommodationSchema, category: Cat
 
 export const getPropertyDetails = (accommodationSchema: AccommodationSchema) => {
 	const category = getPropertyCategory(accommodationSchema);
-	if (category === Category.room) return getDetailsForSharedProperty(accommodationSchema);
-	if (category === Category.fullProperty) return getDetailsForFullProperty(accommodationSchema);
-	if (category === Category.units) return getDetailsForMultipleUnits(accommodationSchema);
+	if (category === "sharedProperty") return getDetailsForSharedProperty(accommodationSchema);
+	if (category === "fullProperty") return getDetailsForFullProperty(accommodationSchema);
+	if (category === "multipleUnits") return getDetailsForMultipleUnits(accommodationSchema);
 	return null;
 };
 
@@ -75,7 +75,7 @@ export const getDetailsForMultipleUnits = (accommodationSchema: AccommodationSch
 		const unitText = curr.numberOfRooms?.unitText;
 		const numberOfRooms = curr.numberOfRooms?.value ? +curr.numberOfRooms.value : 0;
 		const numberOfGuests = curr.amenityFeature[0]?.value ? +curr.amenityFeature[0].value : 0;
-		const { propertyType, customPropertyType } = getPropertyType(curr as AccommodationSchema, Category.units);
+		const { propertyType, customPropertyType } = getPropertyType(curr as AccommodationSchema, "multipleUnits");
 		const unit = { propertyType, customPropertyType, noOfGuests: numberOfGuests };
 		if (unitText) {
 			const prop = TEXT_TO_UNIT_ROOM_TYPE[unitText];

@@ -11,7 +11,7 @@ const Page = () => {
 	const { sttlForm } = useFormContext();
 	const { formState, stepper, onNextStep, onPrevStep, isEditing, propertiesList } = sttlForm;
 	const entry = searchParams.get("entry") && isEditing ? +searchParams.get("entry") : propertiesList.length;
-	const defaultValues = React.useMemo(() => formState?.property_type?.[entry] || ({} as PropertyTypeStep), [entry, formState]);
+	const defaultValues = React.useMemo(() => formState?.propertyType?.[entry] || ({} as PropertyTypeStep), [entry, formState]);
 
 	return (
 		<PropertyType onNextBtnClick={onNextStep} onPrevBtnClick={onPrevStep} isEditing={isEditing} defaultValues={defaultValues} stepper={stepper} />

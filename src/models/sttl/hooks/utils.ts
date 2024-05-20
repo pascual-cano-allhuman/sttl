@@ -4,14 +4,14 @@ import { FormStep } from "./formSteps";
 // build a properties list from the form state
 export const getPropertiesList = (formState: FormState) => {
 	if (!formState) return [];
-	const total = formState.property_owner_details?.length || 0;
+	const total = formState.propertyOwner?.length || 0;
 	const list = [];
 	for (let i = 0; i < total; i++) {
 		const property = {
-			property_type: formState.property_type[i],
-			statutory_obligations: formState.statutory_obligations[i],
-			property_address: formState.property_address[i],
-			property_owner_details: formState.property_owner_details[i]
+			propertyType: formState.propertyType[i],
+			statutoryObligations: formState.statutoryObligations[i],
+			propertyAddress: formState.propertyAddress[i],
+			propertyOwner: formState.propertyOwner[i]
 		};
 		list.push(property);
 	}
@@ -21,8 +21,8 @@ export const getPropertiesList = (formState: FormState) => {
 // check if the form state is partial
 export const hasPartialState = (formState: FormState) => {
 	if (!formState) return true;
-	const total = formState.property_owner_details?.length || 0;
-	return formState.property_type?.length > total;
+	const total = formState.propertyOwner?.length || 0;
+	return formState.propertyType?.length > total;
 };
 
 // add step data to the form state on the current entry

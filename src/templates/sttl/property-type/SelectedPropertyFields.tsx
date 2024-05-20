@@ -1,11 +1,11 @@
 import React from "react";
+import { Category } from "models";
 import { useFormContext } from "react-hook-form";
-import { Category } from "models/global";
-import { EntirePropertyFields } from "./EntirePropertyFields";
+import { FullPropertyFields } from "./FullPropertyFields";
 import { MultipleUnitsFields } from "./MultipleUnitsFields";
-import { PrimaryResidenceFields } from "./PrimaryResidenceFields";
+import { SharedPropertyFields } from "./SharedPropertyFields";
 
-const propertyTypes = Object.values(Category) as Category[];
+const CATEGORIES = ["sharedProperty", "fullProperty", "multipleUnits"] as Category[];
 
 export const SelectedPropertyFields = () => {
 	const { watch, unregister } = useFormContext();
@@ -26,13 +26,13 @@ export const SelectedPropertyFields = () => {
 	React.useEffect(() => {
 		if (category) {
 			// unregister all other category types/category fields other than currently selected
-			const propertiesToUnregister = propertyTypes.filter(p => p !== category);
+			const propertiesToUnregister = CATEGORIES.filter(p => p !== category);
 			unregister(propertiesToUnregister);
 		}
 	}, [category, unregister]);
 
-	if (category === Category.room) return <PrimaryResidenceFields category={category} />;
-	if (category === Category.fullProperty) return <EntirePropertyFields category={category} />;
-	if (category === Category.units) return <MultipleUnitsFields category={category} />;
+	if (category === "sharedProperty") return <SharedPropertyFields />;
+	if (category === "fullProperty") return <FullPropertyFields />;
+	if (category === "multipleUnits") return <MultipleUnitsFields />;
 	return null;
 };
