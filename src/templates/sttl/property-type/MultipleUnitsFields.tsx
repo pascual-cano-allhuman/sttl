@@ -2,7 +2,7 @@ import React from "react";
 import { useFormContext, useFormState } from "react-hook-form";
 import { Box, Text, NumberInput, Dropdown, Input, Divider, TextLink } from "trade-portal-components";
 import { PROPERTY_OPTIONS } from "settings/propertyTypeOptions";
-import { Category } from "models/sttl";
+import { Category } from "models";
 
 const optionsMap = PROPERTY_OPTIONS.units.reduce((acc, { label, inputName, inputLabel }) => {
 	acc[label] = { inputName, inputLabel };

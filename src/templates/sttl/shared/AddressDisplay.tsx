@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Text } from "trade-portal-components";
-import { Address } from "models/sttl";
+import { Address } from "models";
 
 type Props = {
 	address: Address;

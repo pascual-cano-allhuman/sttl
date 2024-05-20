@@ -6,7 +6,15 @@ import {
 	postOrderToEventsBus,
 	getOrderStatusFromEventBus
 } from "middleware/requests";
-import { getSaveAndResumeData, postSaveAndResumeData, deleteSaveAndResumeData, postQAMembershipUpsell, getPayments } from "middleware/requests";
+import {
+	getSaveAndResumeData,
+	postSaveAndResumeData,
+	deleteSaveAndResumeData,
+	postQAMembershipUpsell,
+	getPropertyFromMiddleware,
+	getPropertiesFromMiddleware,
+	getPaymentsFromMiddleware
+} from "middleware/requests";
 
 type Props = { getToken: () => Promise<string>; correlation: Record<string, string> };
 export const useMiddleware = (props: Props) => {
@@ -53,9 +61,17 @@ export const useMiddleware = (props: Props) => {
 				const token = await getToken?.();
 				postQAMembershipUpsell(token, correlation);
 			},
+			loadPropertyDetails: async (propertyId: string) => {
+				const token = await getToken?.();
+				return getPropertyFromMiddleware(propertyId, token, correlation);
+			},
+			loadDashboardProperties: async () => {
+				const token = await getToken?.();
+				return getPropertiesFromMiddleware(token, correlation);
+			},
 			loadDashboardPayments: async () => {
 				const token = await getToken?.();
-				return getPayments(token, correlation);
+				return getPaymentsFromMiddleware(token, correlation);
 			}
 		}),
 		[getToken, correlation]

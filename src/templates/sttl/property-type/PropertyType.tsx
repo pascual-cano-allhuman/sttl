@@ -5,7 +5,7 @@ import { FormProvider } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { Stepper, Alert, Box, CardSelector, CardSelectorGroup } from "trade-portal-components";
 import { FormFooter, FormHeader, FormStepContainer } from "templates";
-import { PropertyTypeStep, Category } from "models/sttl";
+import { PropertyTypeStep, Category } from "models";
 import { SelectedPropertyFields } from "./SelectedPropertyFields";
 
 type TemplateProps = {
@@ -44,6 +44,7 @@ export const PropertyType = (props: TemplateProps) => {
 					onPrevBtnClick={onPrevBtnClick}
 					nextBtnLabel={nextLabel}
 					backBtnLabel={backLabel}
+					showDiscardApplication={!isEditing}
 				/>
 			}
 			header={<FormHeader title={title} subtitle={subtitle} />}
@@ -61,7 +62,6 @@ export const PropertyType = (props: TemplateProps) => {
 						</Alert>
 					)}
 				</Box>
-
 				<SelectedPropertyFields />
 			</FormProvider>
 		</FormStepContainer>

@@ -1,8 +1,8 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import { getOrderForCardPayment, getOrderForZeroPayment, composeOrder, getFeesFromOrder, getOrderResultFromStatus } from "models/sttl/mappings";
-import { FormState, Order, PropertyData } from "models/sttl/types";
-import { UserAccount, useAlert, Alert } from "models/global";
+import { FormState, PropertyData } from "models/sttl/types";
+import { UserAccount, useAlert, Alert, OrderSchema } from "models/global";
 import { retry, getPropertiesList, hasPartialState } from "./utils";
 import { FormStep, formStepById } from "./formSteps";
 
@@ -10,10 +10,10 @@ type Parameters = {
 	formState: FormState;
 	userAccount: UserAccount;
 	goToStep: (step: FormStep) => void;
-	appendFeesToOrder: (order: Order, controller?: AbortController) => Promise<Order>;
-	createPaymentRequest: (order: Order) => Promise<Record<string, string>>;
+	appendFeesToOrder: (order: OrderSchema, controller?: AbortController) => Promise<OrderSchema>;
+	createPaymentRequest: (order: OrderSchema) => Promise<Record<string, string>>;
 	sendPaymentResponse: (paymentResponse: Record<string, string>) => Promise<string>;
-	sendZeroPaymentOrder: (order: Order) => Promise<void>;
+	sendZeroPaymentOrder: (order: OrderSchema) => Promise<void>;
 	fetchOrderStatus: (propertiesList: PropertyData[]) => Promise<any>;
 };
 

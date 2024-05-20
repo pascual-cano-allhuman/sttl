@@ -1,11 +1,12 @@
-import { Box, Button, Copycat, Icon, Text, theme } from "trade-portal-components";
-import { Property } from "models/dashboard";
+import { Box, Button, Copycat, Text, theme } from "trade-portal-components";
+import { Property } from "models";
+import { PROPERTY_STATUS, RegistrationStatus } from "../shared";
 
 export const PropertyCard = ({ property }: { property: Property }) => {
 	const { address, status = "Active", sttlNumber } = property;
-	const { postalCode, streetAddress } = address || {};
+	const { postcode, addressLine1 } = address || {};
 	const id = property.id || "";
-	const { borderColor, icon, color, text } = PROPERTY_STATUS[status];
+	const { borderColor } = PROPERTY_STATUS[status];
 
 	return (
 		<Box background="fi_surface_white" padding={["3.2rem 2.4rem", "3.2rem"]}>
@@ -20,10 +21,10 @@ export const PropertyCard = ({ property }: { property: Property }) => {
 				<Box justifyContent="space-between" minHeight="15.4rem" alignItems="stretch" gap="2.4rem">
 					<Box>
 						<Text textStyle="text_large" color="fi_text_90">
-							{streetAddress}
+							{addressLine1}
 						</Text>
 						<Text textStyle="text_large" color="fi_text_90">
-							{postalCode}
+							{postcode}
 						</Text>
 					</Box>
 					<Copycat label="Property STTL number:">{sttlNumber}</Copycat>
@@ -33,12 +34,7 @@ export const PropertyCard = ({ property }: { property: Property }) => {
 						<Text color="fi_text_60" textStyle="text_small" width="fit-content">
 							Registration status:
 						</Text>
-						<Box flexDirection="row" alignItems="center" justifyContent={["flex-start", "flex-end"]} gap="0.8rem">
-							<Icon codename={icon} size={16} color={color} />
-							<Text textStyle="link_large" textDecoration="none" color={color} as="span">
-								{text}
-							</Text>
-						</Box>
+						<RegistrationStatus status={status} />
 					</Box>
 					<Box justifyContent="flex-end" alignItems={["flex-start", "center"]} flexDirection={["column", "row"]}>
 						{/* TODO: Will get Renew now button back */}
@@ -47,7 +43,7 @@ export const PropertyCard = ({ property }: { property: Property }) => {
 						{/*		Renew now */}
 						{/*	</Button> */}
 						{/* )} */}
-						<Button size="large" variant="primary" as="a" href={`/dashboard/${id}`}>
+						<Button size="large" variant="primary" as="a" href={`/dashboard/property-details?id=${id}`}>
 							View property details
 						</Button>
 					</Box>
@@ -55,31 +51,4 @@ export const PropertyCard = ({ property }: { property: Property }) => {
 			</Box>
 		</Box>
 	);
-};
-
-export const PROPERTY_STATUS = {
-	Renew: {
-		color: "fi_accent_info_100",
-		icon: "fi-circle-exclamation",
-		text: "Ready for renewal",
-		borderColor: "fi_accent_info_80"
-	},
-	Expired: {
-		color: "fi_accent_error_100",
-		icon: "fi-circle-exclamation",
-		text: "Expired",
-		borderColor: "fi_accent_error_60"
-	},
-	Withdrawn: {
-		color: "fi_accent_error_100",
-		icon: "fi-circle-exclamation",
-		text: "Withdrawn",
-		borderColor: "fi_accent_error_100"
-	},
-	Active: {
-		color: "fi_action_primary_100",
-		icon: "fi-circle-check",
-		text: "Active",
-		borderColor: "fi_secondary_sea_100"
-	}
 };

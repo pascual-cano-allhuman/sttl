@@ -1,12 +1,12 @@
 import React from "react";
 import { useAppContext } from "app/AppContext";
-import { useSttlFormState, useSttlOrder, useSaveAndResume } from "models/sttl";
+import { useSttlForm, useSttlOrder, useSaveAndResume } from "models/sttl";
 import { logger } from "lib/logger";
 import { useMiddleware } from "middleware/useMiddleware";
 
 type ContextProps = { children: React.ReactNode };
 type ContextValue = {
-	sttlForm: ReturnType<typeof useSttlFormState>;
+	sttlForm: ReturnType<typeof useSttlForm>;
 	sttlOrder: ReturnType<typeof useSttlOrder>;
 	saveAndResume: ReturnType<typeof useSaveAndResume>;
 	correlation: { userId?: string; correlationId?: string; contactId?: string };
@@ -30,7 +30,7 @@ export const FormContextProvider = ({ children }: ContextProps) => {
 	const { loadSaveAndResumeData, updateSaveAndResume, clearSaveAndResumeData, sendQAUpsell } = middleware;
 
 	// manage the new applications form
-	const sttlForm = useSttlFormState({ sendQAUpsell, resetCorrelationId });
+	const sttlForm = useSttlForm({ sendQAUpsell, resetCorrelationId, loadSaveAndResumeData });
 	const { formState, goToStep } = sttlForm;
 
 	// manage the order and payment flow

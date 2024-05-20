@@ -41,7 +41,15 @@ export const PropertyAddress = (props: TemplateProps) => {
 	return (
 		<FormStepContainer
 			stepper={<Stepper totalSteps={stepper?.total} currentStep={stepper?.step} label={stepper.label} />}
-			footer={<FormFooter onNextBtnClick={nextBtnHandler} onPrevBtnClick={onPrevBtnClick} nextBtnLabel={nextLabel} backBtnLabel={backLabel} />}
+			footer={
+				<FormFooter
+					onNextBtnClick={nextBtnHandler}
+					onPrevBtnClick={onPrevBtnClick}
+					nextBtnLabel={nextLabel}
+					backBtnLabel={backLabel}
+					showDiscardApplication={!isEditing}
+				/>
+			}
 			header={<FormHeader title={title} subtitle={subtitle} />}
 		>
 			{!showManualForm && (

@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { Stepper, Box, Text, Divider, RadioGroup, Radio, Alert } from "trade-portal-components";
 import { FormFooter, FormHeader, FormStepContainer } from "templates";
-import { PermissionStatus, PERMISSION_ANALYTICS_MAP, StatutoryObligationsStep } from "models/sttl";
+import { PermissionStatus, PERMISSION_ANALYTICS_MAP } from "models/global";
+import { StatutoryObligationsStep } from "models";
 
 const errorMessage = `You must select one of the options above in order to complete your application`;
 
@@ -40,7 +41,15 @@ export const StatutoryObligations = (props: TemplateProps) => {
 	return (
 		<FormStepContainer
 			stepper={<Stepper totalSteps={stepper?.total} currentStep={stepper.step} label={stepper.label} />}
-			footer={<FormFooter onNextBtnClick={nextBtnHandler} onPrevBtnClick={onPrevBtnClick} nextBtnLabel={nextLabel} backBtnLabel={backLabel} />}
+			footer={
+				<FormFooter
+					onNextBtnClick={nextBtnHandler}
+					onPrevBtnClick={onPrevBtnClick}
+					nextBtnLabel={nextLabel}
+					backBtnLabel={backLabel}
+					showDiscardApplication={!isEditing}
+				/>
+			}
 			header={<FormHeader title={title} subtitle={subtitle} />}
 		>
 			<Box columns={4} gap="4rem">

@@ -3,8 +3,7 @@
 import { useForm, FormProvider } from "react-hook-form";
 import { Box, Checkbox, Stepper, Switch, ToggleButton } from "trade-portal-components";
 import { FormFooter, FormHeader, FormStepContainer } from "templates";
-import { UserAccount } from "models/global";
-import { PropertyOwnerDetailsStep, Address } from "models/sttl";
+import { PropertyOwnerDetailsStep, Address, UserAccount } from "models";
 
 import { AddressDisplay } from "../shared/AddressDisplay";
 import { OwnerDetailsFields } from "./OwnerDetailsFields";
@@ -49,8 +48,9 @@ export const PropertyOwnerDetails = (props: TemplateProps) => {
 					onNextBtnClick={nextBtnHandler}
 					onPrevBtnClick={onPrevBtnClick}
 					isNextBtnDisabled={!userIsOwnerCheck}
-					backBtnLabel={nextLabel}
-					nextBtnLabel={backLabel}
+					backBtnLabel={backLabel}
+					nextBtnLabel={nextLabel}
+					showDiscardApplication={!isEditing}
 				/>
 			}
 			header={<FormHeader title={title} subtitle={subtitle} />}

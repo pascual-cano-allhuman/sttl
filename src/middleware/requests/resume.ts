@@ -1,12 +1,12 @@
 import { httpPost, httpGet, httpDelete } from "lib/http";
-import { isValidOrder, Order } from "models/sttl";
+import { isValidOrder, OrderSchema } from "models";
 import { logger } from "lib/logger";
 import { order } from "../mocks/order";
 
 const MIDDLEWARE_PORTAL_ENDPOINT = process.env.MIDDLEWARE_PORTAL_ENDPOINT?.length > 0 ? process.env.MIDDLEWARE_PORTAL_ENDPOINT : null;
-const SHOULD_MOCK_MIDDLEWARE = process.env.SHOULD_MOCK_MIDDLEWARE || false;
+const SHOULD_MOCK_MIDDLEWARE = ["1", "true"].includes(process.env.SHOULD_MOCK_MIDDLEWARE);
 
-export const postSaveAndResumeData = async (userId: string, order: Order, token: string, correlation: Record<string, string>) => {
+export const postSaveAndResumeData = async (userId: string, order: OrderSchema, token: string, correlation: Record<string, string>) => {
 	if (!MIDDLEWARE_PORTAL_ENDPOINT || !token || !order || !userId) return;
 	if (SHOULD_MOCK_MIDDLEWARE) return;
 	try {
@@ -16,7 +16,7 @@ export const postSaveAndResumeData = async (userId: string, order: Order, token:
 	}
 };
 
-export const getSaveAndResumeData = async (userId: string, token: string, correlation: Record<string, string>): Promise<Order> => {
+export const getSaveAndResumeData = async (userId: string, token: string, correlation: Record<string, string>): Promise<OrderSchema> => {
 	if (!MIDDLEWARE_PORTAL_ENDPOINT || !token || !userId) return;
 	if (SHOULD_MOCK_MIDDLEWARE) return order;
 	try {
@@ -28,7 +28,7 @@ export const getSaveAndResumeData = async (userId: string, token: string, correl
 			logger.error(new Error(`Failed to validate save-and-resume data.`), correlation);
 			return;
 		}
-		return data as Order;
+		return data as OrderSchema;
 	} catch (e) {
 		logger.error(new Error(`Failed to get save-and-resume data. HTTP Error ${e?.message}}`), correlation);
 	}

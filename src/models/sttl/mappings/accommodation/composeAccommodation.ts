@@ -1,4 +1,5 @@
-import { PropertyData, Accommodation, PostalAddress, Category, Rooms, EntireProperty, MultipleUnits, PLANNING_PERMISSION_AS_TEXT } from "models/sttl";
+import { PropertyData } from "models/sttl";
+import { AccommodationSchema, Category, PLANNING_PERMISSION_AS_TEXT, AddressSchema } from "models/global";
 // TODO: move PLANNING_PERMISSION_AS_TEXT to settings
 import { UNIT_ROOM_TYPE_AS_TEXT } from "settings/propertyTypeOptions";
 
@@ -12,18 +13,18 @@ export const composeAccommodation = (property: PropertyData) => {
 		name: "Planning Permission",
 		value: PLANNING_PERMISSION_AS_TEXT[permissionStatus]
 	};
-	return { ...accommodation, address, additionalProperty: [planningPermission] } as Accommodation;
+	return { ...accommodation, address, additionalProperty: [planningPermission] } as AccommodationSchema;
 };
 
 export const getAccommodationByType = (property: PropertyData) => {
 	const { category, room, fullProperty, units } = property.property_type;
 	if (category === Category.room) return getSharedRooms(room);
 	if (category === Category.fullProperty) return getEntireProperty(fullProperty);
-	if (category === Category.units) return getMultipleProperty(units);
+	if (category === Category.units) return getMultipleUnitsProperty(units);
 };
 
-const getPostalAddress = (addressInput: any, countryOfResidence: string): PostalAddress => {
-	const address = { "@type": "PostalAddress" } as PostalAddress;
+const getPostalAddress = (addressInput: any, countryOfResidence: string): AddressSchema => {
+	const address = { "@type": "PostalAddress" } as AddressSchema;
 	const streetAddressParts = [addressInput.addressLine1, addressInput.addressLine2, addressInput.addressLine3].filter(Boolean);
 	address.streetAddress = streetAddressParts.join(", ");
 	address.postalCode = addressInput.postcode || addressInput.postcode;
@@ -59,7 +60,7 @@ const getSharedRooms = (room: any) => {
 				}
 			]
 		}))
-	} as Rooms;
+	};
 };
 
 const getEntireProperty = (fullProperty: any) => {
@@ -75,10 +76,10 @@ const getEntireProperty = (fullProperty: any) => {
 				value: `${numberOfGuests}`
 			}
 		]
-	} as EntireProperty;
+	};
 };
 
-const getMultipleProperty = (units: any) => {
+const getMultipleUnitsProperty = (units: any) => {
 	return {
 		"@type": "LodgingBusiness",
 		containsPlace: units.reduce((acc, next) => {
@@ -110,5 +111,5 @@ const getMultipleProperty = (units: any) => {
 			acc.push(item);
 			return acc;
 		}, [])
-	} as MultipleUnits;
+	};
 };

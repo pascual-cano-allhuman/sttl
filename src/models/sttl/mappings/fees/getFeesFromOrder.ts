@@ -1,6 +1,6 @@
-import { Order, Category, TEXT_TO_CATEGORY } from "../../types";
+import { Category, TEXT_TO_CATEGORY, OrderSchema } from "models/global";
 
-export const getFeesFromOrder = (order?: Order) => {
+export const getFeesFromOrder = (order?: OrderSchema) => {
 	if (process.env.DISABLE_CARD_PAYMENTS) return { subtotals: { rooms: 0, fullProperty: 0, units: 0 }, total: 0 };
 	if (!order?.acceptedOffer?.length) return { subtotals: undefined, total: undefined };
 	const subtotals = order.acceptedOffer.reduce(

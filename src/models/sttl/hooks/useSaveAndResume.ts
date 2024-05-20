@@ -1,16 +1,16 @@
 import React from "react";
-import { Order } from "../types";
+import { OrderSchema } from "models/global";
 
 type Parameters = {
-	order: Order;
-	loadSaveAndResumeData: () => Promise<Order>;
-	updateSaveAndResume: (order: Order) => void;
+	order: OrderSchema;
+	loadSaveAndResumeData: () => Promise<OrderSchema>;
+	updateSaveAndResume: (order: OrderSchema) => void;
 	clearSaveAndResumeData: () => Promise<void>;
 };
 
 export const useSaveAndResume = (params: Parameters) => {
 	const { order, loadSaveAndResumeData, updateSaveAndResume, clearSaveAndResumeData } = params;
-	const [pendingApplication, setPendingApplication] = React.useState<Order>();
+	const [pendingApplication, setPendingApplication] = React.useState<OrderSchema>();
 
 	// discard the currently saved application
 	const discardSaveAndResume = () => {

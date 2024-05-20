@@ -1,7 +1,7 @@
 "use client";
 
 import { PaymentHistory } from "templates";
-import { useDashboardContext } from "../DashboardContext";
+import { useDashboardContext } from "../../DashboardContext";
 
 const Page = () => {
 	const { dashboard, openInvoice } = useDashboardContext();

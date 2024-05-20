@@ -16,14 +16,19 @@ export const DashboardContext = ({ children }: ContextProps) => {
 	const { auth, correlationId, userAccount } = useAppContext();
 	const { userId, isLoggedIn, getToken } = auth || {};
 	const correlation = { userId, correlationId, contactId: userAccount?.contactId };
-	const { loadSaveAndResumeData, clearSaveAndResumeData, loadDashboardPayments } = useMiddleware({ getToken, correlation });
+	const { loadSaveAndResumeData, clearSaveAndResumeData, loadDashboardProperties, loadDashboardPayments, loadPropertyDetails } = useMiddleware({
+		getToken,
+		correlation
+	});
 
 	// hook
 	const dashboard = useDashboard({
 		isLoggedIn,
 		loadSaveAndResumeData,
 		clearSaveAndResumeData,
-		loadDashboardPayments
+		loadDashboardProperties,
+		loadDashboardPayments,
+		loadPropertyDetails
 	});
 
 	// return value

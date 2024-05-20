@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
-import { Category } from "models/sttl";
+import { Category } from "models/global";
 import { EntirePropertyFields } from "./EntirePropertyFields";
 import { MultipleUnitsFields } from "./MultipleUnitsFields";
 import { PrimaryResidenceFields } from "./PrimaryResidenceFields";

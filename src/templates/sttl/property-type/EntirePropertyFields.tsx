@@ -4,7 +4,7 @@ import React from "react";
 import { useFormContext, useFormState } from "react-hook-form";
 import { Box, Text, NumberInput, Dropdown, Input } from "trade-portal-components";
 import { PROPERTY_OPTIONS, PROPERTY_TYPES_NOT_REQUIRING_BEDROOMS } from "settings/propertyTypeOptions";
-import { Category } from "models/sttl";
+import { Category } from "models";
 
 export type FormCategoryProps = {
 	category: Category;

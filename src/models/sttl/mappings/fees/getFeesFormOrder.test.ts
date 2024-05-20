@@ -1,6 +1,6 @@
+import { OrderSchema } from "models/global";
 import { getFeesFromOrder } from "./getFeesFromOrder";
 import { order } from "../mocks";
-import { Order } from "../../types";
 
 describe("get payment fees", () => {
 	it("should get undefined when there is no accepted offer", () => {
@@ -10,7 +10,7 @@ describe("get payment fees", () => {
 	});
 
 	it("should get payment fees for accepted offer", () => {
-		const orderWithFees = appendFakeFees(order) as Order;
+		const orderWithFees = appendFakeFees(order) as OrderSchema;
 		const { subtotals, total } = getFeesFromOrder(orderWithFees);
 		expect(subtotals).toEqual({
 			rooms: 200,
@@ -21,7 +21,7 @@ describe("get payment fees", () => {
 	});
 });
 
-const appendFakeFees = (order: Order): object => {
+const appendFakeFees = (order: OrderSchema): object => {
 	return {
 		...order,
 		acceptedOffer: order?.acceptedOffer.map(item => ({ ...item, price: 100 })),

@@ -1,15 +1,15 @@
 import { httpGet } from "lib/http";
 import { logger } from "lib/logger";
 import { properties } from "../mocks/dashboard";
+import { accommodation } from "../mocks/accommodation";
 import { payments } from "../mocks/payments";
 
 const MIDDLEWARE_PORTAL_ENDPOINT = process.env.MIDDLEWARE_PORTAL_ENDPOINT?.length > 0 ? process.env.MIDDLEWARE_PORTAL_ENDPOINT : null;
-const SHOULD_MOCK_MIDDLEWARE = process.env.SHOULD_MOCK_MIDDLEWARE || false;
+const SHOULD_MOCK_MIDDLEWARE = ["1", "true"].includes(process.env.SHOULD_MOCK_MIDDLEWARE);
 
-export const getDashboardFromMiddleware = async (token: string, correlation: Record<string, string>): Promise<any> => {
+export const getPropertiesFromMiddleware = async (token: string, correlation: Record<string, string>): Promise<any> => {
 	if (!MIDDLEWARE_PORTAL_ENDPOINT || !token) return;
-	if (SHOULD_MOCK_MIDDLEWARE) return properties;
-
+	if (SHOULD_MOCK_MIDDLEWARE || true) return properties; // eslint-disable-line
 	try {
 		return await httpGet(`${MIDDLEWARE_PORTAL_ENDPOINT}/accommodation`, token);
 	} catch (e) {
@@ -19,6 +19,7 @@ export const getDashboardFromMiddleware = async (token: string, correlation: Rec
 
 export const getPropertyFromMiddleware = async (propertyId: string, token: string, correlation: Record<string, string>): Promise<any> => {
 	if (!MIDDLEWARE_PORTAL_ENDPOINT || !token || !propertyId) return;
+	if (SHOULD_MOCK_MIDDLEWARE || true) return propertyId < "3" ? accommodation : null; // eslint-disable-line
 	try {
 		return await httpGet(`${MIDDLEWARE_PORTAL_ENDPOINT}/accommodation/${propertyId}`, token);
 	} catch (e) {
@@ -26,7 +27,7 @@ export const getPropertyFromMiddleware = async (propertyId: string, token: strin
 	}
 };
 
-export const getPayments = async (token: string, correlation: Record<string, string>): Promise<any> => {
+export const getPaymentsFromMiddleware = async (token: string, correlation: Record<string, string>): Promise<any> => {
 	if (!MIDDLEWARE_PORTAL_ENDPOINT || !token) return;
 	if (SHOULD_MOCK_MIDDLEWARE) return payments;
 	try {

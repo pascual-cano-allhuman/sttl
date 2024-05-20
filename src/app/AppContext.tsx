@@ -34,6 +34,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 	// on page change focus on root element, track the page
 	React.useEffect(() => {
 		document.getElementById("focus-root")?.focus();
+		window.scrollTo(0, 0);
 		document.title = getPageTitle(pathname);
 		appInsightsClient?.trackPageView({ uri: pathname, name: document.title, properties: correlation });
 		dataLayer?.trackPage(pathname, document.title);
@@ -47,7 +48,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 	// redirects
 	React.useEffect(() => {
 		if (!auth?.userId) return;
-		if (["/"].includes(pathname)) router.replace("/dashboard");
+		if (["/", "/dashboard"].includes(pathname)) router.replace("/dashboard/my-properties");
 		if (["/sttl"].includes(pathname)) router.replace("/sttl/terms-and-conditions");
 	}, [pathname, auth?.userId]);
 

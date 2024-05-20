@@ -1,21 +1,24 @@
 import React from "react";
-import { Payment, Property } from "models/dashboard/types";
-import { getPaymentFromSchema } from "models/dashboard/mappings";
+import { Property, getPropertyFromSchema } from "models/global";
+import { Payment } from "models/dashboard/types";
+import { getPaymentFromSchema, getPropertyCardFromSchema } from "models/dashboard/mappings";
 
 type Parameters = {
 	isLoggedIn: boolean;
 	loadSaveAndResumeData: () => Promise<any>;
 	clearSaveAndResumeData: () => Promise<void>;
+	loadDashboardProperties: () => Promise<any>;
 	loadDashboardPayments: () => Promise<any>;
+	loadPropertyDetails: (propertyId: string) => Promise<any>;
 };
 
 export const useDashboard = (params: Parameters) => {
 	// params
-	const { isLoggedIn, loadSaveAndResumeData, clearSaveAndResumeData, loadDashboardPayments } = params;
+	const { isLoggedIn, loadSaveAndResumeData, clearSaveAndResumeData, loadDashboardPayments, loadDashboardProperties, loadPropertyDetails } = params;
 	// states
 	const isSetup = React.useRef(false);
 	const [hasPendingApplication, setHasPendingRegistration] = React.useState(false);
-	const [properties, setProperties] = React.useState<Property[]>(PROPERTIES); // eslint-disable-line
+	const [properties, setProperties] = React.useState<Property[]>();
 	const [payments, setPayments] = React.useState<Payment[]>();
 
 	// retrieve data
@@ -25,12 +28,26 @@ export const useDashboard = (params: Parameters) => {
 		loadSaveAndResumeData().then((data: any) => {
 			setHasPendingRegistration(!!data);
 		});
+		loadDashboardProperties().then((data: any) => {
+			if (!data?.value?.length) return [];
+			const properties = data.value.reverse().map(getPropertyCardFromSchema);
+			setProperties(properties);
+		});
 		loadDashboardPayments().then((data: any) => {
 			if (!data?.value?.length) return [];
 			const payments = data.value.reverse().map(getPaymentFromSchema);
 			setPayments(payments);
 		});
 	}, [isLoggedIn]);
+
+	// load property details
+	const getPropertyDetails = async (propertyId: string) => {
+		const data = await loadPropertyDetails(propertyId);
+		const property = getPropertyFromSchema(data);
+		if (!property) return null;
+		const { sttlNumber, status } = getPropertyCardFromSchema(data);
+		return { ...property, sttlNumber, status };
+	};
 
 	// save and resume
 	const discardSaveAndResume = () => {
@@ -42,16 +59,9 @@ export const useDashboard = (params: Parameters) => {
 		hasPendingApplication,
 		properties,
 		payments,
+		getPropertyDetails,
 		discardSaveAndResume
 	};
 };
 
 export type DashboardHook = ReturnType<typeof useDashboard>;
-
-const PROPERTIES = [
-	{
-		address: { postalCode: "D00 001", streetAddress: "10 Westland Square, Pearse Street, Dublin 2" },
-		id: "1",
-		sttlNumber: "STTL-123456"
-	}
-] as Property[];

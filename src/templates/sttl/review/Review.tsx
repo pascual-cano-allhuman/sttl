@@ -93,10 +93,9 @@ export const Review = (props: TemplateProps) => {
 						})}
 					</Box>
 				</ScrollableContainer>
-
 				{propertiesList?.length > 0 && (
 					<>
-						<FeesOverview total={fees.total} subtotals={fees.subtotals} />
+						<FeesOverview total={fees?.total} subtotals={fees?.subtotals} />
 						<Checkbox {...register(`agreeToQualityAssuredInfo`)}>
 							For further information on being Quality Assured, please tick here
 						</Checkbox>
@@ -117,6 +116,7 @@ export const Review = (props: TemplateProps) => {
 					label: "Remove property",
 					onClick: () => {
 						deleteProperty(modalPropertyIndex);
+						setExpandedPanelIndex(null);
 						setModalPropertyIndex(null);
 					}
 				}}

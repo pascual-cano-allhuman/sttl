@@ -1,6 +1,14 @@
-export const propertySample = {
+export const accommodation = {
 	"@type": "LodgingBusiness",
 	identifier: [{ valueReference: "Active", value: "ABC123" }],
+	address: {
+		"@type": "PostalAddress",
+		addressCountry: "IE",
+		addressLocality: "Dublin",
+		addressRegion: "Dublin",
+		postalCode: "D01 1234",
+		streetAddress: "123 Fake Street"
+	},
 	numberOfBedrooms: 0,
 	containsPlace: [
 		{

@@ -1,4 +1,4 @@
-import { PropertyData, PERMISSION_STATUS_DISPLAY_TEXT } from "models/sttl";
+import { PERMISSION_STATUS_DISPLAY_TEXT, PropertyData } from "models";
 import { Box, Text, ContentPlaybackCard } from "trade-portal-components";
 import { PropertyTickList } from "./PropertyDetails";
 import { AddressDisplay } from "../shared/AddressDisplay";

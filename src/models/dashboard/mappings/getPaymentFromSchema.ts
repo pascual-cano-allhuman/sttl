@@ -1,6 +1,6 @@
-import { Payment, Order } from "models/dashboard";
+import { Payment, OrderWithInvoice } from "models/dashboard";
 
-export const getPaymentFromSchema = (orderSchema: Order) => {
+export const getPaymentFromSchema = (orderSchema: OrderWithInvoice) => {
 	if (!orderSchema?.partOfInvoice?.identifier) return;
 	const {
 		orderDate,

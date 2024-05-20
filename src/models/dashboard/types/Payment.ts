@@ -6,7 +6,7 @@ export type Payment = {
 	id: string;
 };
 
-export type Order = {
+export type OrderWithInvoice = {
 	"@context"?: "https://schema.org" | string;
 	"@type"?: "Order" | string;
 	id?: string;

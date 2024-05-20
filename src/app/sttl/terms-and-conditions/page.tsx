@@ -9,20 +9,13 @@ import { useAppContext } from "app/AppContext";
 const Page = () => {
 	const { isNewUser } = useAppContext();
 	const { sttlForm, saveAndResume } = useFormContext();
-	const { onNextStep, goToReview, updateFormState } = sttlForm;
-	const { pendingApplication } = saveAndResume;
-
-	const resumeRegistration = () => {
-		if (!pendingApplication) return;
-		updateFormState(pendingApplication);
-		goToReview();
-	};
+	const { onNextStep, goToReview } = sttlForm;
 
 	return (
 		<TermsAndConditions
 			onNextBtnClick={onNextStep}
-			resumeRegistration={resumeRegistration}
-			hasPendingApplication={!!pendingApplication}
+			resumeRegistration={goToReview}
+			hasPendingApplication={!!saveAndResume.pendingApplication}
 			isNewUser={isNewUser}
 		/>
 	);

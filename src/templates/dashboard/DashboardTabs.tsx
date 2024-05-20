@@ -8,7 +8,7 @@ type Props = {
 	currentTabIndex: number;
 };
 
-export const Dashboard = ({ children, tabs, currentTabIndex }: Props) => {
+export const DashboardTabs = ({ children, tabs, currentTabIndex }: Props) => {
 	return (
 		<Box padding="0 1.6rem">
 			<Box columns={12} alignItems="left" margin="0 auto">

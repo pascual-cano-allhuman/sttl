@@ -31,3 +31,5 @@ export const formStepByRoute = formSteps.reduce((acc, step) => {
 	acc[step.route] = step;
 	return acc;
 }, {});
+
+export const getEditStepUrl = (step: FormStep, entry: number) => `/sttl/review/${formStepById[step].route}?entry=${entry}`;

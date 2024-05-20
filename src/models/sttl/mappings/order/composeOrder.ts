@@ -1,9 +1,9 @@
 import { v1 as uuid } from "uuid";
-import { UserAccount } from "models/global";
-import { CATEGORY_AS_TEXT, CategoryAsText, FormState, Offer, Order, PropertyData, PostalAddress } from "../../types";
+import { CATEGORY_AS_TEXT, CategoryAsText, UserAccount, AddressSchema, OrderSchema } from "models/global";
+import { FormState, PropertyData } from "../../types";
 import { composeAccommodation } from "../accommodation";
 
-export const getOrderForCardPayment = (formState: FormState, userAccount: UserAccount): Order => composeOrder(formState, userAccount);
+export const getOrderForCardPayment = (formState: FormState, userAccount: UserAccount): OrderSchema => composeOrder(formState, userAccount);
 
 export const getOrderForZeroPayment = (formState: FormState, userAccount: UserAccount) => {
 	const order = composeOrder(formState, userAccount);
@@ -13,10 +13,10 @@ export const getOrderForZeroPayment = (formState: FormState, userAccount: UserAc
 	const totalPaymentDue = { ...order.partOfInvoice.totalPaymentDue, price: 0 };
 	const acceptedOffer = order?.acceptedOffer?.map(offer => ({ ...offer, price: 0 }));
 	const partOfInvoice = { ...order?.partOfInvoice, totalPaymentDue } || { "@type": "Invoice", totalPaymentDue };
-	return { ...order, orderNumber, orderDate, orderStatus, acceptedOffer, partOfInvoice } as Order;
+	return { ...order, orderNumber, orderDate, orderStatus, acceptedOffer, partOfInvoice } as OrderSchema;
 };
 
-export const composeOrder = (formState: FormState, userAccount?: UserAccount): Order => {
+export const composeOrder = (formState: FormState, userAccount?: UserAccount): OrderSchema => {
 	const propertiesList = getPropertiesList(formState);
 	if (propertiesList.length === 0) return null;
 
@@ -34,7 +34,7 @@ export const composeOrder = (formState: FormState, userAccount?: UserAccount): O
 				name: "STL Registration",
 				isRelatedTo: { ...owner, owns: accommodation }
 			}
-		} as Offer;
+		};
 	});
 	const firstPropertyOwner = formState?.["property_owner_details"]?.[0];
 	const nameFromFirstProperty = firstPropertyOwner ? `${firstPropertyOwner.firstName} ${firstPropertyOwner.lastName}` : "";
@@ -107,8 +107,8 @@ export const getOwner = (property: PropertyData) => {
 	};
 };
 
-export const getPostalAddress = (addressInput: any, countryOfResidence: string): PostalAddress => {
-	const address = { "@type": "PostalAddress" } as PostalAddress;
+export const getPostalAddress = (addressInput: any, countryOfResidence: string): AddressSchema => {
+	const address = { "@type": "PostalAddress" } as AddressSchema;
 	const streetAddressParts = [addressInput.addressLine1, addressInput.addressLine2, addressInput.addressLine3].filter(Boolean);
 	address.streetAddress = streetAddressParts.join(", ");
 	address.postalCode = addressInput.postcode || addressInput.postcode;

@@ -1,20 +1,21 @@
 import React from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { getFormFromOrder } from "models/sttl/mappings";
-import { FormState, Order } from "models/sttl/types";
-import { useAlert, Alert } from "models/global";
+import { FormState } from "models/sttl/types";
+import { useAlert, Alert, OrderSchema } from "models/global";
 import { addStepDataToState, hasPartialState, getPropertiesList, deleteEntryFromState } from "./utils";
-import { formSteps, formStepById, FormStep } from "./formSteps";
+import { formSteps, formStepById, FormStep, getEditStepUrl } from "./formSteps";
 
 type Parameters = {
 	initialState?: FormState;
 	sendQAUpsell: () => Promise<void>;
+	loadSaveAndResumeData: () => Promise<OrderSchema>;
 	resetCorrelationId: () => void;
 };
 
-export const useSttlFormState = (params: Parameters) => {
+export const useSttlForm = (params: Parameters) => {
 	// parameters
-	const { initialState, sendQAUpsell, resetCorrelationId } = params;
+	const { initialState, sendQAUpsell, loadSaveAndResumeData, resetCorrelationId } = params;
 	const steps = formSteps;
 
 	// url data
@@ -26,7 +27,8 @@ export const useSttlFormState = (params: Parameters) => {
 	const [formState, setFormState] = React.useState<FormState>(initialState);
 	const propertiesList = React.useMemo(() => getPropertiesList(formState), [formState]);
 	const hasSentQAMembershipUpsell = React.useRef(false);
-	const { alert, closeAlert, showAlert } = useAlert();
+	const { alert, closeAlert, showAlertOnUrl } = useAlert();
+	const isSetup = React.useRef(false);
 
 	// current step data
 	const { currentStep, nextStep, prevStep, isEditing, stepper } = React.useMemo(() => {
@@ -44,9 +46,10 @@ export const useSttlFormState = (params: Parameters) => {
 	// save step data on the current entry and go to the next step
 	const onNextStep = (stepData?: Record<string, any>) => {
 		const updatedState = updateState(stepData);
-		router.push(nextStep.url);
-		if (isEditing) showAlert(alerts.PROPERTY_CHANGED);
-		else if (!hasPartialState(updatedState)) showAlert(alerts.PROPERTY_ADDED);
+		const hasCompletedProperty = !hasPartialState(updatedState);
+		if (isEditing) showAlertOnUrl(alerts.PROPERTY_CHANGED, formStepById[FormStep.review].url);
+		else if (hasCompletedProperty) showAlertOnUrl(alerts.PROPERTY_ADDED, formStepById[FormStep.review].url);
+		else router.push(nextStep.url);
 	};
 
 	// go to the previous step in the flow
@@ -62,9 +65,9 @@ export const useSttlFormState = (params: Parameters) => {
 
 	// go to particular steps
 	const goToStep = (step: FormStep) => router.push(formStepById[step].url);
-	const goToReview = () => goToStep(FormStep.review);
-	const goToEditStep = (step: string, entry: number) => router.push(`${formStepById[step].url}?entry=${entry}`);
+	const goToEditStep = (step: FormStep, entry: number) => router.push(getEditStepUrl(step, entry));
 	const registerNewProperty = () => goToStep(FormStep.property_type);
+	const goToReview = () => goToStep(FormStep.review);
 
 	// delete a property on the review screen
 	const deleteProperty = async (entryIndex: number) => {
@@ -79,16 +82,20 @@ export const useSttlFormState = (params: Parameters) => {
 		hasSentQAMembershipUpsell.current = true;
 	};
 
-	// update form state from a persisted order
-	const updateFormState = (order: Order) => {
-		const state = getFormFromOrder(order);
-		if (state) setFormState(state);
-	};
-
 	// reset the correlation id when the user goes to the confirm page
 	React.useEffect(() => {
-		if (pathname.includes("/confirm")) resetCorrelationId();
+		if (pathname.endsWith("/confirm")) resetCorrelationId();
 	}, [pathname]);
+
+	// if you land to the review page without any data, load the persisted order
+	React.useEffect(() => {
+		if (!pathname.endsWith("/review") || isSetup.current) return;
+		isSetup.current = true;
+		loadSaveAndResumeData().then(order => {
+			const state = getFormFromOrder(order);
+			if (state) setFormState(state);
+		});
+	}, []);
 
 	return {
 		formState,
@@ -103,7 +110,6 @@ export const useSttlFormState = (params: Parameters) => {
 		registerNewProperty,
 		deleteProperty,
 		applyForQAMembership,
-		updateFormState,
 		alert,
 		closeAlert
 	};

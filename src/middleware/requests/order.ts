@@ -4,7 +4,7 @@ import { logger } from "lib/logger";
 
 const MIDDLEWARE_DE_ENDPOINT = process.env.MIDDLEWARE_DE_ENDPOINT?.length > 0 ? process.env.MIDDLEWARE_DE_ENDPOINT : null;
 const MIDDLEWARE_PORTAL_ENDPOINT = process.env.MIDDLEWARE_PORTAL_ENDPOINT?.length > 0 ? process.env.MIDDLEWARE_PORTAL_ENDPOINT : null;
-const SHOULD_MOCK_MIDDLEWARE = process.env.SHOULD_MOCK_MIDDLEWARE || false;
+const SHOULD_MOCK_MIDDLEWARE = ["1", "true"].includes(process.env.SHOULD_MOCK_MIDDLEWARE);
 
 export const postCardPaymentRequest = async (order: any, token: string, correlation: Record<string, string>) => {
 	if (!MIDDLEWARE_DE_ENDPOINT || !token) return;

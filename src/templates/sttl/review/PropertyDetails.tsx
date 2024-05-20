@@ -1,5 +1,6 @@
 import React from "react";
-import { Category, PropertyTypeStep } from "models/sttl";
+import { Category } from "models/global";
+import { PropertyTypeStep } from "models";
 import { Box, Text, TickList } from "trade-portal-components";
 
 export type ListItem = { id: string; value: string };

@@ -1,12 +1,11 @@
 import { PROPERTY_OPTIONS, TEXT_TO_UNIT_ROOM_TYPE } from "settings/propertyTypeOptions";
-import { Rooms, EntireProperty, MultipleUnits, Offer, AdditionalProperty } from "../../types";
-import { TEXT_TO_CATEGORY, Category, TEXT_TO_PLANNING_PERMISSION } from "../../types";
+import { AccommodationSchema, TEXT_TO_CATEGORY, Category, TEXT_TO_PLANNING_PERMISSION, CategoryAsText, PersonSchema } from "models/global";
 
 export const getPlanningPermissionFromOfferItem = (item: Offer) => {
 	const permission = item.itemOffered.isRelatedTo.owns.additionalProperty?.find(ap => ap.name === "Planning Permission");
 	return { permissionStatus: TEXT_TO_PLANNING_PERMISSION[permission.value] ?? "" };
 };
-export const getPlanningPermission = (additionalProperty: AdditionalProperty) => {
+export const getPlanningPermission = (additionalProperty: { name: string; value: string }[]) => {
 	const value = additionalProperty?.find(ap => ap.name === "Planning Permission")?.value;
 	return TEXT_TO_PLANNING_PERMISSION[value] ?? "";
 };
@@ -20,7 +19,7 @@ export const getPropertyType = (item: Offer) => {
 	const stepOneArrayItem = { category };
 
 	if (category === Category.room) {
-		const owns = item.itemOffered.isRelatedTo.owns as Rooms;
+		const owns = item.itemOffered.isRelatedTo.owns as AccommodationSchema;
 		const { containsPlace } = owns;
 		const hasRoomProperty = PROPERTY_OPTIONS.room.some(({ value }) => value === owns.additionalType);
 		const propertyType = hasRoomProperty ? owns.additionalType : "Other - specify";
@@ -52,7 +51,7 @@ export const getPropertyType = (item: Offer) => {
 	}
 
 	if (category === Category.fullProperty) {
-		const owns = item.itemOffered.isRelatedTo.owns as EntireProperty;
+		const owns = item.itemOffered.isRelatedTo.owns as AccommodationSchema;
 		const hasFullProperty = PROPERTY_OPTIONS.fullProperty.some(({ value }) => value === owns.additionalType);
 		const propertyType = hasFullProperty ? owns.additionalType : "Other - specify";
 		const customPropertyType = hasFullProperty ? undefined : owns.additionalType;
@@ -69,7 +68,7 @@ export const getPropertyType = (item: Offer) => {
 	}
 
 	if (category === Category.units) {
-		const owns = item.itemOffered.isRelatedTo.owns as MultipleUnits;
+		const owns = item.itemOffered.isRelatedTo.owns as AccommodationSchema;
 
 		const propertyDetails = owns.containsPlace.reduce((acc, next) => {
 			const unitText = next.numberOfRooms?.unitText;
@@ -142,5 +141,17 @@ export const getOwnerDetails = (item: Offer) => {
 			postcode: address.postalCode,
 			county: address.addressRegion?.replace(/^co. /i, "")
 		}
+	};
+};
+
+export type Offer = {
+	"@type": "Offer";
+	price?: number;
+	priceCurrency: "EUR";
+	itemOffered: {
+		category: CategoryAsText;
+		"@type": "GovernmentService";
+		name: "STL Registration";
+		isRelatedTo: PersonSchema;
 	};
 };

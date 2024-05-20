@@ -1,9 +1,10 @@
-import { Order, FormState } from "../../types";
-import { getOwnerDetails, getPlanningPermissionFromOfferItem, getPropertyAddress, getPropertyType } from "./utils";
+import { OrderSchema } from "models/global";
+import { FormState } from "../../types";
+import { getOwnerDetails, getPlanningPermissionFromOfferItem, getPropertyAddress, getPropertyType, Offer } from "./utils";
 
-export const getFormFromOrder = (order: Order): FormState => {
+export const getFormFromOrder = (order: OrderSchema): FormState => {
 	return order?.acceptedOffer?.reduce(
-		(acc, item) => {
+		(acc, item: Offer) => {
 			acc["property_type"].push(getPropertyType(item));
 			acc["statutory_obligations"].push(getPlanningPermissionFromOfferItem(item));
 			acc["property_address"].push(getPropertyAddress(item));

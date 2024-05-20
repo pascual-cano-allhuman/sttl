@@ -1,27 +1,8 @@
-import { PostalAddress, ContainsPlaceForRooms, Rooms, EntireProperty, MultipleUnits, Offer, Order } from "../../types";
-
-type PermissionProperty = {
-	"@type": string;
-	name: string;
-	value: PermissionStatus;
-};
-type QuantitativeValue = {
-	"@type": "QuantitativeValue";
-	unitText: string;
-	value: string;
-};
-
-type LocationFeatureSpecification = {
-	"@type": "LocationFeatureSpecification";
-	name: string;
-	value: string;
-};
-
-export const isValidOrder = (obj: any): obj is Order => {
+export const isValidOrder = (obj: any) => {
 	const order =
 		typeof obj === "object" &&
 		typeof obj["@context"] === "string" &&
-		obj["@type"] === "Order" &&
+		obj["@type"] === "OrderSchema" &&
 		Array.isArray(obj.acceptedOffer) &&
 		obj.acceptedOffer?.every(offer => isOfferItem(offer)) &&
 		isCustomer(obj.customer) &&
@@ -29,7 +10,7 @@ export const isValidOrder = (obj: any): obj is Order => {
 	return order;
 };
 
-export const isCustomer = (obj: any): obj is Order["customer"] => {
+export const isCustomer = (obj: any) => {
 	const customer =
 		typeof obj === "object" &&
 		typeof obj["@type"] === "string" &&
@@ -51,7 +32,7 @@ export const isCustomer = (obj: any): obj is Order["customer"] => {
 	return customer;
 };
 
-export const isPartOfInvoice = (obj: any): obj is Order["partOfInvoice"] => {
+export const isPartOfInvoice = (obj: any) => {
 	const partOfInvoice =
 		typeof obj === "object" &&
 		typeof obj["@type"] === "string" &&
@@ -62,7 +43,7 @@ export const isPartOfInvoice = (obj: any): obj is Order["partOfInvoice"] => {
 	return partOfInvoice;
 };
 
-export const isOfferItem = (obj: any): obj is Offer => {
+export const isOfferItem = (obj: any) => {
 	const offerItem =
 		typeof obj === "object" &&
 		obj?.["@type"] === "Offer" &&
@@ -84,7 +65,7 @@ export const isOfferItem = (obj: any): obj is Offer => {
 		obj?.itemOffered?.isRelatedTo?.worksFor?.["@type"] === "Organization" &&
 		typeof obj?.itemOffered?.isRelatedTo?.worksFor?.name === "string" &&
 		typeof obj.itemOffered.isRelatedTo.owns === "object" &&
-		obj.itemOffered.isRelatedTo.owns.additionalProperty?.every((item: PermissionProperty) => isPermissionStatus(item.value)) &&
+		obj.itemOffered.isRelatedTo.owns.additionalProperty?.every((item: any) => isPermissionStatus(item.value)) &&
 		(isRoomsOwns(obj.itemOffered.isRelatedTo.owns) ||
 			isEntirePropertyOwns(obj.itemOffered.isRelatedTo.owns) ||
 			isMultipleUnitsOwns(obj.itemOffered.isRelatedTo.owns));
@@ -92,18 +73,18 @@ export const isOfferItem = (obj: any): obj is Offer => {
 	return offerItem;
 };
 
-const isPermissionStatus = (value: any): value is PermissionStatus => value === "Granted" || value === "Outstanding";
+const isPermissionStatus = (value: any) => value === "Granted" || value === "Outstanding";
 
-const isLocationFeatureSpecification = (feature: any): feature is LocationFeatureSpecification =>
+const isLocationFeatureSpecification = (feature: any) =>
 	typeof feature === "object" &&
 	feature["@type"] === "LocationFeatureSpecification" &&
 	typeof feature.name === "string" &&
 	typeof feature.value === "string";
 
-const isQuantitativeValue = (value: any): value is QuantitativeValue =>
+const isQuantitativeValue = (value: any) =>
 	typeof value === "object" && value !== null && value["@type"] === "QuantitativeValue" && typeof value.unitText === "string";
 
-const isContainsPlaceItemForRooms = (item: any): item is ContainsPlaceForRooms =>
+const isContainsPlaceItemForRooms = (item: any) =>
 	typeof item === "object" &&
 	item !== null &&
 	typeof item.additionalType === "string" &&
@@ -112,7 +93,7 @@ const isContainsPlaceItemForRooms = (item: any): item is ContainsPlaceForRooms =
 	Array.isArray(item.amenityFeature) &&
 	item.amenityFeature.every(isLocationFeatureSpecification);
 
-const isRoomsOwns = (obj: any): obj is Rooms => {
+const isRoomsOwns = (obj: any) => {
 	return (
 		typeof obj === "object" &&
 		typeof obj["@type"] === "string" &&
@@ -122,7 +103,7 @@ const isRoomsOwns = (obj: any): obj is Rooms => {
 	);
 };
 
-const isEntirePropertyOwns = (obj: any): obj is EntireProperty => {
+const isEntirePropertyOwns = (obj: any) => {
 	return (
 		typeof obj === "object" &&
 		typeof obj["@type"] === "string" &&
@@ -136,11 +117,11 @@ const isEntirePropertyOwns = (obj: any): obj is EntireProperty => {
 	);
 };
 
-const isMultipleUnitsOwns = (obj: any): obj is MultipleUnits => {
+const isMultipleUnitsOwns = (obj: any) => {
 	return obj != null && typeof obj === "object" && typeof obj["@type"] === "string" && isAddress(obj.address);
 };
 
-export const isAddress = (obj: any): obj is PostalAddress => {
+export const isAddress = (obj: any) => {
 	return (
 		typeof obj === "object" &&
 		obj["@type"] === "PostalAddress" &&

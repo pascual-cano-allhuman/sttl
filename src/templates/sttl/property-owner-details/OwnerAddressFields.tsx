@@ -11,7 +11,7 @@ export const OwnerAddressFields = () => {
 	const { formState, watch } = useFormContext();
 	const { defaultValues, isDirty } = formState;
 	const addressField = useController({ name: "ownerAddress", rules: { validate: value => !!value?.addressLine1 || "Required" } });
-	const countryOfResidence = watch(`countryOfResidence`);
+	const countryOfResidence = watch(`countryOfResidence`) || "Ireland";
 	const isIreland = countryOfResidence === "Ireland";
 
 	if (showManualForm || !isIreland) return <AddressForm key={countryOfResidence} isIrishAddress={isIreland} addressFieldsPrefix="ownerAddress" />;

@@ -1,5 +1,4 @@
-import { Category } from "./categories";
-import { PermissionStatus } from "./permissionStatus";
+import { Category, PermissionStatus } from "models/global";
 
 export type FormState = {
 	property_type: PropertyTypeStep[];
@@ -27,7 +26,7 @@ export type PropertyTypeStep = {
 	units?: Record<string, string | number>[];
 };
 
-export type Address = {
+type Address = {
 	addressLine1: string;
 	addressLine2?: string;
 	addressLine3?: string;

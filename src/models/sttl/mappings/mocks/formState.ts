@@ -1,4 +1,5 @@
-import { Category, FormState, PermissionStatus } from "../../types";
+import { Category, PermissionStatus } from "models/global";
+import { FormState } from "../../types";
 
 export const formState: FormState = {
 	property_type: [

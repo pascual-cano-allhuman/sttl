@@ -1,6 +1,6 @@
-import { CategoryAsText, Order } from "../../types";
+import { CategoryAsText, OrderSchema } from "models/global";
 
-export const order: Order = {
+export const order: OrderSchema = {
 	"@context": "https://schema.org",
 	"@type": "Order",
 	acceptedOffer: [
@@ -43,6 +43,7 @@ export const order: Order = {
 						additionalType: "House",
 						containsPlace: [
 							{
+								"@type": "Accommodation",
 								additionalType: "shared",
 								numberOfRooms: {
 									"@type": "QuantitativeValue",
@@ -58,6 +59,7 @@ export const order: Order = {
 								]
 							},
 							{
+								"@type": "Accommodation",
 								additionalType: "private",
 								numberOfRooms: {
 									"@type": "QuantitativeValue",
@@ -239,6 +241,7 @@ export const order: Order = {
 						additionalType: "Room Special",
 						containsPlace: [
 							{
+								"@type": "Accommodation",
 								additionalType: "shared",
 								numberOfRooms: {
 									"@type": "QuantitativeValue",
@@ -254,6 +257,7 @@ export const order: Order = {
 								]
 							},
 							{
+								"@type": "Accommodation",
 								additionalType: "private",
 								numberOfRooms: {
 									"@type": "QuantitativeValue",

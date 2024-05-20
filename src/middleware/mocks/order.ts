@@ -1,6 +1,6 @@
-import { CategoryAsText, Order } from "models/sttl";
+import { CategoryAsText, OrderSchema } from "models";
 
-export const order: Order = {
+export const order: OrderSchema = {
 	"@context": "https://schema.org",
 	"@type": "Order",
 	acceptedOffer: [
@@ -31,6 +31,7 @@ export const order: Order = {
 						name: "All Human"
 					},
 					owns: {
+						"@type": "Accommodation",
 						address: {
 							"@type": "PostalAddress",
 							streetAddress: "532 West Rocky Milton Freeway",
@@ -39,10 +40,10 @@ export const order: Order = {
 							addressRegion: "Cavan",
 							addressCountry: "Ireland"
 						},
-						"@type": "Accommodation",
 						additionalType: "House",
 						containsPlace: [
 							{
+								"@type": "Accommodation",
 								additionalType: "shared",
 								numberOfRooms: {
 									"@type": "QuantitativeValue",
@@ -58,6 +59,7 @@ export const order: Order = {
 								]
 							},
 							{
+								"@type": "Accommodation",
 								additionalType: "private",
 								numberOfRooms: {
 									"@type": "QuantitativeValue",
@@ -111,6 +113,7 @@ export const order: Order = {
 						name: "All Human"
 					},
 					owns: {
+						"@type": "Accommodation",
 						address: {
 							"@type": "PostalAddress",
 							streetAddress: "634 New Freeway",
@@ -119,7 +122,6 @@ export const order: Order = {
 							addressRegion: "Carlow",
 							addressCountry: "Ireland"
 						},
-						"@type": "Accommodation",
 						additionalType: "Apartment / Flat",
 						numberOfBedrooms: "1",
 						amenityFeature: [
@@ -167,6 +169,7 @@ export const order: Order = {
 						name: "All Human"
 					},
 					owns: {
+						"@type": "LodgingBusiness",
 						address: {
 							"@type": "PostalAddress",
 							streetAddress: "740 Rocky Clarendon Avenue",
@@ -175,7 +178,6 @@ export const order: Order = {
 							addressRegion: "Cork",
 							addressCountry: "Ireland"
 						},
-						"@type": "LodgingBusiness",
 						containsPlace: [
 							{
 								"@type": "Accommodation",
@@ -227,6 +229,7 @@ export const order: Order = {
 						name: "All Human"
 					},
 					owns: {
+						"@type": "Accommodation",
 						address: {
 							"@type": "PostalAddress",
 							streetAddress: "84 West Rocky Oak Street",
@@ -235,10 +238,10 @@ export const order: Order = {
 							addressRegion: "Clare",
 							addressCountry: "Ireland"
 						},
-						"@type": "Accommodation",
 						additionalType: "Room Special",
 						containsPlace: [
 							{
+								"@type": "Accommodation",
 								additionalType: "shared",
 								numberOfRooms: {
 									"@type": "QuantitativeValue",
@@ -254,6 +257,7 @@ export const order: Order = {
 								]
 							},
 							{
+								"@type": "Accommodation",
 								additionalType: "private",
 								numberOfRooms: {
 									"@type": "QuantitativeValue",

@@ -1,5 +1,5 @@
 import { Box, Pagination, Button, Text, theme } from "trade-portal-components";
-import { usePagination, Property } from "models/dashboard";
+import { usePagination, Property } from "models";
 import { PropertyCard } from "./PropertyCard";
 import { PendingApplicationCard } from "./PendingApplicationCard";
 
@@ -31,15 +31,15 @@ export const MyProperties = (props: Props) => {
 				)}
 			</Box>
 			{hasPendingApplication && <PendingApplicationCard discardSaveAndResume={discardSaveAndResume} />}
-			{properties.length > 0 && (
+			{properties?.length > 0 && (
 				<Box gap="2.4rem">
-					{pageItems.map(item => {
-						return <PropertyCard key={item.id} property={item} />;
-					})}
+					{pageItems.map((item, i) => (
+						<PropertyCard key={i} property={item} />
+					))}
 					<Pagination totalNumberOfPages={totalNumberOfPage} currentPage={pageNumber} onPageChange={goToPage} />
 				</Box>
 			)}
-			{!hasPendingApplication && properties.length === 0 && <EmptyCard />}
+			{!hasPendingApplication && properties?.length === 0 && <EmptyCard />}
 		</Box>
 	);
 };

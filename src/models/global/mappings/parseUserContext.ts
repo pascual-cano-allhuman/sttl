@@ -1,4 +1,4 @@
-import { UserContextData, UserAccount } from "../types/UserAccount";
+import { UserContextData, UserAccount } from "../types/userAccount";
 
 export const parseUserContext = (data: UserContextData) => {
 	if (!data?.b2c) return { name: "", firstName: "", lastName: "", email: "", contactId: "" };
