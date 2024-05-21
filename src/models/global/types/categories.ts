@@ -1,6 +1,6 @@
 export const CATEGORY_AS_TEXT = {
 	sharedProperty: "Shared property",
-	fullProperty: "Full property",
+	fullProperty: "Entire property",
 	multipleUnits: "Multiple units"
 } as const;
 

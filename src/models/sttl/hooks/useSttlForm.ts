@@ -1,11 +1,10 @@
 import React from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { getPropertiesFromForm, getPropertiesFromSchema } from "models/sttl/mappings";
+import { getFormFromOrder, getPropertiesFromForm } from "models/sttl/mappings";
 import { FormState } from "models/sttl/types";
 import { useAlert, Alert, OrderSchema } from "models/global";
 import { addStepDataToState, hasPartialState, deleteEntryFromState } from "./utils";
 import { formSteps, formStepById, FormStep, getEditStepUrl } from "./formSteps";
-import { getFormFromProperties } from "../mappings/form/getFormFromProperties";
 
 type Parameters = {
 	initialState?: FormState;
@@ -93,8 +92,7 @@ export const useSttlForm = (params: Parameters) => {
 		if (!pathname.endsWith("/review") || isSetup.current) return;
 		isSetup.current = true;
 		loadSaveAndResumeData().then(order => {
-			const properties = getPropertiesFromSchema(order);
-			const formState = getFormFromProperties(properties);
+			const formState = getFormFromOrder(order);
 			if (formState) setFormState(formState);
 		});
 	}, []);

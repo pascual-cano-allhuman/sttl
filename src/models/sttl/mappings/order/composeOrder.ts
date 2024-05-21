@@ -38,7 +38,6 @@ export const composeOrder = (formState: FormState, userAccount?: UserAccount): O
 	const firstPropertyOwner = formState?.["propertyOwner"]?.[0];
 	const nameFromFirstProperty = firstPropertyOwner ? `${firstPropertyOwner.firstName} ${firstPropertyOwner.lastName}` : "";
 	const emailFromFirstProperty = firstPropertyOwner ? firstPropertyOwner.emailAddress : "";
-
 	return {
 		"@context": "https://schema.org",
 		"@type": "Order",

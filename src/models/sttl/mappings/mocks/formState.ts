@@ -49,10 +49,10 @@ export const formState: FormState = {
 			category: "multipleUnits",
 			multipleUnits: {
 				units: [
-					{ propertyType: "Activity or adventure centre", noOfGuests: 2, noOfRooms: 1 },
+					{ propertyType: "Activity or adventure centre", noOfGuests: 2, noOfUnits: 1 },
 					{ propertyType: "Hostel", noOfGuests: 2 },
-					{ propertyType: "Apartments - student accommodation", noOfGuests: 2, noOfOwnDoorUnits: 1 },
-					{ propertyType: "Other - specify", customPropertyType: "Multiple Other Special", noOfGuests: 2, number: 1 }
+					{ propertyType: "Apartments - student accommodation", noOfGuests: 2, noOfUnits: 1 },
+					{ propertyType: "Other - specify", customPropertyType: "Multiple Other Special", noOfGuests: 2, noOfUnits: 1 }
 				]
 			}
 		}

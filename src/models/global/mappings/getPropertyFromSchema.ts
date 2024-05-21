@@ -94,7 +94,7 @@ const getOwnerDetails = (owner: PersonSchema) => {
 		emailAddress: email,
 		telephone,
 		businessName,
-		ownerAddress: {
+		address: {
 			addressLine1: address.streetAddress,
 			addressLine2: "", // will never know
 			addressLine3: "", // will never know

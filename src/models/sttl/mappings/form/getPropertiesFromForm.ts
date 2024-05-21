@@ -39,19 +39,32 @@ const getPropertyDetails = (propertyTypeStep: PropertyTypeStep) => {
 	const { category, sharedProperty, fullProperty, multipleUnits } = propertyTypeStep;
 	if (category === "sharedProperty") {
 		const {
-			propertyType,
 			numberOfSharedRooms = 0,
 			numberOfPrivateRooms = 0,
 			numberOfGuestsInSharedRooms = 0,
 			numberOfGuestsInPrivateRooms = 0
 		} = sharedProperty;
+		const propertyType = getPropertyType(sharedProperty);
 		return { propertyType, numberOfSharedRooms, numberOfPrivateRooms, numberOfGuestsInSharedRooms, numberOfGuestsInPrivateRooms };
 	}
 	if (category === "fullProperty") {
-		const { propertyType, numberOfBedrooms = 0, numberOfGuests = 0 } = fullProperty;
+		const { numberOfBedrooms = 0, numberOfGuests = 0 } = fullProperty;
+		const propertyType = getPropertyType(fullProperty);
 		return { propertyType, numberOfBedrooms, numberOfGuests };
 	}
-	if (category === "multipleUnits") return multipleUnits;
+	if (category === "multipleUnits") {
+		const { units: formUnitInputs } = multipleUnits;
+		const units = formUnitInputs.map(unit => {
+			const propertyType = getPropertyType(unit);
+			return { ...unit, propertyType };
+		});
+		return { units };
+	}
+};
+
+const getPropertyType = (inputs: Record<string, any>) => {
+	const { propertyType, customPropertyType } = inputs;
+	return customPropertyType || propertyType;
 };
 
 const getPropertyOwner = (propertyOwnerStep: PropertyOwnerDetailsStep, propertyAddressStep: PropertyAddressStep) => {

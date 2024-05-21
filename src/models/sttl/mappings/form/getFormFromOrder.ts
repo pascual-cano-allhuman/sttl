@@ -1,6 +1,19 @@
 import { PROPERTY_OPTIONS } from "settings/propertyTypeOptions";
-import { Property, Address, Category } from "models/global";
+import { Property, Address, Category, getPropertyFromSchema, OrderSchema } from "models/global";
 import { FormState, PropertyTypeStep, PropertyAddressStep, PropertyOwnerDetailsStep, StatutoryObligationsStep } from "models/sttl";
+
+export const getFormFromOrder = (orderSchema: OrderSchema) => {
+	if (!orderSchema?.acceptedOffer) return null;
+	const itemsOffered = orderSchema.acceptedOffer.map(offer => offer.itemOffered);
+	const properties = itemsOffered
+		.map(itemOffered => {
+			const ownerSchema = itemOffered.isRelatedTo;
+			const accommodationSchema = ownerSchema.owns;
+			return getPropertyFromSchema(accommodationSchema, ownerSchema);
+		})
+		.filter(Boolean);
+	return getFormFromProperties(properties);
+};
 
 export const getFormFromProperties = (properties: Property[]) => {
 	const formState = { propertyType: [], statutoryObligations: [], propertyAddress: [], propertyOwner: [] } as FormState;
@@ -61,6 +74,7 @@ export const getPropertyOwnerStep = (property: Property): PropertyOwnerDetailsSt
 };
 
 export const areAddressesSame = (address1: Address, address2: Address) => {
+	if (!address1 || !address2) return false;
 	const keys = Object.keys(address1);
 	return keys.every(key => address1[key] === address2[key]);
 };

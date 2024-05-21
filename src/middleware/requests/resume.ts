@@ -1,5 +1,5 @@
 import { httpPost, httpGet, httpDelete } from "lib/http";
-import { isValidOrder, OrderSchema } from "models";
+import { OrderSchema } from "models";
 import { logger } from "lib/logger";
 import { order } from "../mocks/order";
 
@@ -23,11 +23,11 @@ export const getSaveAndResumeData = async (userId: string, token: string, correl
 		const data = await httpGet(`${MIDDLEWARE_PORTAL_ENDPOINT}/cache/sttl/${userId}`, token);
 
 		if (!data || Object.keys(data).length === 0) return;
-		const isValid = isValidOrder(data);
-		if (!isValid) {
-			logger.error(new Error(`Failed to validate save-and-resume data.`), correlation);
-			return;
-		}
+		// const isValid = isValidOrder(data);
+		// if (!isValid) {
+		// 	logger.error(new Error(`Failed to validate save-and-resume data.`), correlation);
+		// 	return;
+		// }
 		return data as OrderSchema;
 	} catch (e) {
 		logger.error(new Error(`Failed to get save-and-resume data. HTTP Error ${e?.message}}`), correlation);
