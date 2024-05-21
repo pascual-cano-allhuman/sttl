@@ -92,7 +92,7 @@ export const OwnerDetailsFields = (props: Props) => {
 				{...register(`countryOfResidence`, {
 					required: "Required",
 					onChange: () => {
-						setValue("isAddressSameAsStlProperty", false);
+						setValue("isOwnerAddressSame", false);
 						ADDRESS_FIELDS.forEach(field => setValue(`ownerAddress.${field}`, ""));
 					}
 				})}

@@ -4,7 +4,7 @@ import React from "react";
 import { useSearchParams } from "next/navigation";
 import { PropertyAddress } from "templates";
 import { useFormContext } from "app/sttl/FormContext";
-import { PropertyAddressStep, PropertyData } from "models/sttl";
+import { PropertyAddressStep, Property } from "models";
 
 const Page = () => {
 	const searchParams = useSearchParams();
@@ -13,9 +13,7 @@ const Page = () => {
 	const entry = searchParams.get("entry") && isEditing ? +searchParams.get("entry") : propertiesList.length;
 	const defaultValues = React.useMemo(() => formState?.propertyAddress?.[entry] || ({} as PropertyAddressStep), [entry, formState]);
 	const excludedEircodes = React.useMemo(() => {
-		return propertiesList
-			.filter((_: any, i: number) => i !== entry)
-			.map((property: PropertyData) => property.propertyAddress.propertyAddress?.postcode);
+		return propertiesList.filter((_: any, i: number) => i !== entry).map((property: Property) => property.address?.postcode);
 	}, [entry, propertiesList]);
 
 	return (

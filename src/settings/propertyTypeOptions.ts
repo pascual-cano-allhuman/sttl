@@ -23,48 +23,35 @@ const FULL_PROPERTY_OPTIONS = [
 	{ label: "Other - specify", value: "Other - specify" }
 ];
 
-const OPTIONAL_INPUTS = {
-	noOfRooms: "noOfRooms",
-	noOfOwnDoorUnits: "noOfOwnDoorUnits",
-	noOfBedrooms: "noOfBedrooms",
-	noOfPitches: "noOfPitches",
-	number: "number"
-};
-
 const MULTIPLE_UNITS_OPTIONS = [
 	{
 		label: "Activity or adventure centre",
 		value: "Activity or adventure centre",
-		inputName: OPTIONAL_INPUTS.noOfRooms,
 		inputLabel: "Number of rooms"
 	},
 	{
 		label: "Apartments - student accommodation",
 		value: "Apartments - student accommodation",
-		inputName: OPTIONAL_INPUTS.noOfOwnDoorUnits,
 		inputLabel: "Number of own door units"
 	},
-	{ label: "Apartments - other", value: "Apartments - other", inputName: OPTIONAL_INPUTS.noOfOwnDoorUnits, inputLabel: "Number of own door units" },
+	{ label: "Apartments - other", value: "Apartments - other", inputLabel: "Number of own door units" },
 	{ label: "Hostel style", value: "Hostel" },
 	{
 		label: "Multiple houses on a site",
 		value: "Multiple houses on a site",
-		inputName: OPTIONAL_INPUTS.noOfOwnDoorUnits,
 		inputLabel: "Number of own door units"
 	},
 	{
 		label: "Site - for motor home / tent / yurt etc.",
 		value: "Site - for motor home / tent / yurt etc.",
-		inputName: OPTIONAL_INPUTS.noOfPitches,
 		inputLabel: "Number of pitches"
 	},
 	{
 		label: "Serviced accommodation",
 		value: "Serviced accommodation",
-		inputName: OPTIONAL_INPUTS.noOfOwnDoorUnits,
 		inputLabel: "Number of own door units"
 	},
-	{ label: "Other - specify", value: "Other - specify", inputName: OPTIONAL_INPUTS.number, inputLabel: "Number" }
+	{ label: "Other - specify", value: "Other - specify", inputLabel: "Number" }
 ];
 
 export const PROPERTY_OPTIONS = {
@@ -74,16 +61,3 @@ export const PROPERTY_OPTIONS = {
 };
 
 export const PROPERTY_TYPES_NOT_REQUIRING_BEDROOMS = ["Recreational vehicle / Motor home", "Treehouse", "Yurt"];
-
-export const UNIT_ROOM_TYPE_AS_TEXT = {
-	noOfOwnDoorUnits: "Own Door Unit",
-	noOfRooms: "Room",
-	noOfBedrooms: "Bedroom",
-	noOfPitches: "Pitch",
-	number: "Number"
-};
-
-export const TEXT_TO_UNIT_ROOM_TYPE = Object.entries(UNIT_ROOM_TYPE_AS_TEXT).reduce((acc, [key, value]) => {
-	acc[value] = key;
-	return acc;
-}, {});

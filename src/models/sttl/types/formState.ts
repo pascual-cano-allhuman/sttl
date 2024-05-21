@@ -23,7 +23,9 @@ export type PropertyTypeStep = {
 		numberOfBedrooms?: number;
 		numberOfGuests?: number;
 	};
-	multipleUnits?: Record<string, string | number>[];
+	multipleUnits?: {
+		units: Record<string, string | number>[];
+	};
 };
 
 type Address = {
@@ -46,17 +48,10 @@ export type PropertyOwnerDetailsStep = {
 	businessName: string;
 	telephone: string;
 	countryOfResidence: string;
-	isAddressSameAsStlProperty: boolean;
+	isOwnerAddressSame: boolean;
 	ownerAddress?: Address;
 };
 
 export type StatutoryObligationsStep = {
 	permissionStatus: PermissionStatus;
-};
-
-export type PropertyData = {
-	propertyType: PropertyTypeStep;
-	statutoryObligations: StatutoryObligationsStep;
-	propertyAddress: PropertyAddressStep;
-	propertyOwner: PropertyOwnerDetailsStep;
 };

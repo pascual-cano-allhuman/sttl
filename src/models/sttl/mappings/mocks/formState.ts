@@ -23,7 +23,7 @@ export const formState: FormState = {
 		},
 		{
 			category: "multipleUnits",
-			multipleUnits: [{ propertyType: "Hostel", noOfGuests: 1 }]
+			multipleUnits: { units: [{ propertyType: "Hostel", noOfGuests: 1 }] }
 		},
 		{
 			category: "sharedProperty",
@@ -47,12 +47,14 @@ export const formState: FormState = {
 		},
 		{
 			category: "multipleUnits",
-			multipleUnits: [
-				{ propertyType: "Activity or adventure centre", noOfGuests: 2, noOfRooms: 1 },
-				{ propertyType: "Hostel", noOfGuests: 2 },
-				{ propertyType: "Apartments - student accommodation", noOfGuests: 2, noOfOwnDoorUnits: 1 },
-				{ propertyType: "Other - specify", customPropertyType: "Multiple Other Special", noOfGuests: 2, number: 1 }
-			]
+			multipleUnits: {
+				units: [
+					{ propertyType: "Activity or adventure centre", noOfGuests: 2, noOfRooms: 1 },
+					{ propertyType: "Hostel", noOfGuests: 2 },
+					{ propertyType: "Apartments - student accommodation", noOfGuests: 2, noOfOwnDoorUnits: 1 },
+					{ propertyType: "Other - specify", customPropertyType: "Multiple Other Special", noOfGuests: 2, number: 1 }
+				]
+			}
 		}
 	],
 	statutoryObligations: [
@@ -145,7 +147,7 @@ export const formState: FormState = {
 			emailAddress: "kekyzo@mailinator.com",
 			telephone: "+353851231234",
 			businessName: "All Human",
-			isAddressSameAsStlProperty: false,
+			isOwnerAddressSame: false,
 			ownerAddress: {
 				addressLine1: "653 White Hague Extension",
 				addressLine2: "",
@@ -162,7 +164,7 @@ export const formState: FormState = {
 			emailAddress: "pakicihi@mailinator.com",
 			telephone: "+353851231234",
 			businessName: "All Human",
-			isAddressSameAsStlProperty: true
+			isOwnerAddressSame: true
 		},
 		{
 			countryOfResidence: "American Samoa",
@@ -171,7 +173,7 @@ export const formState: FormState = {
 			emailAddress: "mejeqyhal@mailinator.com",
 			telephone: "+353851231234",
 			businessName: "All Human",
-			isAddressSameAsStlProperty: false,
+			isOwnerAddressSame: false,
 			ownerAddress: {
 				addressLine1: "Samoa West Avenue",
 				addressLine2: "",
@@ -188,7 +190,7 @@ export const formState: FormState = {
 			emailAddress: "nove@mailinator.com",
 			telephone: "+353851231234",
 			businessName: "All Human",
-			isAddressSameAsStlProperty: true
+			isOwnerAddressSame: true
 		},
 		{
 			countryOfResidence: "Ireland",
@@ -197,7 +199,7 @@ export const formState: FormState = {
 			emailAddress: "vowuraqozo@mailinator.com",
 			telephone: "+353851231234",
 			businessName: "All Human",
-			isAddressSameAsStlProperty: true
+			isOwnerAddressSame: true
 		},
 		{
 			countryOfResidence: "Ireland",
@@ -206,7 +208,7 @@ export const formState: FormState = {
 			emailAddress: "raleso@mailinator.com",
 			telephone: "+353851231234",
 			businessName: "All Human",
-			isAddressSameAsStlProperty: true
+			isOwnerAddressSame: true
 		}
 	]
 };

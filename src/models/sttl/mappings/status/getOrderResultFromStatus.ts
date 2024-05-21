@@ -1,9 +1,9 @@
-import { PropertyData } from "models/sttl/types";
+import { Property } from "models/global";
 
-export const getOrderResultFromStatus = (status: any, propertiesList: PropertyData[]) => {
+export const getOrderResultFromStatus = (status: any, propertiesList: Property[]) => {
 	const registrations = [];
 	propertiesList.forEach(property => {
-		const address = property?.propertyAddress?.propertyAddress;
+		const { address } = property;
 		const sttlNumber = getSTTLNumberForPostalCode(address?.postcode, status);
 		if (sttlNumber) registrations.push({ address: address.addressLine1, sttlNumber, postcode: address.postcode });
 	});

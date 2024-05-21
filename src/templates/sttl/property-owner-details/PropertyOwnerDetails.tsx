@@ -29,14 +29,14 @@ export const PropertyOwnerDetails = (props: TemplateProps) => {
 	const methods = useForm({ mode: "all", defaultValues: { ...defaultValues, userIsOwnerCheck: getDefaultUserCheck(defaultValues, userAccount) } });
 	const { register, watch, trigger, getValues, formState } = methods;
 	const userIsOwnerCheck = watch("userIsOwnerCheck");
-	const isAddressSameAsStlProperty = watch(`isAddressSameAsStlProperty`);
+	const isOwnerAddressSame = watch(`isOwnerAddressSame`);
 	const countryOfResidence = watch(`countryOfResidence`) || "Ireland";
 	const isIreland = countryOfResidence === "Ireland";
 
 	const nextBtnHandler = async () => {
 		const isValid = await trigger(null, { shouldFocus: true });
 		if (!isValid) return;
-		if (isAddressSameAsStlProperty) onNextBtnClick({ ...getValues(), ownerAddress: undefined });
+		if (isOwnerAddressSame) onNextBtnClick({ ...getValues(), ownerAddress: undefined });
 		else onNextBtnClick(getValues());
 	};
 
@@ -68,11 +68,11 @@ export const PropertyOwnerDetails = (props: TemplateProps) => {
 					<FormProvider {...methods}>
 						<Box columns={4} gap="2.4rem">
 							<OwnerDetailsFields userAccount={userAccount} />
-							<Checkbox {...register(`isAddressSameAsStlProperty`)} checked={isAddressSameAsStlProperty} disabled={!isIreland}>
+							<Checkbox {...register(`isOwnerAddressSame`)} checked={isOwnerAddressSame} disabled={!isIreland}>
 								Property owner address is the same as the Short Term Tourist Letting property address
 							</Checkbox>
-							{!isAddressSameAsStlProperty && <OwnerAddressFields />}
-							{isAddressSameAsStlProperty && <AddressDisplay address={propertyAddress} hasBackground />}
+							{!isOwnerAddressSame && <OwnerAddressFields />}
+							{isOwnerAddressSame && <AddressDisplay address={propertyAddress} hasBackground />}
 						</Box>
 					</FormProvider>
 				)}

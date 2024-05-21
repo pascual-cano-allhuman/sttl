@@ -1,14 +1,13 @@
 import { Property, SharedPropertyDetails, FullPropertyDetails, MultipleUnitsDetails } from "../types";
 
 export const usePropertyDetails = ({ property }: { property: Property }) => {
-	const propertyType = property.customPropertyType || property.propertyType;
 	switch (property.category) {
 		case "sharedProperty": {
-			const items = getItemsForSharedProperty(propertyType, property.details as SharedPropertyDetails);
+			const items = getItemsForSharedProperty(property.details as SharedPropertyDetails);
 			return { items };
 		}
 		case "fullProperty": {
-			const items = getItemsForFullProperty(propertyType, property.details as FullPropertyDetails);
+			const items = getItemsForFullProperty(property.details as FullPropertyDetails);
 			return { items };
 		}
 		case "multipleUnits": {
@@ -20,8 +19,8 @@ export const usePropertyDetails = ({ property }: { property: Property }) => {
 	}
 };
 
-export const getItemsForSharedProperty = (propertyType: string, details: SharedPropertyDetails) => {
-	const { numberOfSharedRooms, numberOfPrivateRooms, numberOfGuestsInSharedRooms, numberOfGuestsInPrivateRooms } = details;
+export const getItemsForSharedProperty = (details: SharedPropertyDetails) => {
+	const { propertyType, numberOfSharedRooms, numberOfPrivateRooms, numberOfGuestsInSharedRooms, numberOfGuestsInPrivateRooms } = details;
 	const items = [];
 	if (propertyType) items.push(propertyType);
 	if (numberOfSharedRooms) items.push(`${numberOfSharedRooms} shared rooms`);
@@ -31,8 +30,8 @@ export const getItemsForSharedProperty = (propertyType: string, details: SharedP
 	return items;
 };
 
-export const getItemsForFullProperty = (propertyType: string, details: FullPropertyDetails) => {
-	const { numberOfBedrooms, numberOfGuests } = details;
+export const getItemsForFullProperty = (details: FullPropertyDetails) => {
+	const { propertyType, numberOfBedrooms, numberOfGuests } = details;
 	const items = [];
 	if (propertyType) items.push(propertyType);
 	if (numberOfBedrooms) items.push(`${numberOfBedrooms} bedrooms`);

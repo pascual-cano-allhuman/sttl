@@ -1,14 +1,14 @@
 import React from "react";
 import { Alert, Box, Stepper, Checkbox, Button, ScrollableContainer, CollapsePanel, Modal, Text } from "trade-portal-components";
 import { FormFooter, FormHeader, FormStepContainer } from "templates";
+import { Property } from "models";
 import { useForm } from "react-hook-form";
-import { PropertyData } from "models/sttl";
 import { AddressDisplay } from "../shared/AddressDisplay";
 import { FeesOverview } from "./FeesOverview";
 import { PropertyListItem } from "./PropertyListItem";
 
 type TemplateProps = {
-	propertiesList: PropertyData[];
+	propertiesList: Property[];
 	fees: { total: number; subtotals: Record<string, number> };
 	createCardPayment: () => void;
 	processZeroPayment: () => void;
@@ -62,14 +62,14 @@ export const Review = (props: TemplateProps) => {
 				<ScrollableContainer maxHeight={hasMoreThan10 ? "calc(10*56.5px)" : "unset"}>
 					<Box gap={hasMoreThan10 ? "0" : "1.6rem"} as="ul">
 						{propertiesList?.map((property, index) => {
-							const { propertyAddress } = property.propertyAddress;
+							const { address } = property;
 							const onEditClick = (step: string) => goToEditStep(step, index);
 							return (
 								<CollapsePanel
 									as="li"
 									key={index}
 									title={`Property ${index + 1}`}
-									subtitle={`${propertyAddress.addressLine1}, ${propertyAddress.postcode}`}
+									subtitle={`${address.addressLine1}, ${address.postcode}`}
 									padding="0"
 									variant={hasMoreThan10 ? "list" : "default"}
 									ordinalNumber={index + 1}
@@ -123,7 +123,7 @@ export const Review = (props: TemplateProps) => {
 				onClose={() => setModalPropertyIndex(null)}
 			>
 				<Box marginTop="1rem">
-					<AddressDisplay address={propertiesList[modalPropertyIndex]?.propertyAddress.propertyAddress} hasBackground />
+					<AddressDisplay address={propertiesList[modalPropertyIndex]?.address} hasBackground />
 				</Box>
 			</Modal>
 		</FormStepContainer>

@@ -1,22 +1,5 @@
-import { FormState, PropertyData } from "../types";
+import { FormState } from "../types";
 import { FormStep } from "./formSteps";
-
-// build a properties list from the form state
-export const getPropertiesList = (formState: FormState) => {
-	if (!formState) return [];
-	const total = formState.propertyOwner?.length || 0;
-	const list = [];
-	for (let i = 0; i < total; i++) {
-		const property = {
-			propertyType: formState.propertyType[i],
-			statutoryObligations: formState.statutoryObligations[i],
-			propertyAddress: formState.propertyAddress[i],
-			propertyOwner: formState.propertyOwner[i]
-		};
-		list.push(property);
-	}
-	return list as PropertyData[];
-};
 
 // check if the form state is partial
 export const hasPartialState = (formState: FormState) => {

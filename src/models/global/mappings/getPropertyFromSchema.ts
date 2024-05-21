@@ -1,18 +1,14 @@
-import { PROPERTY_OPTIONS, TEXT_TO_UNIT_ROOM_TYPE } from "settings/propertyTypeOptions";
-import { AccommodationSchema, Property, PersonSchema, TEXT_TO_PLANNING_PERMISSION, Category } from "../types";
+import { AccommodationSchema, Property, PersonSchema, TEXT_TO_PLANNING_PERMISSION } from "../types";
 
 export const getPropertyFromSchema = (accommodationSchema: AccommodationSchema, ownerSchema?: PersonSchema): Property => {
 	if (!["Accommodation", "LodgingBusiness"].includes(accommodationSchema?.["@type"])) return null;
 	const category = getPropertyCategory(accommodationSchema);
 	const owner = getOwnerDetails(ownerSchema);
-	const { propertyType, customPropertyType } = getPropertyType(accommodationSchema, category);
 	const address = getPropertyAddress(accommodationSchema);
 	const details = getPropertyDetails(accommodationSchema);
 	const permissionStatus = getPlanningPermission(accommodationSchema);
 	return {
 		category,
-		propertyType,
-		customPropertyType,
 		address,
 		details,
 		owner,
@@ -27,15 +23,6 @@ export const getPropertyCategory = (accommodationSchema: AccommodationSchema) =>
 	return null;
 };
 
-const getPropertyType = (accommodationSchema: AccommodationSchema, category: Category) => {
-	const { additionalType } = accommodationSchema;
-	if (!additionalType) return { propertyType: null, customPropertyType: null };
-	const hasKnownOption = PROPERTY_OPTIONS[category]?.some(({ value }) => value === additionalType);
-	const propertyType = hasKnownOption ? additionalType : "Other - specify";
-	const customPropertyType = hasKnownOption ? null : additionalType;
-	return { propertyType, customPropertyType };
-};
-
 export const getPropertyDetails = (accommodationSchema: AccommodationSchema) => {
 	const category = getPropertyCategory(accommodationSchema);
 	if (category === "sharedProperty") return getDetailsForSharedProperty(accommodationSchema);
@@ -45,26 +32,27 @@ export const getPropertyDetails = (accommodationSchema: AccommodationSchema) => 
 };
 
 export const getDetailsForSharedProperty = (accommodationSchema: AccommodationSchema) => {
-	return accommodationSchema.containsPlace.reduce((acc, curr) => {
-		const numberOfRooms = +curr.numberOfRooms.value;
-		const numberOfGuests = +curr.amenityFeature[0].value;
+	const propertyType = accommodationSchema.additionalType;
+	const roomsDetails = accommodationSchema.containsPlace.reduce((acc, curr) => {
 		if (curr.additionalType === "shared") {
-			acc["numberOfSharedRooms"] = numberOfRooms;
-			acc["numberOfGuestsInSharedRooms"] = numberOfGuests;
+			acc["numberOfSharedRooms"] = +curr.numberOfRooms.value;
+			acc["numberOfGuestsInSharedRooms"] = +curr.amenityFeature[0].value;
 			return acc;
 		}
 		if (curr.additionalType === "private") {
-			acc["numberOfPrivateRooms"] = numberOfRooms;
-			acc["numberOfGuestsInPrivateRooms"] = numberOfGuests;
+			acc["numberOfPrivateRooms"] = +curr.numberOfRooms.value;
+			acc["numberOfGuestsInPrivateRooms"] = +curr.amenityFeature[0].value;
 			return acc;
 		}
 		return acc;
 	}, {});
+	return { propertyType, ...roomsDetails };
 };
 
 export const getDetailsForFullProperty = (accommodationSchema: AccommodationSchema) => {
-	const { numberOfBedrooms, amenityFeature } = accommodationSchema;
+	const { additionalType, numberOfBedrooms, amenityFeature } = accommodationSchema;
 	return {
+		propertyType: additionalType,
 		numberOfBedrooms: +numberOfBedrooms,
 		numberOfGuests: +amenityFeature[0].value
 	};
@@ -72,15 +60,10 @@ export const getDetailsForFullProperty = (accommodationSchema: AccommodationSche
 
 export const getDetailsForMultipleUnits = (accommodationSchema: AccommodationSchema) => {
 	const units = accommodationSchema.containsPlace.reduce((acc, curr) => {
-		const unitText = curr.numberOfRooms?.unitText;
 		const numberOfRooms = curr.numberOfRooms?.value ? +curr.numberOfRooms.value : 0;
 		const numberOfGuests = curr.amenityFeature[0]?.value ? +curr.amenityFeature[0].value : 0;
-		const { propertyType, customPropertyType } = getPropertyType(curr as AccommodationSchema, "multipleUnits");
-		const unit = { propertyType, customPropertyType, noOfGuests: numberOfGuests };
-		if (unitText) {
-			const prop = TEXT_TO_UNIT_ROOM_TYPE[unitText];
-			unit[prop] = numberOfRooms;
-		}
+		const propertyType = curr.additionalType;
+		const unit = { propertyType, noOfGuests: numberOfGuests, noOfUnits: numberOfRooms };
 		acc.push(unit);
 		return acc;
 	}, []);

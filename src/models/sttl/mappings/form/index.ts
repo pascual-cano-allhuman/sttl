@@ -1,2 +1,3 @@
-export * from "./getFormFromOrder";
-export * from "./utils";
+export * from "./getPropertiesFromForm";
+export * from "./getPropertiesFromSchema";
+export * from "./getFormFromProperties";

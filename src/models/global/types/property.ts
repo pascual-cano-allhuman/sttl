@@ -3,8 +3,6 @@ import { PermissionStatus } from "./permissionStatus";
 
 export type Property = {
 	category: Category;
-	propertyType?: string;
-	customPropertyType?: string;
 	address: Address;
 	owner: {
 		firstName: string;
@@ -32,6 +30,7 @@ export type Address = {
 	country?: string;
 };
 export type SharedPropertyDetails = {
+	propertyType?: string;
 	numberOfSharedRooms?: number;
 	numberOfPrivateRooms?: number;
 	numberOfGuestsInSharedRooms?: number;
@@ -39,6 +38,7 @@ export type SharedPropertyDetails = {
 };
 
 export type FullPropertyDetails = {
+	propertyType?: string;
 	numberOfBedrooms?: number;
 	numberOfGuests?: number;
 };

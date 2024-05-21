@@ -1,9 +1,9 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import { getOrderForCardPayment, getOrderForZeroPayment, composeOrder, getFeesFromOrder, getOrderResultFromStatus } from "models/sttl/mappings";
-import { FormState, PropertyData } from "models/sttl/types";
-import { UserAccount, useAlert, Alert, OrderSchema } from "models/global";
-import { retry, getPropertiesList, hasPartialState } from "./utils";
+import { FormState, getPropertiesFromForm } from "models/sttl";
+import { UserAccount, useAlert, Alert, OrderSchema, Property } from "models/global";
+import { retry, hasPartialState } from "./utils";
 import { FormStep, formStepById } from "./formSteps";
 
 type Parameters = {
@@ -14,7 +14,7 @@ type Parameters = {
 	createPaymentRequest: (order: OrderSchema) => Promise<Record<string, string>>;
 	sendPaymentResponse: (paymentResponse: Record<string, string>) => Promise<string>;
 	sendZeroPaymentOrder: (order: OrderSchema) => Promise<void>;
-	fetchOrderStatus: (propertiesList: PropertyData[]) => Promise<any>;
+	fetchOrderStatus: (propertiesList: Property[]) => Promise<any>;
 };
 
 export const useSttlOrder = (params: Parameters) => {
@@ -62,7 +62,7 @@ export const useSttlOrder = (params: Parameters) => {
 	// poll the order status, store the result and clean up
 	const processOrderResult = async () => {
 		const callback = async () => {
-			const propertiesList = getPropertiesList(formState);
+			const propertiesList = getPropertiesFromForm(formState);
 			const status = await fetchOrderStatus(propertiesList);
 			if (status) return getOrderResultFromStatus(status, propertiesList);
 		};

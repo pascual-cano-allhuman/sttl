@@ -1,10 +1,11 @@
 import React from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { getFormFromOrder } from "models/sttl/mappings";
+import { getPropertiesFromForm, getPropertiesFromSchema } from "models/sttl/mappings";
 import { FormState } from "models/sttl/types";
 import { useAlert, Alert, OrderSchema } from "models/global";
-import { addStepDataToState, hasPartialState, getPropertiesList, deleteEntryFromState } from "./utils";
+import { addStepDataToState, hasPartialState, deleteEntryFromState } from "./utils";
 import { formSteps, formStepById, FormStep, getEditStepUrl } from "./formSteps";
+import { getFormFromProperties } from "../mappings/form/getFormFromProperties";
 
 type Parameters = {
 	initialState?: FormState;
@@ -25,7 +26,7 @@ export const useSttlForm = (params: Parameters) => {
 
 	// states
 	const [formState, setFormState] = React.useState<FormState>(initialState);
-	const propertiesList = React.useMemo(() => getPropertiesList(formState), [formState]);
+	const propertiesList = React.useMemo(() => getPropertiesFromForm(formState), [formState]);
 	const hasSentQAMembershipUpsell = React.useRef(false);
 	const { alert, closeAlert, showAlertOnUrl } = useAlert();
 	const isSetup = React.useRef(false);
@@ -92,8 +93,9 @@ export const useSttlForm = (params: Parameters) => {
 		if (!pathname.endsWith("/review") || isSetup.current) return;
 		isSetup.current = true;
 		loadSaveAndResumeData().then(order => {
-			const state = getFormFromOrder(order);
-			if (state) setFormState(state);
+			const properties = getPropertiesFromSchema(order);
+			const formState = getFormFromProperties(properties);
+			if (formState) setFormState(formState);
 		});
 	}, []);
 

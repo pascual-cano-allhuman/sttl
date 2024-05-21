@@ -1,7 +1,7 @@
 import { v1 as uuid } from "uuid";
-import { CATEGORY_AS_TEXT, CategoryAsText, UserAccount, AddressSchema, OrderSchema } from "models/global";
-import { FormState, PropertyData } from "../../types";
-import { composeAccommodation } from "../accommodation";
+import { CATEGORY_AS_TEXT, CategoryAsText, UserAccount, OrderSchema, getSchemaFromProperty } from "models/global";
+import { FormState } from "../../types";
+import { getPropertiesFromForm } from "../form";
 
 export const getOrderForCardPayment = (formState: FormState, userAccount: UserAccount): OrderSchema => composeOrder(formState, userAccount);
 
@@ -17,14 +17,13 @@ export const getOrderForZeroPayment = (formState: FormState, userAccount: UserAc
 };
 
 export const composeOrder = (formState: FormState, userAccount?: UserAccount): OrderSchema => {
-	const propertiesList = getPropertiesList(formState);
+	const propertiesList = getPropertiesFromForm(formState);
 	if (propertiesList.length === 0) return null;
-
 	const acceptedOffer = propertiesList.map(property => {
-		const { category } = property.propertyType;
+		const { category } = property;
 		const categoryAsText = CATEGORY_AS_TEXT[category] as CategoryAsText;
-		const accommodation = composeAccommodation(property);
-		const owner = getOwner(property);
+		const { accommodationSchema, ownerSchema } = getSchemaFromProperty(property);
+
 		return {
 			"@type": "Offer",
 			priceCurrency: "EUR",
@@ -32,7 +31,7 @@ export const composeOrder = (formState: FormState, userAccount?: UserAccount): O
 				"@type": "GovernmentService",
 				category: categoryAsText,
 				name: "STL Registration",
-				isRelatedTo: { ...owner, owns: accommodation }
+				isRelatedTo: { ...ownerSchema, owns: accommodationSchema }
 			}
 		};
 	});
@@ -70,50 +69,4 @@ export const composeOrder = (formState: FormState, userAccount?: UserAccount): O
 			}
 		}
 	};
-};
-
-export const getPropertiesList = (formState: FormState) => {
-	if (!formState) return [];
-	const total = formState.propertyOwner?.length || 0;
-	const list = [];
-	for (let i = 0; i < total; i++) {
-		const property = {
-			propertyType: formState.propertyType[i],
-			statutoryObligations: formState.statutoryObligations[i],
-			propertyAddress: formState.propertyAddress[i],
-			propertyOwner: formState.propertyOwner[i]
-		};
-		list.push(property);
-	}
-	return list as PropertyData[];
-};
-
-export const getOwner = (property: PropertyData) => {
-	const { firstName, lastName, emailAddress, telephone, businessName } = property.propertyOwner;
-	const ownerAddress = property.propertyOwner.ownerAddress || property.propertyAddress.propertyAddress;
-	const ownerCountry = property.propertyOwner.countryOfResidence;
-	return {
-		"@type": "Person",
-		name: `${firstName} ${lastName}`,
-		givenName: firstName,
-		familyName: lastName,
-		address: getPostalAddress(ownerAddress, ownerCountry),
-		email: emailAddress,
-		telephone,
-		worksFor: {
-			"@type": "Organization",
-			name: businessName || ""
-		}
-	};
-};
-
-export const getPostalAddress = (addressInput: any, countryOfResidence: string): AddressSchema => {
-	const address = { "@type": "PostalAddress" } as AddressSchema;
-	const streetAddressParts = [addressInput.addressLine1, addressInput.addressLine2, addressInput.addressLine3].filter(Boolean);
-	address.streetAddress = streetAddressParts.join(", ");
-	address.postalCode = addressInput.postcode || addressInput.postcode;
-	address.addressLocality = addressInput.town;
-	address.addressRegion = addressInput.county?.replace(/^co. /i, "");
-	address.addressCountry = countryOfResidence;
-	return address;
 };
