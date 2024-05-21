@@ -53,6 +53,7 @@ export type AccommodationSchema = {
 			}
 		];
 	}[];
+	contactPoint?: PersonSchema[];
 };
 
 export type AddressSchema = {

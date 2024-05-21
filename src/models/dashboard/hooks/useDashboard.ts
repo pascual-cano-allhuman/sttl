@@ -29,13 +29,11 @@ export const useDashboard = (params: Parameters) => {
 			setHasPendingRegistration(!!data);
 		});
 		loadDashboardProperties().then((data: any) => {
-			if (!data?.value?.length) return [];
-			const properties = data.value.reverse().map(getPropertyCardFromSchema);
+			const properties = data?.value?.reverse().map(getPropertyCardFromSchema) || [];
 			setProperties(properties);
 		});
 		loadDashboardPayments().then((data: any) => {
-			if (!data?.value?.length) return [];
-			const payments = data.value.reverse().map(getPaymentFromSchema);
+			const payments = data?.value?.reverse().map(getPaymentFromSchema) || [];
 			setPayments(payments);
 		});
 	}, [isLoggedIn]);

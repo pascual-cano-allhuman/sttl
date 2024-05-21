@@ -28,13 +28,15 @@ export const AppProviders = ({ children }: { children: React.ReactNode }) => {
 export const GlobalLayout = ({ children }: { children: React.ReactNode }) => {
 	const { auth, isLoadingData } = useAppContext();
 	const { isLoggedIn, logout, login } = auth || {};
+	const gap = !isLoadingData && !isLoggedIn ? "0" : null;
+	const hasTransparentHeader = !isLoggedIn;
 	return (
-		<Layout links={links} isLoggedIn={isLoggedIn} logout={logout} login={login}>
+		<Layout links={links} isLoggedIn={isLoggedIn} logout={logout} login={login} gap={gap} hasTransparentHeader={hasTransparentHeader}>
 			<Suspense>{isLoadingData ? <Loading /> : children}</Suspense>
 		</Layout>
 	);
 };
 
-const Loading = () => <LoaderWithContent>Please wait while we are processing your data.</LoaderWithContent>;
+const Loading = () => <LoaderWithContent>Just a moment while we load this page.</LoaderWithContent>;
 
 export default AppProviders;

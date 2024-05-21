@@ -9,7 +9,7 @@ const SHOULD_MOCK_MIDDLEWARE = ["1", "true"].includes(process.env.SHOULD_MOCK_MI
 
 export const getPropertiesFromMiddleware = async (token: string, correlation: Record<string, string>): Promise<any> => {
 	if (!MIDDLEWARE_PORTAL_ENDPOINT || !token) return;
-	if (SHOULD_MOCK_MIDDLEWARE || true) return properties; // eslint-disable-line
+	if (SHOULD_MOCK_MIDDLEWARE) return properties; // eslint-disable-line
 	try {
 		return await httpGet(`${MIDDLEWARE_PORTAL_ENDPOINT}/accommodation`, token);
 	} catch (e) {
@@ -19,7 +19,7 @@ export const getPropertiesFromMiddleware = async (token: string, correlation: Re
 
 export const getPropertyFromMiddleware = async (propertyId: string, token: string, correlation: Record<string, string>): Promise<any> => {
 	if (!MIDDLEWARE_PORTAL_ENDPOINT || !token || !propertyId) return;
-	if (SHOULD_MOCK_MIDDLEWARE || true) return propertyId < "3" ? accommodation : null; // eslint-disable-line
+	if (SHOULD_MOCK_MIDDLEWARE) return propertyId < "3" ? accommodation : null; // eslint-disable-line
 	try {
 		return await httpGet(`${MIDDLEWARE_PORTAL_ENDPOINT}/accommodation/${propertyId}`, token);
 	} catch (e) {

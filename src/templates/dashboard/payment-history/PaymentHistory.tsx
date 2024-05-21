@@ -1,5 +1,5 @@
 import { Payment, usePagination } from "models/dashboard";
-import { Text, Box, TextLink, Pagination, theme } from "trade-portal-components";
+import { Text, Box, TextLink, Pagination, Button, theme } from "trade-portal-components";
 
 type Props = {
 	payments: Payment[];
@@ -68,8 +68,18 @@ export const InvoiceCard = (props: CardProps) => {
 
 const EmptyCard = () => (
 	<Box padding={["3.2rem 2.4rem", "3.2rem"]} background="fi_surface_white">
-		<Box paddingLeft={["2.4rem", "3.2rem"]} borderLeft={`2px solid ${theme.color.fi_secondary_sea_100}`}>
+		<Box
+			paddingLeft={["2.4rem", "3.2rem"]}
+			flexDirection={["column", "row"]}
+			justifyContent="space-between"
+			alignItems={["start", "center"]}
+			gap="3.2rem"
+			borderLeft={`2px solid ${theme.color.fi_secondary_sea_100}`}
+		>
 			<Text>You have no payments registered</Text>
+			<Button size="large" as="a" href="/sttl">
+				Register a property now
+			</Button>
 		</Box>
 	</Box>
 );

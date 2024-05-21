@@ -4,3 +4,4 @@ export * from "./FormFooter";
 export * from "./LoaderWithContent";
 export * from "./ErrorTemplate";
 export * from "./NeedHelp";
+export * from "./Wrapper";

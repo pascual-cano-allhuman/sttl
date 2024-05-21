@@ -35,17 +35,16 @@ export const PropertyDetails = ({ property }: { property: Property }) => {
 									<AddressDisplay address={address} />
 								</ContentPlaybackCard>
 							</Box>
-							<PropertyTickList property={property} />
+							<ContentPlaybackCard subHeading="Property details">
+								<PropertyTickList property={property} />
+							</ContentPlaybackCard>
 							{permissionStatus && (
 								<ContentPlaybackCard subHeading="Statutory obligations">
 									<Text color="fi_text_100">{PERMISSION_STATUS_DISPLAY_TEXT[permissionStatus]}</Text>
 								</ContentPlaybackCard>
 							)}
 							{owner?.firstName && (
-								<ContentPlaybackCard>
-									<Text textStyle="text_small" color="fi_text_60">
-										Property owner details
-									</Text>
+								<ContentPlaybackCard subHeading="Property owner details">
 									<Box gap="0.8rem">
 										<Text textStyle="text_large">
 											{owner?.firstName} {owner?.lastName}

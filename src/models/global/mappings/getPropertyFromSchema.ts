@@ -3,7 +3,8 @@ import { AccommodationSchema, Property, PersonSchema, TEXT_TO_PLANNING_PERMISSIO
 export const getPropertyFromSchema = (accommodationSchema: AccommodationSchema, ownerSchema?: PersonSchema): Property => {
 	if (!["Accommodation", "LodgingBusiness"].includes(accommodationSchema?.["@type"])) return null;
 	const category = getPropertyCategory(accommodationSchema);
-	const owner = getOwnerDetails(ownerSchema);
+	const contacts = accommodationSchema.contactPoint;
+	const owner = getOwnerDetails(ownerSchema || contacts?.[0]);
 	const address = getPropertyAddress(accommodationSchema);
 	const details = getPropertyDetails(accommodationSchema);
 	const permissionStatus = getPlanningPermission(accommodationSchema);
